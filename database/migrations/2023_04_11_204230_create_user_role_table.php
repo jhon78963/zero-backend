@@ -13,9 +13,9 @@ return new class extends Migration
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->integer('roleId')->nullable();
+            $table->bigInt('roleId')->nullable();
             $table->foreign('roleId')->references('id')->on('roles');
-            $table->integer('userId')->nullable();
+            $table->bigInt('userId')->nullable();
             $table->foreign('userId')->references('id')->on('users');
         });
     }

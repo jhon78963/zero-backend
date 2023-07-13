@@ -15,11 +15,10 @@ return new class extends Migration
             $table->integer('TenantId')->nullable();
             $table->string('name');
             $table->boolean('isGranted')->default(true);
-            $table->integer('roleId')->nullable();
+            $table->bigInt('roleId')->nullable();
             $table->foreign('roleId')->references('id')->on('roles');
-            $table->integer('userId')->nullable();
+            $table->bigInt('userId')->nullable();
             $table->foreign('userId')->references('id')->on('users');
-
         });
     }
 
