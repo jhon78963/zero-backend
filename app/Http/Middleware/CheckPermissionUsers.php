@@ -24,7 +24,7 @@ class CheckPermissionUsers
             abort(403, 'The user has no role. Please contact an administrator.');
         }
 
-        $role_id = Permission::where('name', $permission)->value('roleId');
+        $role_id = Permission::where('name', $permission)->where('roleId', $role_user->roleId)->value('roleId');
 
         if (!$role_id) {
             abort(403, 'The permission is invalid. Please contact an administrator.');

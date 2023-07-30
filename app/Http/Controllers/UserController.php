@@ -3,24 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\AssignRoleRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\AssignRoleRequest;
-use App\models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\UserRole;
 
 class UserController extends Controller
 {
     public function __construct(){
         $this->middleware('auth:api');
-        $this->middleware("check.permissions:Admin,pages.user", ['only'=>['get', 'getAll']]);
-        $this->middleware("check.permissions:Admin,pages.user.modify", ['only'=>['create', 'update']]);
-        $this->middleware("check.permissions:Admin,pages.user.delete", ['only'=>['delete']]);
+
+        $user = Auth::user();
+        $role_user = $user->userRoles()->first();
+
+        if($role_user->role->name == 'Admin'){
+            $this->middleware("check.permissions:Admin,pages.user", ['only'=>['get', 'getAll']]);
+            $this->middleware("check.permissions:Admin,pages.user.modify", ['only'=>['create', 'update']]);
+            $this->middleware("check.permissions:Admin,pages.user.delete", ['only'=>['delete']]);
+        }else{
+            $this->middleware("check.permissions:Guest,pages.user", ['only'=>['get', 'getAll']]);
+        }
     }
 
     public function create(CreateUserRequest $request)
@@ -160,54 +168,28 @@ class UserController extends Controller
         ]);
     }
 
+    public function getRoles($id)
+    {
+        $userExist = DB::table('users')->where('id', $id)->get();
 
-    public function assign(AssignRoleRequest $request){
-
-        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
-        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();
-        $permission_exists = Permission::where('id', $request->permissionId)->where('IsDeleted', false)->first();
-
-
-        if (empty($user_exist) || empty($role_exist)) {
+        if (empty($userExist)) {
             return response()->json([
                 'status' => 'error',
-                'msg' => empty($user_exist) && empty($role_exist) ? 'The user and role does not exist' : (empty($user_exist) ? 'The user does not exists' : 'The role does not exists')
-            ], 400);
+                'msg' => 'The user does not exist'
+            ], 404);
         }
 
-        $user_roles = UserRole::where('userId', $request->userId)->pluck('roleId')->toArray();
+        $user = User::findOrFail($id);
 
-        $user = Auth::user();
-
-        foreach ($user->userRoles as $user_role) {
-            if ($user_role->roleId == $request->roleId) {
-                $role_name = $user_role->role->name;
-                return response()->json([
-                    'status' => 'error',
-                    'msg' => 'The role '.$role_name.' is already assigned to the user'
-                ], 400);
-            }
-        }
-
-        $assigned_role = new UserRole([
-            "userId" => $request->userId,
-            "roleId" => $request->roleId
-        ]);
-
-        $assigned_role->save();
-
-        $roles = Role::findOrFail($request->roleId);
-        $permissions = $roles->permissions;
-
-        foreach ($permissions as $permission) {
-            $permission->update([
-                'userId' => $request->userId
-            ]);
-        }
+        $roles = $user->userRoles->pluck('role.name');
+        $data[] = [
+                'id' => $user->id,
+                'roles' => $roles
+            ];
 
         return response()->json([
             'status' => 'success',
-            'data' => $assigned_role
+            'data' => $data
         ]);
     }
 
@@ -248,6 +230,59 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'msg' => 'The role '.$role->name.' was successfully unassigned from the user'
+        ]);
+    }
+
+    public function assign(AssignRoleRequest $request)
+    {
+
+        $this->unassign($request);
+
+        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
+        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();
+        $permission_exists = Permission::where('id', $request->permissionId)->first();
+
+
+        if (empty($user_exist) || empty($role_exist)) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => empty($user_exist) && empty($role_exist) ? 'The user and role does not exist' : (empty($user_exist) ? 'The user does not exists' : 'The role does not exists')
+            ], 400);
+        }
+
+        $user_roles = UserRole::where('userId', $request->userId)->pluck('roleId')->toArray();
+
+        $user = User::findOrFail($request->userId);
+
+        foreach ($user->userRoles as $user_role) {
+            if ($user_role->roleId == $request->roleId) {
+                $role_name = $user_role->role->name;
+                return response()->json([
+                    'status' => 'error',
+                    'msg' => 'The role '.$role_name.' is already assigned to the user'
+                ], 400);
+            }
+        }
+
+        $assigned_role = new UserRole([
+            "userId" => $request->userId,
+            "roleId" => $request->roleId
+        ]);
+
+        $assigned_role->save();
+
+        $roles = Role::findOrFail($request->roleId);
+        $permissions = $roles->permissions;
+
+        foreach ($permissions as $permission) {
+            $permission->update([
+                'userId' => $request->userId
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $assigned_role
         ]);
     }
 }

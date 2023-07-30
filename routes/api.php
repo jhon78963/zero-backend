@@ -29,17 +29,19 @@ Route::post('/logout',[AuthController::class,'logout']);
 Route::post('/refresh',[AuthController::class,'refresh']);
 
 // Users
-Route::post('/users/create',[UserController::class,'create']);
 Route::get('/users/get/{id}',[UserController::class,'get']);
 Route::get('/users/getAll',[UserController::class,'getAll']);
-Route::put('/users/update/{id}',[UserController::class,'update']);
-Route::patch('/users/delete/{id}',[UserController::class,'delete']);
+Route::get('/users/getRoles/{id}',[UserController::class,'getRolesc']);
+Route::post('/users/create',[UserController::class,'create']);
 Route::post('/users/assign',[UserController::class,'assign']);
 Route::post('/users/unassign',[UserController::class,'unassign']);
+Route::put('/users/update/{id}',[UserController::class,'update']);
+Route::patch('/users/delete/{id}',[UserController::class,'delete']);
 
 // Roles
-Route::post('/roles/create',[RoleController::class,'create']);
 Route::get('/roles/get/{id}',[RoleController::class,'get']);
 Route::get('/roles/getAll',[RoleController::class,'getAll']);
+Route::post('/roles/create',[RoleController::class,'create']);
 Route::put('/roles/update/{id}',[RoleController::class,'update']);
 Route::patch('/roles/delete/{id}',[RoleController::class,'delete']);
+Route::delete('/roles/revoke/{id}',[RoleController::class,'revoke']);

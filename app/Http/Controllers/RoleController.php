@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth:api');
-        $this->middleware("check.permissions:Admin,pages.role", ['only'=>['get', 'getAll']]);
-        $this->middleware("check.permissions:Admin,pages.role.modify", ['only'=>['create', 'update']]);
-        $this->middleware("check.permissions:Admin,pages.role.delete", ['only'=>['delete']]);
+        $user = Auth::user();
+        $role_user = $user->userRoles()->first();
+
+        if($role_user->role->name == 'Admin'){
+            $this->middleware('auth:api');
+            $this->middleware("check.permissions:Admin,pages.role", ['only'=>['get', 'getAll']]);
+            $this->middleware("check.permissions:Admin,pages.role.modify", ['only'=>['create', 'update', 'revoke']]);
+            $this->middleware("check.permissions:Admin,pages.role.delete", ['only'=>['delete']]);
+        }else{
+            $this->middleware('auth:api');
+            $this->middleware("check.permissions:Guest,pages.role", ['only'=>['get', 'getAll']]);
+        }
     }
 
     public function create(CreateRoleRequest $request)
@@ -66,6 +74,7 @@ class RoleController extends Controller
 
         foreach($permissions as $permission){
             $permission_save = new Permission([
+                'CreatorUserId' => Auth::id(),
                 'name' => $permission,
                 'roleId' => $role->id
             ]);
@@ -177,11 +186,49 @@ class RoleController extends Controller
         }
 
         $role = Role::findOrFail($id);
+        $role->update(['name' => $request->name]);
         $permissions = $role->permissions;
 
         return response()->json([
             'status' => 'success',
             'data' => $role
         ], 201);
+    }
+
+    public function revoke(Request $request, $id)
+    {
+        // Verificar si el rol ya existe
+        $role = Role::where('id', $id)->where('IsDeleted', false)->first();
+
+        if (empty($role)) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'The role does not exist'
+            ], 404);
+        }
+
+        $role_permissions = $role->permissions;
+
+        $permissionExists = false;
+
+        foreach ($role_permissions as $role_permission) {
+            if ($role_permission->name == $request->name) {
+                Permission::where('name', $request->name)->where('roleId', $id)->delete();
+                $permissionExists = true;
+                break;
+            }
+        }
+
+        if ($permissionExists) {
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'The permission has been revoked'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'The permission does not exist or has already been revoked.'
+            ], 404);
+        }
     }
 }
