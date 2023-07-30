@@ -23,9 +23,7 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        $token = Auth::attempt($credentials);
-
-        if (!$token) {
+        if (!$token= Auth::attempt($credentials)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
@@ -34,12 +32,17 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
+        $data = array(
+            'username' => $user->username,
+            'email' => $user->email
+        );
+
         return response()->json([
             'status' => 'success',
-            'data' => $user,
+            'data' => $data,
             'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
+                'access_token' => $token,
+                'refresh_token' => Auth::refresh()
             ]
         ]);
 
