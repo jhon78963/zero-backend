@@ -13,9 +13,13 @@ class RecoveryPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct($password_default)
+    public $password_default;
+    public $user_fullName;
+
+    public function __construct($password_default, $user_fullName)
     {
         $this->password_default = $password_default;
+        $this->user_fullName = $user_fullName;
     }
 
     public function envelope()

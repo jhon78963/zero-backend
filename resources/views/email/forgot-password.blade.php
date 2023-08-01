@@ -385,8 +385,7 @@
                                                                                         style="padding:0;Margin:0;padding-left:40px;padding-right:40px">
                                                                                         <p
                                                                                             style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;font-size:16px;font-family:helvetica, 'helvetica neue', arial, verdana, sans-serif;line-height:24px;color:#666666;text-align:center">
-                                                                                            Hola,&nbsp;
-                                                                                            {{-- {{ auth()->user()->name }}&nbsp;{{ auth()->user()->surname }} --}}
+                                                                                            Hola,&nbsp;{{ $user_fullName }}
                                                                                         </p>
                                                                                     </td>
                                                                                 </tr>
@@ -418,10 +417,11 @@
                                                                                 <tr style="border-collapse:collapse">
                                                                                     <td align="center"
                                                                                         style="Margin:0;padding-left:10px;padding-right:10px;padding-top:40px;padding-bottom:40px">
+                                                                                        Contraseña por defecto:
+                                                                                        <br>
                                                                                         <span class="es-button-border"
                                                                                             style="border-style:solid;border-color:whitesmoke;background:whitesmoke;border-width:2px;display:inline-block;border-radius:10px;width:auto">
-                                                                                            Contraseña por defecto:
-                                                                                            123456789
+                                                                                            {{ $password_default }}
                                                                                         </span>
                                                                                     </td>
                                                                                 </tr>

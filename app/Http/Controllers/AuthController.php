@@ -145,9 +145,9 @@ class AuthController extends Controller
             'email.email'=>'El email debe tener un formato válido',
         ]);
 
-        $roleExists = User::where('email', $request->email)->exists();
+        $userExists = User::where('email', $request->email)->exists();
 
-        if(!$roleExists)
+        if(!$userExists)
         {
             return response()->json([
                 'status' => 'error',
@@ -157,17 +157,20 @@ class AuthController extends Controller
 
         $password_default = '123456789';
 
+        $user = User::where('email', $request->email)->first();
+
+        $user_fullName = $user->name.' '.$user->surname;
+
         User::where('email', $request->email)->update([
             'password' => Hash::make($password_default),
         ]);
 
-        $mail = new RecoveryPasswordMail($password_default);
+        $mail = new RecoveryPasswordMail($password_default, $user_fullName);
         Mail::to($request->email)->send($mail);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Se envió un mensaje con la contraseña. Porfavor revise su bandeja de entrada',
-
         ]);
     }
 }
