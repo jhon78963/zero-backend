@@ -360,7 +360,7 @@
                                                                                 <tr style="border-collapse:collapse">
                                                                                     <td align="center"
                                                                                         style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px;font-size:0">
-                                                                                        <img src="https://tlr.stripocdn.email/content/guids/CABINET_dd354a98a803b60e2f0411e893c82f56/images/23891556799905703.png"
+                                                                                        <img src="https://backend.zerogroups.uk/loginn/img/login.png"
                                                                                             alt
                                                                                             style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
                                                                                             width="175">
@@ -421,7 +421,7 @@
                                                                                         <span class="es-button-border"
                                                                                             style="border-style:solid;border-color:whitesmoke;background:whitesmoke;border-width:2px;display:inline-block;border-radius:10px;width:auto">
                                                                                             Contraseña por defecto:
-                                                                                            {{-- {{ $password_default }} --}}
+                                                                                            123456789
                                                                                         </span>
                                                                                     </td>
                                                                                 </tr>
