@@ -57,6 +57,14 @@
                         <p id="conPasswordError" style="font-weight: 500; color: red; font-size: 0.75rem;"></p>
                     </div>
 
+                    <a href="https://www.iubenda.com/privacy-policy/21649256"
+                        class="iubenda-black iubenda-noiframe iubenda-embed iubenda-noiframe "
+                        title="Política de Privacidad ">Política de Privacidad</a>
+
+                    <a href="https://www.iubenda.com/condiciones-de-uso/21649256"
+                        class="iubenda-black iubenda-noiframe iubenda-embed iubenda-noiframe "
+                        title="Términos y Condiciones ">Términos y Condiciones</a>
+
                     <div class="check">
                         <input type="checkbox" name="termino" id="termino" style="width: 13px; height: 13px;">
                         <label for="terminos" style="color: #3d3d3d;">He leído y acepto los términos</label>
@@ -80,38 +88,22 @@
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        $('#termino').click(() => {
-            const div = $('<div>').attr('style', `
-                position: absolute;
-                width: 65%;
-                height: 420px;
-                border-radius: 10px;
-                background: #fff;
-
-                color: #3d3d3d;
-
-                -webkit-box-shadow: 0px 0px 6px -1px #000000;
-                box-shadow: 0px 0px 6px -1px #000000;
-
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                align-items: center;
-            `)
-
-            $(div).addClass('termino')
-
-            $(div).append(`Eu entendo e aceitos os terminos impostos pela plataforma...`)
-
-            $(div).append(
-                $('<button>Ok</button>').click(() => {
-                    div.hide()
-                })
-            )
-
-            $('body').append(div)
-        })
+    <script type="text/javascript">
+        (function(w, d) {
+            var loader = function() {
+                var s = d.createElement("script"),
+                    tag = d.getElementsByTagName("script")[0];
+                s.src = "https://cdn.iubenda.com/iubenda.js";
+                tag.parentNode.insertBefore(s, tag);
+            };
+            if (w.addEventListener) {
+                w.addEventListener("load", loader, false);
+            } else if (w.attachEvent) {
+                w.attachEvent("onload", loader);
+            } else {
+                w.onload = loader;
+            }
+        })(window, document);
     </script>
 
     <script>
