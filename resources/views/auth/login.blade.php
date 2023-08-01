@@ -11,10 +11,6 @@
     <!--CSS-->
     <link rel="stylesheet" href="{{ asset('loginn/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('loginn/css/media.css') }}">
-
-    <!--JS & jQuery-->
-    <script type="text/javascript" src="{{ asset('loginn/js/script.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -73,6 +69,10 @@
             </div>
         </div>
     </form>
+
+    <!--JS & jQuery-->
+    <script type="text/javascript" src="{{ asset('loginn/js/script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>

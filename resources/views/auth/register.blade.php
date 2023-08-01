@@ -142,7 +142,7 @@
 
                         let timerInterval
                         Swal.fire({
-                            title: 'Login Exitoso!',
+                            title: 'Registro Exitoso!',
                             html: 'Ingresando al sistema en <b></b> milisegundos.',
                             timer: 700,
                             timerProgressBar: true,
