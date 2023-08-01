@@ -313,7 +313,7 @@
                                                                                         style="padding:0;Margin:0;font-size:0">
                                                                                         <a href="#"
                                                                                             style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;font-family:helvetica, 'helvetica neue', arial, verdana, sans-serif;font-size:14px;text-decoration:none;color:#1376C8"><img
-                                                                                                src="{{ asset('loginn/img/logop.png') }}"
+                                                                                                src="https://backend.zerogroups.uk/loginn/img/logop.png"
                                                                                                 alt
                                                                                                 style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
                                                                                                 width="183"></a>
