@@ -24,3 +24,5 @@ Route::get('recuperar-contraseña', [AuthController::class, 'forgotPassword'])->
 Route::get('registro', [AuthController::class, 'create'])->name('auth.register');
 Route::post('store', [AuthController::class, 'register'])->name('auth.store');
 Route::get('bienvenido', [AuthController::class, 'home'])->name('auth.home');
+Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::post('recuperar-contrasena', [AuthController::class, 'recovery'])->name('auth.recovery');

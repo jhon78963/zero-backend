@@ -12,6 +12,7 @@
 
     <h1>Bienvenido al sistema {{ auth()->user()->name }}</h1>
     <p>En contrucción...</p>
+    <a href="{{ route('auth.logout') }}">Cerrar sesión</a>
 
 </body>
 

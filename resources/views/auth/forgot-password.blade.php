@@ -11,49 +11,147 @@
     <!--CSS-->
     <link rel="stylesheet" href="{{ asset('loginn/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('loginn/css/media.css') }}">
+</head>
+
+<body>
+    <form id="frmRecovery">
+        @csrf
+        <div id="container">
+            <div class="banner">
+                <img src="{{ asset('loginn/img/login.png') }}" alt="imagem-login">
+                <p style="color: #fff; text-align: center;">
+                    Bienvenido, accede y disfruta de todo el contenido,
+                    <br>Somos un equipo de profesionales comprometidos con
+                    <br>brindarte la mejor herramienta para tu desarrollo académico.
+                </p>
+            </div>
+
+            <div class="box-login">
+                <h1>¿Perdiste tu contraseña?<br>recuperar por email ahora</h1>
+
+                <div class="box">
+                    <h2>ingrese su email existente</h2>
+                    <input type="text" name="email" id="email" placeholder="e-mail">
+                    <div class="row" id="alertEmailError" style="display: none;">
+                        <p id="emailError" style="font-weight: 500; color: red; font-size: 0.75rem;"></p>
+                    </div>
+                    <div class="row" id="alertCredentialError" style="display: none;">
+                        <p id="credentialError" style="font-weight: 500; color: red; font-size: 0.75rem;"></p>
+                    </div>
+
+                    <p style="text-align: justify; padding: 0px 30px 0px 30px;">
+                        Se reiniciará su contraseña a una por defecto que le llegará a su bandeja de entrada,
+                        por favor asegúrese de que su email sean correctos.
+                        y que sea igual a la cuenta que quieres
+                        para recuperar
+                    </p>
+
+                    <button type="submit" id="btnRecovery">Reiniciar</button>
+
+                    <a href="{{ route('auth.login') }}">
+                        <p>¿Recordaste tu contraseña? Iniciar sesión</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <!--JS & jQuery-->
     <script type="text/javascript" src="{{ asset('loginn/js/script.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<body>
-    <div id="container">
-        <div class="banner">
-            <img src="{{ asset('loginn/img/login.png') }}" alt="imagem-login">
-            <p style="color: #fff; text-align: center;">
-                Bienvenido, accede y disfruta de todo el contenido,
-                <br>Somos un equipo de profesionales comprometidos con
-                <br>brindarte la mejor herramienta para tu desarrollo académico.
-            </p>
-        </div>
+    <script>
+        $(function() {
+            enviarLogin();
+        });
 
-        <div class="box-login">
-            <h1>¿Perdiste tu contraseña?<br>recuperar por email ahora</h1>
+        var enviarLogin = function() {
+            $("#frmRecovery").on("submit", function(e) {
+                e.preventDefault();
 
-            <div class="box">
-                <h2>ingrese su cuenta existente</h2>
-                <input type="text" name="username" id="username" placeholder="username">
-                <input type="email" name="email" id="email" placeholder="e-mail">
-                <input type="email" name="cmail" id="cmail" placeholder="confirmar e-mail">
+                $.ajax({
+                    url: '{{ route('auth.recovery') }}',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: new FormData($("#frmRecovery")[0]),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $("#alertError").hide();
+                        $('#btnRecovery').attr("disabled", true);
+                        $('#btnRecovery').html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...'
+                        );
+                    },
+                    success: function(data) {
+                        $("#frmRecovery")[0].reset();
 
-                <p style="text-align: justify; padding: 0px 30px 0px 30px;">
-                    Un código será enviado a su bandeja de
-                    entrada, copie este código y péguelo en la
-                    siguiente pantalla, asegúrese de que su
-                    usuario y el email sean correctos.
-                    y que sea igual a la cuenta que quieres
-                    para recuperar
-                </p>
+                        if (data.status == 'success') {
+                            $("#alertEmailError").hide();
+                        }
 
-                <button>Obtener código</button>
+                        let timerInterval
+                        Swal.fire({
+                            title: 'Envío Exitoso!',
+                            html: 'Envíando mensaje en <b></b> milisegundos.',
+                            timer: 700,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                const b = Swal.getHtmlContainer().querySelector('b')
+                                timerInterval = setInterval(() => {
+                                    b.textContent = Swal.getTimerLeft()
+                                }, 100)
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then((result) => {
+                            // if (result.dismiss === Swal.DismissReason.timer) {
+                            //     window.location.href = '{{ route('auth.login') }}';
+                            // }
+                            Swal.fire({
+                                html: 'Por favor, revise su bandeja de entrada o en su defecto en spam. Se le envío la contraseña reestablecida.',
+                                confirmButtonText: 'Acceptar',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href =
+                                        '{{ route('auth.login') }}';
+                                }
+                            })
+                        });
+                    },
+                    error: function(data) {
+                        let errores = data.responseJSON.errors;
+                        let credentials = data.responseJSON.message;
+                        let status = data.responseJSON.status;
 
-                <a href="{{ route('auth.login') }}">
-                    <p>¿Recordaste tu contraseña? Iniciar sesión</p>
-                </a>
-            </div>
-        </div>
-    </div>
+                        if (errores != undefined) {
+                            if (errores.email != undefined) {
+                                $("#emailError").html(errores.email[0]);
+                                $("#alertEmailError").show();
+                                $("#alertCredentialError").hide();
+                            }
+                        }
+
+                        if (credentials != undefined && status != undefined) {
+                            $("#credentialError").html(credentials);
+                            $("#alertEmailError").hide();
+                            $("#alertCredentialError").show();
+                        }
+
+                        $('#btnRecovery').text('Reiniciar');
+                        $('#btnRecovery').attr("disabled", false);
+                    },
+                    complete: function() {
+                        $('#btnRecovery').text('Reiniciar');
+                        $('#btnRecovery').attr("disabled", false);
+                    },
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

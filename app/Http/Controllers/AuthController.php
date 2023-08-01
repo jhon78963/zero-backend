@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+use App\Mail\RecoveryPasswordMail;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -114,10 +117,12 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        Session::flush();
+        return redirect()->route('auth.login');
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'Successfully logged out',
+        // ]);
     }
 
     public function forgotPassword()
@@ -128,5 +133,41 @@ class AuthController extends Controller
     public function home()
     {
         return view('auth.home');
+    }
+
+    public function recovery(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ],
+        [
+            'email.required'=>'El email es requerido',
+            'email.email'=>'El email debe tener un formato válido',
+        ]);
+
+        $roleExists = User::where('email', $request->email)->exists();
+
+        if(!$roleExists)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'El email no existe en nuestra base de datos',
+            ], 401);
+        }
+
+        $password_default = '123456789';
+
+        User::where('email', $request->email)->update([
+            'password' => Hash::make($password_default),
+        ]);
+
+        $mail = new RecoveryPasswordMail($password_default);
+        Mail::to($request->email)->send($mail);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Se envió un mensaje con la contraseña. Porfavor revise su bandeja de entrada',
+
+        ]);
     }
 }
