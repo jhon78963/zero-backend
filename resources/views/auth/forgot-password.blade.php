@@ -59,7 +59,7 @@
     <!--JS & jQuery-->
     <script type="text/javascript" src="{{ asset('loginn/js/script.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(function() {
@@ -94,8 +94,8 @@
                         let timerInterval
                         Swal.fire({
                             title: 'Envío Exitoso!',
-                            html: 'Envíando mensaje en <b></b> milisegundos.',
-                            timer: 700,
+                            html: 'Envíando mensaje en <b style="color:black"></b> milisegundos.',
+                            timer: 1000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading()

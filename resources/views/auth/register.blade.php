@@ -86,7 +86,7 @@
         </div>
     </form>
 
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script type="text/javascript">
         (function(w, d) {
@@ -143,8 +143,8 @@
                         let timerInterval
                         Swal.fire({
                             title: 'Registro Exitoso!',
-                            html: 'Ingresando al sistema en <b></b> milisegundos.',
-                            timer: 700,
+                            html: 'Ingresando al sistema en <b style="color:black"></b> milisegundos.',
+                            timer: 1000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading()
