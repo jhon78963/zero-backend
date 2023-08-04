@@ -48,7 +48,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $userExists = User::join('userroles as ur', 'users.id', 'ur.userId')
+        $userExists = User::join('userRoles as ur', 'users.id', 'ur.userId')
                             ->join('roles as r', 'ur.roleId', 'r.id')
                             ->where('email', $request->email)
                             ->select('users.id as userId', 'r.id as roleId')
