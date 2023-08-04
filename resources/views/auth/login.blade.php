@@ -132,7 +132,6 @@
                                     window.location.href =
                                         '{{ route('guest.auth.home') }}';
                                 }
-
                             }
                         })
                     },

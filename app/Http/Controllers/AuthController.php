@@ -121,7 +121,7 @@ class AuthController extends Controller
 
         if (isset($userCreated))
         {
-            UserRole::create([
+            $user_role = UserRole::create([
                 "userId" => $last_user_id,
                 "roleId" => 2
             ]);
@@ -131,7 +131,8 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Usuario creado con existo'
+            'message' => 'Usuario creado con existo',
+            'role' => $user_role->roleId
         ], 200);
     }
 

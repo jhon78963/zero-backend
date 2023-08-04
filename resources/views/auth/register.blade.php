@@ -158,7 +158,13 @@
                             }
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                window.location.href = '{{ route('auth.home') }}';
+                                if (data.role == 1) {
+                                    window.location.href =
+                                        '{{ route('admin.auth.home') }}';
+                                } else if (data.role == 2) {
+                                    window.location.href =
+                                        '{{ route('guest.auth.home') }}';
+                                }
                             }
                         });
                     },
