@@ -124,9 +124,15 @@
                                 clearInterval(timerInterval)
                             }
                         }).then((result) => {
-                            /* Read more about handling dismissals below */
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                window.location.href = '{{ route('auth.home') }}';
+                                if (data.role == 1) {
+                                    window.location.href =
+                                        '{{ route('admin.auth.home') }}';
+                                } else if (data.role == 2) {
+                                    window.location.href =
+                                        '{{ route('guest.auth.home') }}';
+                                }
+
                             }
                         })
                     },
@@ -134,6 +140,15 @@
                         let errores = data.responseJSON.errors;
                         let credentials = data.responseJSON.message;
                         let status = data.responseJSON.status;
+
+                        if (data.responseJSON.exception != undefined && data.responseJSON
+                            .exception == 'ErrorException') {
+                            $("#credentialError").html(
+                                "El usuario no tiene un rol asignado");
+                            $("#alertEmailError").hide();
+                            $("#alertPasswordError").hide();
+                            $("#alertCredentialError").show();
+                        }
 
                         if (errores != undefined) {
                             if (errores.email != undefined) {

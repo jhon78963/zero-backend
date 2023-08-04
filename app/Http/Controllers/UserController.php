@@ -16,19 +16,14 @@ use App\Models\UserRole;
 
 class UserController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth:api');
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-        $user = Auth::user();
-        $role_user = $user->userRoles()->first();
-
-        if($role_user->role->name == 'Admin'){
-            $this->middleware("check.permissions:Admin,pages.user", ['only'=>['get', 'getAll']]);
-            $this->middleware("check.permissions:Admin,pages.user.modify", ['only'=>['create', 'update']]);
-            $this->middleware("check.permissions:Admin,pages.user.delete", ['only'=>['delete']]);
-        }else{
-            $this->middleware("check.permissions:Guest,pages.user", ['only'=>['get', 'getAll']]);
-        }
+    public function index()
+    {
+        return view('access.user');
     }
 
     public function create(CreateUserRequest $request)

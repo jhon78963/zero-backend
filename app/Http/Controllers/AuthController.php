@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
 use App\Models\User;
+use App\Models\UserRole;
 
 class AuthController extends Controller
 {
@@ -47,13 +48,18 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $userExists = User::where('email', $request->email)->first();
+        $userExists = User::join('userroles as ur', 'users.id', 'ur.userId')
+                            ->join('roles as r', 'ur.roleId', 'r.id')
+                            ->where('email', $request->email)
+                            ->select('users.id as userId', 'r.id as roleId')
+                            ->first();
 
-        Auth::loginUsingId($userExists->id);
+        Auth::loginUsingId($userExists->userId);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Bienvenido al sistema'
+            'message' => 'Bienvenido al sistema',
+            'role' => $userExists->roleId
         ], 200);
 
     }
@@ -100,11 +106,26 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if (User::all()->count()) {
+                $last_user_id = User::all()->last()->id+1;
+            } else {
+                $last_user_id = 1;
+            }
+
         $userCreated = User::create([
+            'id' => $last_user_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        if (isset($userCreated))
+        {
+            UserRole::create([
+                "userId" => $last_user_id,
+                "roleId" => 2
+            ]);
+        }
 
         Auth::loginUsingId($userCreated->id);
 
@@ -119,10 +140,6 @@ class AuthController extends Controller
         Auth::logout();
         Session::flush();
         return redirect()->route('auth.login');
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => 'Successfully logged out',
-        // ]);
     }
 
     public function forgotPassword()

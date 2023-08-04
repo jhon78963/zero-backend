@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\User;
 
 class CheckPermissionUsers
 {
@@ -20,18 +21,18 @@ class CheckPermissionUsers
 
         $role_user = $user->userRoles()->first();
 
-        if (!$role_user || $role_user->role->name !== $role_name) {
-            abort(403, 'The user has no role. Please contact an administrator.');
+        if (!$role_user) {
+            abort(403, 'No tienes asignado un rol. Por favor contacta a un administrador.');
         }
 
-        $role_id = Permission::where('name', $permission)->where('roleId', $role_user->roleId)->value('roleId');
-
-        if (!$role_id) {
-            abort(403, 'The permission is invalid. Please contact an administrator.');
+        if ($role_user->role->name != $role_name) {
+            abort(403, 'No tienes el rol requerido. Por favor contacta a un administrador.');
         }
 
-        if ($role_id !== $role_user->roleId) {
-            abort(403, 'The user has no permission. Please contact an administrator.');
+        $hasPermission = $role_user->role->permissions()->where('name', $permission)->exists();
+
+        if (!$hasPermission) {
+            abort(403, 'No tienes el permiso requerido. Por favor contacta a un administrador.');
         }
 
         return $next($request);

@@ -9,22 +9,18 @@ use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 
 class RoleController extends Controller
 {
-    public function __construct(){
-        $user = Auth::user();
-        $role_user = $user->userRoles()->first();
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-        if($role_user->role->name == 'Admin'){
-            $this->middleware('auth:api');
-            $this->middleware("check.permissions:Admin,pages.role", ['only'=>['get', 'getAll']]);
-            $this->middleware("check.permissions:Admin,pages.role.modify", ['only'=>['create', 'update', 'revoke']]);
-            $this->middleware("check.permissions:Admin,pages.role.delete", ['only'=>['delete']]);
-        }else{
-            $this->middleware('auth:api');
-            $this->middleware("check.permissions:Guest,pages.role", ['only'=>['get', 'getAll']]);
-        }
+    public function index()
+    {
+        return view('access.role');
     }
 
     public function create(CreateRoleRequest $request)
