@@ -133,7 +133,7 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('guest.users.index') }}" class="menu-link">
                             <div data-i18n="Notifications">Usuarios</div>
                         </a>
                     </li>
