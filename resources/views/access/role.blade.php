@@ -1,24 +1,20 @@
 @extends('layout.template')
 @section('content')
     <div class="card">
-        <div class="d-flex align-items-end">
-            <div class="card-body">
-                <h5 class="card-title text-primary">Gestión de roles</h5>
-                <div class="table-responsive text-nowrap">
-                    <table class="table" id="tabla-roles">
-                        <thead>
-                            <tr>
-                                <th>Role</th>
-                                <th>Permisos</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
+        <h5 class="card-header">Gestión de roles</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table" id="tabla-roles">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Permisos</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
@@ -36,7 +32,8 @@
                     for (const item of data.data) {
                         const permissionsNames = item.permissions
                             .map(permission =>
-                                `<span class="badge bg-label-primary me-1">${permission.name}</span>`);
+                                `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                            ).join(' ');
 
                         filas += `<tr><td>${item.name}</td>
                                   <td>${permissionsNames}</td>
