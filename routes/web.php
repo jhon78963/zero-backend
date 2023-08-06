@@ -25,6 +25,9 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('roles', [RoleController::class, 'index'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.index');
     Route::get('roles/getAll',[RoleController::class,'getAll'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.getall');
+    Route::put('roles/update/{id}',[RoleController::class,'update'])->middleware('check.permissions:Admin,pages.role.modify')->name('admin.roles.update');
+    Route::get('/roles/delete/{id}',[RoleController::class,'delete'])->middleware('check.permissions:Admin,pages.role.delete')->name('admin.roles.delete');
+    Route::post('/roles/store',[RoleController::class,'create'])->middleware('check.permissions:Admin,pages.role.modify')->name('admin.roles.create');
 
     Route::get('users', [UserController::class, 'index'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.index');
     Route::get('/users/getAll',[UserController::class,'getAll'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.getall');

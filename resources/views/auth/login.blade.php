@@ -95,7 +95,7 @@
                         $("#alertError").hide();
                         $('#btnLogin').attr("disabled", true);
                         $('#btnLogin').html(
-                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...'
+                            '<div class="spinner-border spinner-border-sm text-primary" role="status"></div> Verificando...'
                         );
                     },
                     success: function(data) {

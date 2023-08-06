@@ -165,23 +165,36 @@ class RoleController extends Controller
             ], 404);
         }
 
+        // Obtener los permisos actuales del rol
+        $currentPermissions = $role->permissions->pluck('name')->toArray();
+
+        //  Obtener los permisos del request
         $permissions = $request->permissions;
 
-        // Agregar los nuevos permisos
+        // Obtener los permisos que ya no están en el array del request pero eliminar de la base de datos
+        $permissionsToRemove = array_diff($currentPermissions, $permissions);
+
+        // Obtener los permisos nuevos que no estan la base de datos
         $new_permissions = array_diff($permissions, $role->permissions->pluck('name')->toArray());
 
-        $permissionsToSave = [];
+        // Agregar los nuevos permisos
         foreach($new_permissions as $permissionName){
-            $permissionsToSave[] = [
+            Permission::create([
                 'name' => $permissionName,
                 'roleId' => $role->id
-            ];
-        }
-        if (!empty($permissionsToSave)) {
-            Permission::insert($permissionsToSave);
+            ]);
         }
 
-        $role = Role::findOrFail($id);
+        // Actualizar los nombres de los permisos modificados
+        $permissionsToUpdate = array_intersect($currentPermissions, $permissions);
+        foreach ($permissionsToUpdate as $permissionName) {
+            $existingPermission = $role->permissions->where('name', $permissionName)->first();
+            $existingPermission->update(['name' => $permissionName]);
+        }
+
+        // Eliminar los permisos que ya no están en el array $permissions pero existen en la base de datos
+        $role->permissions()->whereIn('name', $permissionsToRemove)->delete();
+
         $role->update(['name' => $request->name]);
         $permissions = $role->permissions;
 

@@ -39,7 +39,7 @@
                             '<td>' + data.data[i].email + '</td>' +
                             '<td>' + role + '</td>' +
                             '<td>' +
-                            '<button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1">' +
+                            '<button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalDeleteRole">' +
                             '<span class="tf-icons bx bx-edit-alt"></span></button>' + deleteButton +
                             '</td></tr>';
                     }
@@ -52,19 +52,5 @@
                 }
             });
         }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var currentUrl = window.location.href;
-            var menuLinks = $('.menu-link');
-            menuLinks.each(function() {
-                var linkUrl = $(this).attr('href');
-                if (currentUrl.includes(linkUrl)) {
-                    $(this).addClass('active');
-                    $(this).parents('li.menu-item').addClass('active open');
-                }
-            });
-        });
     </script>
 @endsection
