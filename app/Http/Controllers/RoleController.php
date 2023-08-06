@@ -26,7 +26,7 @@ class RoleController extends Controller
     public function create(CreateRoleRequest $request)
     {
         // Verificar si el rol ya existe
-        $roleExists = Role::where('name', $request->name)->exists();
+        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->exists();
         $permissions = $request->permissions;
         if ($roleExists) {
             $role = Role::where('name', $request->name)->first();
@@ -99,6 +99,7 @@ class RoleController extends Controller
         $role->IsDeleted = true;
         $role->DeleterUserId = Auth::id();
         $role->DeletionTime = now()->format('Y-m-d H:i:s');
+        $role->name = $role->name.$role->id;
         $role->save();
 
         return response()->json([
