@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center">
             <h5 class="card-header">Gestión de roles</h5>
             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" id="btnCreate">
-                <span class="tf-icons bx bx-plus"></span>
+                <span class="tf-icons bx bx-list-plus"></span>
             </button>
         </div>
         <div class="table-responsive text-nowrap">
