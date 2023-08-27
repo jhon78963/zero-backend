@@ -180,13 +180,13 @@
             const permissionsContainer = $('#permissionsContainerCreate');
             $.get('/api/role/permissions', function(data) {
                 for (const all_permission of data) {
-                    console.log(permissionsContainer);
                     const checkboxHtml =
                         `<div class="input-group mt-2">
                                 <div class="input-group-text">
                                     <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" aria-label="Checkbox for following text input" name="permissions[]">
                                 </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${all_permission.name}" name="permissions-text[]">
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${all_permission.name}" readonly name="permissions-text[]"
+                                style="background-color: white;color: #697a8d;">
                             </div>`;
                     permissionsContainer.append(checkboxHtml);
                 }
@@ -260,7 +260,8 @@
                                 <div class="input-group-text">
                                     <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" ${isChecked ? 'checked' : ''} aria-label="Checkbox for following text input" name="permissions[]">
                                 </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" name="permissions-text[]">
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" readonly name="permissions-text[]"
+                                style="background-color: white;color: #697a8d;">
                             </div>`;
                         permissionsContainer.append(checkboxHtml);
                     }
@@ -438,7 +439,8 @@
                                 <div class="input-group-text">
                                     <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" ${isChecked ? 'checked' : ''} aria-label="Checkbox for following text input" name="permissions[]">
                                 </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" name="permissions-text[]">
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" readonly name="permissions-text[]"
+                                style="background-color: white;color: #697a8d;">
                             </div>`;
                                 permissionsContainer.append(checkboxHtml);
                             }
