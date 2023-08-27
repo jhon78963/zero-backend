@@ -96,6 +96,8 @@ class RoleController extends Controller
             ], 404);
         }
 
+        Permission::where('roleId', $role->id)->delete();
+
         $role->IsDeleted = true;
         $role->DeleterUserId = Auth::id();
         $role->DeletionTime = now()->format('Y-m-d H:i:s');
@@ -110,7 +112,7 @@ class RoleController extends Controller
 
     public function get($id)
     {
-        $roleExist = DB::table('roles')->where('id', $id)->get();
+        $roleExist = DB::table('roles')->where('id', $id)->where('IsDeleted', false)->get();
 
         if (empty($roleExist)) {
             return response()->json([
@@ -119,8 +121,7 @@ class RoleController extends Controller
             ], 404);
         }
 
-        $role = Role::where('IsDeleted', false)
-            ->findOrFail($id);
+        $role = Role::where('IsDeleted', false)->findOrFail($id);
 
         $permissions = $role->permissions;
 
@@ -147,10 +148,18 @@ class RoleController extends Controller
 
         $count = count($roles);
 
+        $roles = Role::where('IsDeleted', false)->paginate(5);
+
+        $permissions = Permission::distinct('name')
+            ->whereNotIn('id', $roles->pluck('name'))
+            ->get(['name']);
+
         return response()->json([
             'status' => 'success',
             'maxCount' => $count,
-            'data' => $data
+            'data' => $data,
+            'role' => $roles,
+            'all_permissions' => $permissions
         ]);
     }
 

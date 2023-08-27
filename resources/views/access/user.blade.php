@@ -1,7 +1,12 @@
 @extends('layout.template')
 @section('content')
     <div class="card">
-        <h5 class="card-header">Gestión de usuarios</h5>
+        <div class="d-flex align-items-center">
+            <h5 class="card-header">Gestión de usuarios</h5>
+            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" id="btnCreate">
+                <span class="tf-icons bx bx-list-plus"></span>
+            </button>
+        </div>
         <div class="table-responsive text-nowrap">
             <table class="table" id="tabla-users">
                 <thead>
@@ -31,6 +36,7 @@
                     let filas = "";
                     for (var i = 0; i < data.maxCount; i++) {
                         var role = data.data[i].roles[0] || 'Sin asignar';
+
                         var deleteButton = (role !== 'Admin') ?
                             '<button type="button" class="btn rounded-pill btn-icon btn-outline-danger">' +
                             '<span class="tf-icons bx bx-trash"></span></button>' : '';

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Models\Permission;
+use App\Models\Role;
 
 
 /*
@@ -45,3 +47,9 @@ Route::post('/roles/create',[RoleController::class,'create']);
 Route::put('/roles/update/{id}',[RoleController::class,'update']);
 Route::patch('/roles/delete/{id}',[RoleController::class,'delete']);
 Route::delete('/roles/revoke/{id}',[RoleController::class,'revoke']);
+
+Route::get('role/permissions', function(){
+    $roles = Role::where('IsDeleted', false)->get();
+    $permissions = Permission::distinct('name')->whereNotIn('id', $roles->pluck('name'))->get(['name']);
+    return $permissions;
+});

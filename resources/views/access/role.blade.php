@@ -20,6 +20,40 @@
 
                 </tbody>
             </table>
+
+            {{-- <div class="demo-inline-spacing mr-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item first">
+                            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-left"></i></a>
+                        </li>
+                        <li class="page-item prev">
+                            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevron-left"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);">2</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="javascript:void(0);">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);">4</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);">5</a>
+                        </li>
+                        <li class="page-item next">
+                            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevron-right"></i></a>
+                        </li>
+                        <li class="page-item last">
+                            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div> --}}
         </div>
     </div>
     <br>
@@ -149,38 +183,6 @@
                 $('#card_create').show();
             });
 
-            $(document).on('click', '#btnEdit', function() {
-                $('#card_edit').show();
-                $('#card_create').hide();
-                const roleId = $(this).data('role-id');
-                const roleName = $(this).data('role-name');
-
-                $("#role_id").val(roleId);
-
-                // Populate the card with role information
-                $('#cardRoleName').val(roleName);
-
-                // Clear any existing permissions checkboxes and add new ones based on data.permissions
-                const permissions = roleData.data.find(item => item.id === roleId).permissions;
-                const permissionsContainer = $('#permissionsContainer');
-                permissionsContainer.empty();
-
-                for (const permission of permissions) {
-                    const permissionName = permission.name;
-                    const checkboxHtml = `<div class="input-group mt-2">
-                            <div class="input-group-text">
-                              <input class="form-check-input mt-0" type="checkbox" value="${permission.name}" checked
-                                aria-label="Checkbox for following text input" name="permissions[]">
-                            </div>
-                            <input type="text" class="form-control" aria-label="Text input with checkbox"
-                              value="${permissionName}" name="permissions-text[]">
-                          </div>`;
-                    permissionsContainer.append(checkboxHtml);
-                }
-
-                $('#btnUpdate').attr("disabled", false);
-            });
-
             $(document).on('click', '#btnAddCreate', function() {
                 const permissionsContainer = $('#permissionsContainerCreate');
 
@@ -213,6 +215,41 @@
                                 </button>
                               </div>`;
                 permissionsContainer.append(checkboxHtml);
+            });
+
+            $(document).on('click', '#btnEdit', function() {
+                $('#card_edit').show();
+                $('#card_create').hide();
+                $('#btnUpdate').attr("disabled", false);
+                const roleId = $(this).data('role-id');
+                const roleName = $(this).data('role-name');
+
+                $("#role_id").val(roleId);
+
+                // Populate the card with role information
+                $('#cardRoleName').val(roleName);
+
+                // Clear any existing permissions checkboxes and add new ones based on data.permissions
+                const permissions = roleData.data.find(item => item.id === roleId).permissions;
+                const permissionsContainer = $('#permissionsContainer');
+                permissionsContainer.empty();
+                $.get('/api/role/permissions', function(data) {
+                    permissionsContainer.empty();
+                    for (const all_permission of data) {
+                        const permissionName = all_permission.name;
+                        const isChecked = permissions.some(permission => permission.name ===
+                            permissionName);
+
+                        const checkboxHtml =
+                            `<div class="input-group mt-2">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" ${isChecked ? 'checked' : ''} aria-label="Checkbox for following text input" name="permissions[]">
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" name="permissions-text[]">
+                            </div>`;
+                        permissionsContainer.append(checkboxHtml);
+                    }
+                });
             });
 
             $(document).on('click', '#btnAddedDelete', function() {
@@ -291,38 +328,9 @@
                             }
 
                             $("#tabla-roles tbody").html(filas);
+
+                            location.reload();
                         }
-                    });
-
-                    $(document).on('click', '#btnEdit', function() {
-                        const roleId = $(this).data('role-id');
-                        const roleName = $(this).data('role-name');
-
-                        $("#role_id").val(roleId);
-
-                        // Populate the card with role information
-                        $('#cardRoleName').val(roleName);
-
-                        // Clear any existing permissions checkboxes and add new ones based on data.permissions
-                        const permissions = roleData.data.find(item => item.id === roleId)
-                            .permissions;
-                        const permissionsContainer = $('#permissionsContainer');
-                        permissionsContainer.empty();
-
-                        for (const permission of permissions) {
-                            const permissionName = permission.name;
-                            const checkboxHtml = `<div class="input-group mt-2">
-                            <div class="input-group-text">
-                              <input class="form-check-input mt-0" type="checkbox" value="${permission.name}" checked
-                                aria-label="Checkbox for following text input" name="permissions[]">
-                            </div>
-                            <input type="text" class="form-control" aria-label="Text input with checkbox"
-                              value="${permissionName}" name="permissions-text[]">
-                          </div>`;
-                            permissionsContainer.append(checkboxHtml);
-                        }
-
-                        $('#btnUpdate').attr("disabled", false);
                     });
                 },
                 complete: function() {
@@ -402,22 +410,24 @@
                         const permissions = roleData.data.find(item => item.id === roleId)
                             .permissions;
                         const permissionsContainer = $('#permissionsContainer');
-                        permissionsContainer.empty();
+                        $.get('/api/role/permissions', function(data) {
+                            permissionsContainer.empty();
+                            for (const all_permission of data) {
+                                const permissionName = all_permission.name;
+                                const isChecked = permissions.some(permission =>
+                                    permission.name ===
+                                    permissionName);
 
-                        for (const permission of permissions) {
-                            const permissionName = permission.name;
-                            const checkboxHtml = `<div class="input-group mt-2">
-                            <div class="input-group-text">
-                              <input class="form-check-input mt-0" type="checkbox" value="${permission.name}" checked
-                                aria-label="Checkbox for following text input" name="permissions[]">
-                            </div>
-                            <input type="text" class="form-control" aria-label="Text input with checkbox"
-                              value="${permissionName}" name="permissions-text[]">
-                          </div>`;
-                            permissionsContainer.append(checkboxHtml);
-                        }
-
-                        $('#btnUpdate').attr("disabled", false);
+                                const checkboxHtml =
+                                    `<div class="input-group mt-2">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" ${isChecked ? 'checked' : ''} aria-label="Checkbox for following text input" name="permissions[]">
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${permissionName}" name="permissions-text[]">
+                            </div>`;
+                                permissionsContainer.append(checkboxHtml);
+                            }
+                        });
                     });
                 },
                 error: function(data) {
