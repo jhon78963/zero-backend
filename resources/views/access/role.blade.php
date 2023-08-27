@@ -177,6 +177,21 @@
                 }
             });
 
+            const permissionsContainer = $('#permissionsContainerCreate');
+            $.get('/api/role/permissions', function(data) {
+                for (const all_permission of data) {
+                    console.log(permissionsContainer);
+                    const checkboxHtml =
+                        `<div class="input-group mt-2">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value="${all_permission.name}" aria-label="Checkbox for following text input" name="permissions[]">
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${all_permission.name}" name="permissions-text[]">
+                            </div>`;
+                    permissionsContainer.append(checkboxHtml);
+                }
+            });
+
             $(document).on('click', '#btnCreate', function() {
                 // TODO
                 $('#card_edit').hide();
