@@ -208,6 +208,8 @@ class AuthController extends Controller
     {
         $user = User::findOrFail($id);
 
+        $profilePicture = null;
+
         if ($request->hasFile('profilePicture')) {
             $imagen = $request->file('profilePicture');
             $fileFolderPath = '/assets/img/avatars/';
@@ -233,5 +235,6 @@ class AuthController extends Controller
         $user->save();
 
         return back();
+
     }
 }
