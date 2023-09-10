@@ -243,7 +243,8 @@
                             '<span class="tf-icons bx bx-trash"></span></button>' :
                             '';
 
-                        filas += '<tr><td>' + data.data[i].name + '</td>' +
+                        filas += '<tr><td>' + data.data[i].name + (data.data[i].surname !== null ? ' ' +
+                                data.data[i].surname : '') + '</td>' +
                             '<td>' + data.data[i].email + '</td>' +
                             '<td>' + role + '</td>' +
                             '<td>' +
@@ -287,7 +288,7 @@
                 success: function(data) {
                     $('#modalCreateUser').modal('hide');
                     $('#userCreateForm')[0].reset();
-                    toastr.info('El registro fue creado correctamente.',
+                    toastr.success('El registro fue creado correctamente.',
                         'Crear Registro', {
                             timeOut: 3000
                         });
@@ -307,7 +308,9 @@
                                     '<span class="tf-icons bx bx-trash"></span></button>' :
                                     '';
 
-                                filas += '<tr><td>' + data.data[i].name + '</td>' +
+                                filas += '<tr><td>' + data.data[i].name + (data.data[i]
+                                        .surname !== null ? ' ' +
+                                        data.data[i].surname : '') + '</td>' +
                                     '<td>' + data.data[i].email + '</td>' +
                                     '<td>' + role + '</td>' +
                                     '<td>' +
@@ -371,7 +374,7 @@
                 },
                 success: function(data) {
                     $('#modalUpdateUser').modal('hide');
-                    toastr.info('El registro fue actualizado correctamente.',
+                    toastr.success('El registro fue actualizado correctamente.',
                         'Actualizar Registro', {
                             timeOut: 3000
                         });
@@ -391,7 +394,9 @@
                                     '<span class="tf-icons bx bx-trash"></span></button>' :
                                     '';
 
-                                filas += '<tr><td>' + data.data[i].name + '</td>' +
+                                filas += '<tr><td>' + data.data[i].name + (data.data[i]
+                                        .surname !== null ? ' ' +
+                                        data.data[i].surname : '') + '</td>' +
                                     '<td>' + data.data[i].email + '</td>' +
                                     '<td>' + role + '</td>' +
                                     '<td>' +
@@ -498,7 +503,9 @@
                                     '<span class="tf-icons bx bx-trash"></span></button>' :
                                     '';
 
-                                filas += '<tr><td>' + data.data[i].name + '</td>' +
+                                filas += '<tr><td>' + data.data[i].name + (data.data[i]
+                                        .surname !== null ? ' ' +
+                                        data.data[i].surname : '') + '</td>' +
                                     '<td>' + data.data[i].email + '</td>' +
                                     '<td>' + role + '</td>' +
                                     '<td>' +
@@ -573,7 +580,9 @@
                                     '<span class="tf-icons bx bx-trash"></span></button>' :
                                     '';
 
-                                filas += '<tr><td>' + data.data[i].name + '</td>' +
+                                filas += '<tr><td>' + data.data[i].name + (data.data[i]
+                                        .surname !== null ? ' ' +
+                                        data.data[i].surname : '') + '</td>' +
                                     '<td>' + data.data[i].email + '</td>' +
                                     '<td>' + role + '</td>' +
                                     '<td>' +
