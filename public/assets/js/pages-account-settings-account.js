@@ -4,26 +4,22 @@
 
 'use strict';
 
-document.addEventListener('DOMContentLoaded', function (e) {
-  (function () {
-    const deactivateAcc = document.querySelector('#formAccountDeactivation');
+document.addEventListener('DOMContentLoaded', function () {
+  const accountUserImage = document.getElementById('uploadedAvatar');
+  const fileInput = document.querySelector('.account-file-input');
+  const resetFileInput = document.querySelector('.account-image-reset');
 
-    // Update/reset user image of account page
-    let accountUserImage = document.getElementById('uploadedAvatar');
-    const fileInput = document.querySelector('.account-file-input'),
-      resetFileInput = document.querySelector('.account-image-reset');
+  if (accountUserImage) {
+    const resetImage = accountUserImage.src;
 
-    if (accountUserImage) {
-      const resetImage = accountUserImage.src;
-      fileInput.onchange = () => {
-        if (fileInput.files[0]) {
-          accountUserImage.src = window.URL.createObjectURL(fileInput.files[0]);
-        }
-      };
-      resetFileInput.onclick = () => {
+    fileInput.onchange = () => {
+        const selectedFile = fileInput.files[0];
+        accountUserImage.src = URL.createObjectURL(selectedFile);
+    };
+
+    resetFileInput.onclick = () => {
         fileInput.value = '';
         accountUserImage.src = resetImage;
-      };
-    }
-  })();
+    };
+  }
 });

@@ -9,18 +9,22 @@
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
+<script src="{{ asset('assets/js/pages-account-settings-account.js') }}"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <script>
     $(document).ready(function() {
         var currentUrl = window.location.href;
-        var menuLinks = $('.menu-link');
-        menuLinks.each(function() {
-            var linkUrl = $(this).attr('href');
-            if (currentUrl.includes(linkUrl)) {
-                $(this).addClass('active');
-                $(this).parents('li.menu-item').addClass('active open');
-            }
-        });
+        if (window.location.href.indexOf('/admin/perfil') === -1) {
+            console.log(currentUrl);
+            var menuLinks = $('.menu-link');
+            menuLinks.each(function() {
+                var linkUrl = $(this).attr('href');
+                if (currentUrl.includes(linkUrl)) {
+                    $(this).addClass('active');
+                    $(this).parents('li.menu-item').addClass('active open');
+                }
+            });
+        }
     });
 </script>
 @yield('js')

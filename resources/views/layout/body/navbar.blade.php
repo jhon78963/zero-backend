@@ -24,7 +24,7 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="{{ auth()->user()->profilePicture }}" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -33,7 +33,7 @@
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
-                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt
+                                        <img src="{{ auth()->user()->profilePicture }}" alt
                                             class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                 </div>
@@ -48,12 +48,21 @@
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">Mi perfil</span>
-                        </a>
-                    </li>
+                    @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.auth.profile') }}">
+                                <i class="bx bx-user me-2"></i>
+                                <span class="align-middle">Mi perfil</span>
+                            </a>
+                        </li>
+                    @elseif(auth()->user()->userRoles()->first()->role->name == 'Guest')
+                        <li>
+                            <a class="dropdown-item" href="{{ route('guest.auth.profile') }}">
+                                <i class="bx bx-user me-2"></i>
+                                <span class="align-middle">Mi perfil</span>
+                            </a>
+                        </li>
+                    @endif
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>

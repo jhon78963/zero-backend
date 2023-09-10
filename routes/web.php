@@ -22,6 +22,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('bienvenido', [AuthController::class, 'home'])->name('admin.auth.home');
+    Route::get('perfil', [AuthController::class, 'profile'])->name('admin.auth.profile');
+    Route::put('perfil/{id}', [AuthController::class, 'storeProfile'])->name('admin.auth.profile.store');
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.index');
     Route::get('/roles/getAll',[RoleController::class,'getAll'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.getall');
@@ -41,9 +43,9 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::group(['prefix' => 'invitado'], function () {
     Route::get('bienvenido', [AuthController::class, 'home'])->name('guest.auth.home');
-
-    Route::get('roles', [RoleController::class, 'index'])->middleware('check.permissions:Guest,pages.role')->name('guest.roles.index');
-    Route::get('users', [UserController::class, 'index'])->middleware('check.permissions:Guest,pages.user')->name('guest.users.index');
+    Route::get('perfil', [AuthController::class, 'profile'])->name('guest.auth.profile');
+    Route::get('roles', [RoleController::class, 'index'])->name('guest.roles.index');
+    Route::get('users', [UserController::class, 'index'])->name('guest.users.index');
 });
 
 // Auth

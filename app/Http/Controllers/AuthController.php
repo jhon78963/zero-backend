@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
 use App\Models\User;
 use App\Models\UserRole;
+use Intervention\Image\Facades\Image;
 
 class AuthController extends Controller
 {
@@ -190,5 +191,67 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Se envió un mensaje con la contraseña. Porfavor revise su bandeja de entrada',
         ]);
+    }
+
+    public function profile()
+    {
+        return view('auth.profile');
+    }
+
+    public function storeProfile(Request $request, $id)
+    {
+        // if ($request->hasFile('profilePicture')) {
+        //     $imagen = $request->file('profilePicture');
+        //     $fileFolderPath = '/assets/img/avatars/';
+        //     $nombreImagen = $imagen->getClientOriginalName();
+        //     $suffix = 1;
+        //     $fileNameWithoutExtension = pathinfo($nombreImagen, PATHINFO_FILENAME);
+        //     while (User::where('profilePicture', $nombreImagen)->exists()) {
+        //         $fileName = $fileNameWithoutExtension . "($suffix)." . $imagen->getClientOriginalExtension();
+        //         $suffix++;
+        //         $nombreImagen = $fileName;
+        //     }
+        //     $imagen->move(public_path($fileFolderPath), $nombreImagen);
+        //     $profilePicture = $fileFolderPath . $nombreImagen;
+        // }
+
+        // User::findOrFail($id)->update([
+        //     'name' => $request->name,
+        //     'surname' => $request->surname,
+        //     'email' => $request->email,
+        //     'phoneNumber' => $request->phoneNumber,
+        //     'profilePicture' => $profilePicture,
+        // ]);
+        $user = User::findOrFail($id);
+        $nombreFotoAnterior = $user->profilePicture;
+
+        if (!is_null($nombreFotoAnterior) && file_exists(public_path($nombreFotoAnterior))) {
+            unlink(public_path($nombreFotoAnterior));
+        }
+
+        if ($request->hasFile('profilePicture')) {
+            $imagen = $request->file('profilePicture');
+            $fileFolderPath = '/assets/img/avatars/';
+            $nombreImagen = $imagen->getClientOriginalName();
+            $suffix = 1;
+            $fileNameWithoutExtension = pathinfo($nombreImagen, PATHINFO_FILENAME);
+            while (User::where('profilePicture', $nombreImagen)->exists()) {
+                $fileName = $fileNameWithoutExtension . "($suffix)." . $imagen->getClientOriginalExtension();
+                $suffix++;
+                $nombreImagen = $fileName;
+            }
+            $imagen->move(public_path($fileFolderPath), $nombreImagen);
+            $profilePicture = $fileFolderPath . $nombreImagen;
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'surname' => $request->surname,
+            'email' => $request->email,
+            'phoneNumber' => $request->phoneNumber,
+            'profilePicture' => $profilePicture,
+        ]);
+
+        return back();
     }
 }
