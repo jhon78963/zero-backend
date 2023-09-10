@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
 use App\Models\User;
 use App\Models\UserRole;
-use Intervention\Image\Facades\Image;
 
 class AuthController extends Controller
 {
