@@ -1,59 +1,30 @@
 @extends('layout.template')
 @section('content')
     <div class="row">
-        <div class="col-lg-8 mb-4 order-1">
-            <div class="card">
-                <div class="d-flex align-items-end row">
-                    <div class="col-sm-7">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary">Bienvenido al sistema {{ auth()->user()->name }}! 🎉</h5>
-                            <p class="mb-4">
-                                You have done <span class="fw-bold">72%</span> more sales today.
-                                Check your new badge in
-                                your profile.
-                            </p>
-
-                            <a href="javascript:;" class="btn btn-sm btn-outline-primary">View
-                                Badges</a>
-                        </div>
-                    </div>
-                    <div class="col-sm-5 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
-                            <img src="{{ asset('assets/img/illustrations/man-with-laptop-light.png') }}" height="140"
-                                alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png')}}"
-                                data-app-light-img="illustrations/man-with-laptop-light.png')}}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="col-lg-4 col-md-4 order-1">
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/chart-success.png') }}" alt="chart success"
-                                        class="rounded" />
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                        <a class="dropdown-item" href="javascript:void(0);">View
-                                            More</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/matricula.png" alt="Credit Card"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                            <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        </div>
                                     </div>
                                 </div>
+                                <span>Matrículas</span>
+                                <h3 class="card-title text-nowrap mb-1">0</h3>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Profit</span>
-                            <h3 class="card-title mb-2">$12,628</h3>
-                            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                                +72.80%</small>
                         </div>
                     </div>
                 </div>
@@ -62,8 +33,7 @@
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/wallet-info.png') }}" alt="Credit Card"
-                                        class="rounded" />
+                                    <img src="../assets/img/icons/unicons/tesoreria.png" alt="Credit Card" class="rounded">
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
@@ -71,20 +41,203 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">View
-                                            More</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
                                     </div>
                                 </div>
                             </div>
-                            <span>Sales</span>
-                            <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-                            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                                +28.42%</small>
+                            <span>Tesorería</span>
+                            <h3 class="card-title text-nowrap mb-1">S/ 0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 order-1">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-start justify-content-between">
+                                <div class="avatar flex-shrink-0">
+                                    <img src="../assets/img/icons/unicons/docente.png" alt="Credit Card" class="rounded">
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>Docentes</span>
+                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-start justify-content-between">
+                                <div class="avatar flex-shrink-0">
+                                    <img src="../assets/img/icons/unicons/curso.png" alt="Credit Card" class="rounded">
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>Cursos</span>
+                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 order-1">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-start justify-content-between">
+                                <div class="avatar flex-shrink-0">
+                                    <img src="../assets/img/icons/unicons/alumno.png" alt="Credit Card" class="rounded">
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>Alumnos</span>
+                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-start justify-content-between">
+                                <div class="avatar flex-shrink-0">
+                                    <img src="../assets/img/icons/unicons/padres.png" alt="Credit Card" class="rounded">
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>Padres</span>
+                            <h3 class="card-title text-nowrap mb-1">0</h3>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="card">
+                <div class="card-img-top"
+                    style="background-color: #696cff; height: 11rem; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <img src="http://localhost:8000/assets/img/avatars/1.png" alt="" class="rounded-circle mb-2"
+                        style="width: 100px; height: 100px;">
+                    <h4 style="color: white" class="mb-1"><em>{{ auth()->user()->username }}</em></h4>
+                    <h6 style="color: white" class="mb-0">
+                        <em>{{ auth()->user()->userRoles()->first()->role->name }}</em>
+                    </h6>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">Usuario</div>
+                            <div class="col-6">{{ auth()->user()->username }}</div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">Email</div>
+                            <div class="col-6">{{ auth()->user()->email }}</div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">Teléfono</div>
+                            <div class="col-6">{{ auth()->user()->phoneNumber }}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-6 col-sm-12">
+            <div class="card overflow-hidden mb-4" style="height: 300px">
+                <h5 class="card-header">Agenda</h5>
+
+                <div class="table-responsive text-nowrap ps ps--active-y" id="vertical-example">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="20%">Domingo</th>
+                                <th width="75%"></th>
+                                <th width="5%">Septiembre 10, 2023</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            <tr>
+                                <td>
+                                    <strong>08:00am - 09:30am </strong>
+                                </td>
+                                <td>Reunión</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ps__rail-x" style="left: 0px; bottom: -300px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                </div>
+                <div class="ps__rail-y" style="top: 300px; height: 232px; right: 0px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 59px; height: 45px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/extended-ui-perfect-scrollbar.js') }}"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src="{{ asset('fullcalendar/dist/index.global.js') }}"></script>
+    <script src="{{ asset('fullcalendar/locales/es.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+
+            });
+            calendar.render();
+        });
+    </script>
 @endsection
