@@ -36,7 +36,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::put('/users/update/{id}',[UserController::class,'update'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.update');
     Route::get('/users/delete/{id}',[UserController::class,'delete'])->middleware('check.permissions:Admin,pages.user.delete')->name('admin.users.delete');
     Route::post('/users/store',[UserController::class,'create'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.create');
-    Route::post('/users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
+    Route::post('users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
 });
 
 Route::group(['prefix' => 'invitado'], function () {
