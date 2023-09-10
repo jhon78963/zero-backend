@@ -222,28 +222,31 @@ class AuthController extends Controller
         //     'profilePicture' => $profilePicture,
         // ]);
         $user = User::findOrFail($id);
-        $nombreFotoAnterior = $user->profilePicture;
+$nombreFotoAnterior = $user->profilePicture;
 
-        if (!is_null($nombreFotoAnterior) && file_exists(public_path($nombreFotoAnterior))) {
-            unlink(public_path($nombreFotoAnterior));
-        }
+if (!is_null($nombreFotoAnterior) && file_exists(public_path($nombreFotoAnterior))) {
+    unlink(public_path($nombreFotoAnterior));
+}
 
-        if ($request->hasFile('profilePicture')) {
-            $imagen = $request->file('profilePicture');
-            $fileFolderPath = '/assets/img/avatars/';
-            $nombreImagen = $imagen->getClientOriginalName();
-            $imagen->move(public_path($fileFolderPath), $nombreImagen);
-            $profilePicture = $fileFolderPath . $nombreImagen;
-        }
+$profilePicture = null; // Inicializa la variable como nula por defecto
 
-        $user->update([
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'email' => $request->email,
-            'phoneNumber' => $request->phoneNumber,
-            'profilePicture' => $profilePicture,
-        ]);
+if ($request->hasFile('profilePicture')) {
+    $imagen = $request->file('profilePicture');
+    $fileFolderPath = '/assets/img/avatars/';
+    $nombreImagen = $imagen->getClientOriginalName();
+    $imagen->move(public_path($fileFolderPath), $nombreImagen);
+    $profilePicture = $fileFolderPath . $nombreImagen;
+}
 
-        return back();
+$user->update([
+    'name' => $request->name,
+    'surname' => $request->surname,
+    'email' => $request->email,
+    'phoneNumber' => $request->phoneNumber,
+    'profilePicture' => $profilePicture,
+]);
+
+return back();
+
     }
 }
