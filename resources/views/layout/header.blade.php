@@ -3,7 +3,7 @@
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="">
 <title>San Gerardo | </title>
-<link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}">
+<link rel="icon" type="image/png" href="{{ asset('loginn/img/icono.png') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}">

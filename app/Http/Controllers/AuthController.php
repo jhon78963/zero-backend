@@ -199,28 +199,6 @@ class AuthController extends Controller
 
     public function storeProfile(Request $request, $id)
     {
-        // if ($request->hasFile('profilePicture')) {
-        //     $imagen = $request->file('profilePicture');
-        //     $fileFolderPath = '/assets/img/avatars/';
-        //     $nombreImagen = $imagen->getClientOriginalName();
-        //     $suffix = 1;
-        //     $fileNameWithoutExtension = pathinfo($nombreImagen, PATHINFO_FILENAME);
-        //     while (User::where('profilePicture', $nombreImagen)->exists()) {
-        //         $fileName = $fileNameWithoutExtension . "($suffix)." . $imagen->getClientOriginalExtension();
-        //         $suffix++;
-        //         $nombreImagen = $fileName;
-        //     }
-        //     $imagen->move(public_path($fileFolderPath), $nombreImagen);
-        //     $profilePicture = $fileFolderPath . $nombreImagen;
-        // }
-
-        // User::findOrFail($id)->update([
-        //     'name' => $request->name,
-        //     'surname' => $request->surname,
-        //     'email' => $request->email,
-        //     'phoneNumber' => $request->phoneNumber,
-        //     'profilePicture' => $profilePicture,
-        // ]);
         $user = User::findOrFail($id);
         $nombreFotoAnterior = $user->profilePicture;
 

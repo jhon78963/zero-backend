@@ -2,20 +2,6 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <ul class="nav nav-pills flex-column flex-md-row mb-3">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('admin.auth.profile') }}"><i class="bx bx-user me-1"></i>
-                        Cuenta</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bx bx-bell me-1"></i>
-                        Notificaciones</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bx bx-link-alt me-1"></i>
-                        Conexiones</a>
-                </li>
-            </ul>
             <div class="card mb-4">
                 <h5 class="card-header">Perfil de Usuario</h5>
                 <!-- Account -->
