@@ -463,7 +463,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "/admin/users/assign/",
+                url: "{{ route('admin.users.assign') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#userAssignForm")[0]),
