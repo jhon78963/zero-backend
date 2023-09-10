@@ -224,13 +224,14 @@ class AuthController extends Controller
         $user = User::findOrFail($id);
         $nombreFotoAnterior = $user->profilePicture;
 
-        if (!is_null($nombreFotoAnterior) && file_exists(public_path($nombreFotoAnterior))) {
-            unlink(public_path($nombreFotoAnterior));
-        }
 
-        $profilePicture = null;
+
+        $profilePicture = $user->profilePicture;
 
         if ($request->hasFile('profilePicture')) {
+            if (!is_null($nombreFotoAnterior) && file_exists(public_path($nombreFotoAnterior))) {
+                unlink(public_path($nombreFotoAnterior));
+            }
             $imagen = $request->file('profilePicture');
             $fileFolderPath = '/assets/img/avatars/';
             $nombreImagen = $imagen->getClientOriginalName();
