@@ -23,14 +23,20 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::get('bienvenido', [AuthController::class, 'home'])->name('admin.auth.home');
 
-    Route::get('roles', [RoleController::class, 'index'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.index');
-    Route::get('roles/getAll',[RoleController::class,'getAll'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.getall');
-    Route::put('roles/update/{id}',[RoleController::class,'update'])->middleware('check.permissions:Admin,pages.role.modify')->name('admin.roles.update');
+    Route::get('/roles', [RoleController::class, 'index'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.index');
+    Route::get('/roles/getAll',[RoleController::class,'getAll'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.getall');
+    Route::get('/roles/get/{id}',[RoleController::class,'get'])->middleware('check.permissions:Admin,pages.role')->name('admin.roles.get');
+    Route::put('/roles/update/{id}',[RoleController::class,'update'])->middleware('check.permissions:Admin,pages.role.modify')->name('admin.roles.update');
     Route::get('/roles/delete/{id}',[RoleController::class,'delete'])->middleware('check.permissions:Admin,pages.role.delete')->name('admin.roles.delete');
     Route::post('/roles/store',[RoleController::class,'create'])->middleware('check.permissions:Admin,pages.role.modify')->name('admin.roles.create');
 
-    Route::get('users', [UserController::class, 'index'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.index');
+    Route::get('/users', [UserController::class, 'index'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.index');
     Route::get('/users/getAll',[UserController::class,'getAll'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.getall');
+    Route::get('/users/get/{id}',[UserController::class,'get'])->middleware('check.permissions:Admin,pages.user')->name('admin.users.get');
+    Route::put('/users/update/{id}',[UserController::class,'update'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.update');
+    Route::get('/users/delete/{id}',[UserController::class,'delete'])->middleware('check.permissions:Admin,pages.user.delete')->name('admin.users.delete');
+    Route::post('/users/store',[UserController::class,'create'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.create');
+    Route::post('/users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
 });
 
 Route::group(['prefix' => 'invitado'], function () {

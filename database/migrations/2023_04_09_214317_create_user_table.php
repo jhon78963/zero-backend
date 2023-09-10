@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('phoneNumber')->nullable();
             $table->string('profilePicture')->nullable();
+            $table->string('googleId')->nullable();
         });
     }
 

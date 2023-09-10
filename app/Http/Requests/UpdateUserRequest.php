@@ -15,7 +15,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'surname' => ['required', 'string'],
+            'surname' => ['nullable', 'string'],
             'phoneNumber' => ['nullable', 'numeric'],
         ];
     }

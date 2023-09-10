@@ -128,6 +128,7 @@
 @section('js')
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
+    {{-- LIST --}}
     <script>
         window.onload = function() {
             let roleData;
@@ -291,6 +292,7 @@
         }
     </script>
 
+    {{-- CREATE --}}
     <script>
         let roleData;
         $("#frmPermissionsCreate").on("submit", function(e) {
@@ -357,6 +359,7 @@
         });
     </script>
 
+    {{-- UPDATE --}}
     <script>
         $("#frmPermissions").on("submit", function(e) {
             e.preventDefault();
@@ -459,6 +462,7 @@
         });
     </script>
 
+    {{-- DELETE --}}
     <script>
         var roleId;
         $(document).on('click', '#btnDelete', function() {

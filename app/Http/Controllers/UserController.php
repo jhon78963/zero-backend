@@ -28,8 +28,8 @@ class UserController extends Controller
 
     public function create(CreateUserRequest $request)
     {
-        $emailExists = User::where('email', $request->input('email'))->exists();
-        $usernameExists = User::where('username', $request->input('username'))->exists();
+        $emailExists = User::where('email', $request->input('email'))->where('IsDeleted', false)->exists();
+        $usernameExists = User::where('username', $request->input('username'))->where('IsDeleted', false)->exists();
 
         if ($emailExists || $usernameExists) {
             return response()->json([
@@ -80,7 +80,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $userExist = DB::table('users')->where('id', $id)->get();
+        $userExist = DB::table('users')->where('id', $id)->first();
 
         if (empty($userExist)) {
             return response()->json([
@@ -92,8 +92,9 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $roles = $user->userRoles->pluck('role.name');
+        $role_id = $user->userRoles->pluck('role.id');
 
-        $data[] = [
+        $data = [
                 'id' => $user->id,
                 'username' => $user->username,
                 'email' => $user->email,
@@ -101,7 +102,8 @@ class UserController extends Controller
                 'surname' => $user->surname,
                 'phoneNumber' => $user->phoneNumber,
                 'profilePicture' => $user->profilePicture,
-                'roles' => $roles
+                'roles' => $roles,
+                'role_id' => $role_id,
             ];
 
         return response()->json([
@@ -112,7 +114,7 @@ class UserController extends Controller
 
     public function getAll()
     {
-        $users = User::all();
+        $users = User::where('IsDeleted', false)->get();
 
         $data = [];
 
@@ -230,8 +232,7 @@ class UserController extends Controller
 
     public function assign(AssignRoleRequest $request)
     {
-
-        $this->unassign($request);
+        UserRole::where('userId', $request->userId)->delete();
 
         $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
         $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();

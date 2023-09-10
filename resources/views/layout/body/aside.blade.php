@@ -140,5 +140,113 @@
                 @endif
             </ul>
         </li>
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Entidades</div>
+            </a>
+            <ul class="menu-sub">
+                @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Account">Estudiantes</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Notifications">Docentes</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Notifications">Secretarias</div>
+                        </a>
+                    </li>
+                @elseif(auth()->user()->userRoles()->first()->role->name == 'Guest')
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Account">Estudiantes</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Notifications">Docentes</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Notifications">Secretarias</div>
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Gestión administrativa</span>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Periodo Académico</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Calendario Académico</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Sílabus</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Carga Horaria</div>
+            </a>
+            <ul class="menu-sub">
+                @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Account">Docente</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Notifications">Alumno</div>
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Matriculas</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Tesorería</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Gestión académica</span>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Asistencias</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Notas</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <div data-i18n="Account">Aula Virtual</div>
+            </a>
+        </li>
     </ul>
 </aside>
