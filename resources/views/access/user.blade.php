@@ -533,7 +533,7 @@
     {{-- DELETE --}}
     <script>
         function deleteUser(user_id) {
-            $.get('users/' + user_id + '/get', function(user) {
+            $.get('users/get/' + user_id, function(user) {
                 $('#d_id').val(user.data.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${user.data.name || ''} ${user.data.surname || ''}</b> de la lista?`

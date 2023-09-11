@@ -45,6 +45,7 @@ class UserController extends Controller
             'surname' => $request->input('surname'),
             'password' => Hash::make($request->input('password')),
             'phoneNumber' => $request->input('phoneNumber'),
+            'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id()
         ]);
 

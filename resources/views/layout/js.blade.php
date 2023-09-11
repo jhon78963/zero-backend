@@ -14,8 +14,8 @@
 <script>
     $(document).ready(function() {
         var currentUrl = window.location.href;
-        if (window.location.href.indexOf('/admin/perfil') === -1) {
-            console.log(currentUrl);
+        if (window.location.href.indexOf('/admin/perfil') === -1 &&
+            window.location.href.indexOf('/admin/bienvenido') === -1) {
             var menuLinks = $('.menu-link');
             menuLinks.each(function() {
                 var linkUrl = $(this).attr('href');
