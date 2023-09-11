@@ -118,6 +118,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profilePicture' => '/assets/img/avatars/1.png',
         ]);
 
         if (isset($userCreated))
