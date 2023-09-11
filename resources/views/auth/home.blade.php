@@ -155,7 +155,7 @@
             <div class="card">
                 <div class="card-img-top"
                     style="background-color: #696cff; height: 11rem; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <img src="http://localhost:8000/assets/img/avatars/1.png" alt="" class="rounded-circle mb-2"
+                    <img src="{{ auth()->user()->profilePicture }}" alt="" class="rounded-circle mb-2"
                         style="width: 100px; height: 100px;">
                     <h4 style="color: white" class="mb-1"><em>{{ auth()->user()->username }}</em></h4>
                     <h6 style="color: white" class="mb-0">
@@ -194,9 +194,9 @@
                     <table class="table">
                         <thead class="table-light">
                             <tr>
-                                <th width="20%">Domingo</th>
+                                <th width="20%">{{ $diaActual }}</th>
                                 <th width="75%"></th>
-                                <th width="5%">Septiembre 10, 2023</th>
+                                <th width="5%">{{ $fechaActual }}</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">

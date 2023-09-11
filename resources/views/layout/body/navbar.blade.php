@@ -28,27 +28,27 @@
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <div class="avatar avatar-online">
-                                        <img src="{{ auth()->user()->profilePicture }}" alt
-                                            class="w-px-40 h-auto rounded-circle" />
+                    @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.auth.home') }}">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar avatar-online">
+                                            <img src="{{ auth()->user()->profilePicture }}" alt
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
+                                        <small
+                                            class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
                                     </div>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
-                                    <small
-                                        class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('admin.auth.profile') }}">
                                 <i class="bx bx-user me-2"></i>
@@ -56,6 +56,26 @@
                             </a>
                         </li>
                     @elseif(auth()->user()->userRoles()->first()->role->name == 'Guest')
+                        <li>
+                            <a class="dropdown-item" href="{{ route('guest.auth.profile') }}">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar avatar-online">
+                                            <img src="{{ auth()->user()->profilePicture }}" alt
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
+                                        <small
+                                            class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('guest.auth.profile') }}">
                                 <i class="bx bx-user me-2"></i>

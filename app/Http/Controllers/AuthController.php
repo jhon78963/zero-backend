@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
 use App\Models\User;
 use App\Models\UserRole;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -150,7 +151,9 @@ class AuthController extends Controller
 
     public function home()
     {
-        return view('auth.home');
+        $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
+        $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
+        return view('auth.home', compact('diaActual', 'fechaActual'));
     }
 
     public function recovery(Request $request)
