@@ -220,16 +220,14 @@ class AuthController extends Controller
             }
 
             $imagen->move(public_path($fileFolderPath), $nombreImagen);
-            $profilePicture = $fileFolderPath . $nombreImagen;
+            $user->profilePicture = $fileFolderPath . $nombreImagen;
         }
 
-        $user->update([
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'email' => $request->email,
-            'phoneNumber' => $request->phoneNumber,
-            'profilePicture' => $profilePicture,
-        ]);
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->email = $request->email;
+        $user->phoneNumber = $request->phoneNumber;
+        $user->save();
 
         return back();
     }
