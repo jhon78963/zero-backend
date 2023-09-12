@@ -152,7 +152,7 @@
 
     <div class="row">
         <div class="col-lg-4 col-md-6">
-            <div class="card">
+            <div class="card overflow-hidden mb-4">
                 <div class="card-img-top"
                     style="background-color: #696cff; height: 11rem; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                     <img src="{{ auth()->user()->profilePicture }}" alt="" class="rounded-circle mb-2"
@@ -186,8 +186,26 @@
             </div>
         </div>
 
-        <div class="col-lg-8 col-md-6 col-sm-12">
-            <div class="card overflow-hidden mb-4" style="height: 300px">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="card mb-4">
+                <div class="card-body text-center"> <!-- Agrega la clase "text-center" aquí -->
+                    <div class="card-title align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <img src="../assets/img/icons/unicons/periodo.png" alt="Credit Card" class="rounded">
+                        </div>
+                    </div>
+                    <h6 class="text-center">Periodo académico</h6>
+                    <h6 class="text-center">activo</h6>
+                    <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">PA-2023</h3>
+                    <a href="#" class="btn rounded-pill btn-primary">Ir</a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-6 col-md-4 col-sm-12 mb-3">
+            <div class="card overflow-hidden mb-4">
                 <h5 class="card-header">Agenda</h5>
 
                 <div class="table-responsive text-nowrap ps ps--active-y" id="vertical-example">

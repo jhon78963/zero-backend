@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -19,6 +20,15 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('auth.login');
 });
+
+// Auth
+Route::get('login', [AuthController::class, 'index'])->name('auth.login');
+Route::post('validate', [AuthController::class, 'login'])->name('auth.validate');
+Route::get('recuperar-contraseña', [AuthController::class, 'forgotPassword'])->name('auth.password');
+Route::post('recuperar-contrasena', [AuthController::class, 'recovery'])->name('auth.recovery');
+Route::get('registro', [AuthController::class, 'create'])->name('auth.register');
+Route::post('store', [AuthController::class, 'register'])->name('auth.store');
+Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('bienvenido', [AuthController::class, 'home'])->name('admin.auth.home');
@@ -39,6 +49,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/users/delete/{id}',[UserController::class,'delete'])->middleware('check.permissions:Admin,pages.user.delete')->name('admin.users.delete');
     Route::post('/users/store',[UserController::class,'create'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.create');
     Route::post('users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
+
+    Route::get('/periods', [AcademicPeriodController::class, 'index'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.index');
 });
 
 Route::group(['prefix' => 'invitado'], function () {
@@ -47,12 +59,3 @@ Route::group(['prefix' => 'invitado'], function () {
     Route::get('roles', [RoleController::class, 'index'])->name('guest.roles.index');
     Route::get('users', [UserController::class, 'index'])->name('guest.users.index');
 });
-
-// Auth
-Route::get('login', [AuthController::class, 'index'])->name('auth.login');
-Route::post('validate', [AuthController::class, 'login'])->name('auth.validate');
-Route::get('recuperar-contraseña', [AuthController::class, 'forgotPassword'])->name('auth.password');
-Route::post('recuperar-contrasena', [AuthController::class, 'recovery'])->name('auth.recovery');
-Route::get('registro', [AuthController::class, 'create'])->name('auth.register');
-Route::post('store', [AuthController::class, 'register'])->name('auth.store');
-Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

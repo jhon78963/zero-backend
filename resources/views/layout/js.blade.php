@@ -14,17 +14,16 @@
 <script>
     $(document).ready(function() {
         var currentUrl = window.location.href;
-        if (window.location.href.indexOf('/admin/perfil') === -1 &&
-            window.location.href.indexOf('/admin/bienvenido') === -1) {
-            var menuLinks = $('.menu-link');
-            menuLinks.each(function() {
-                var linkUrl = $(this).attr('href');
-                if (currentUrl.includes(linkUrl)) {
-                    $(this).addClass('active');
-                    $(this).parents('li.menu-item').addClass('active open');
-                }
-            });
-        }
+        var menuLinks = $('.menu-link');
+
+        menuLinks.each(function() {
+            var linkUrl = $(this).attr('href');
+            if (currentUrl === linkUrl || (linkUrl && currentUrl.startsWith(linkUrl + "#"))) {
+                $(this).addClass('active');
+                $(this).parents('li.menu-item').addClass('active open');
+                return false;
+            }
+        });
     });
 </script>
 @yield('js')
