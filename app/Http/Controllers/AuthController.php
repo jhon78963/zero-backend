@@ -49,7 +49,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $userExists = User::join('userRoles as ur', 'users.id', 'ur.userId')
+        $userExists = User::join('user_roles as ur', 'users.id', 'ur.userId')
                             ->join('roles as r', 'ur.roleId', 'r.id')
                             ->where('email', $request->email)
                             ->select('users.id as userId', 'r.id as roleId')
@@ -119,6 +119,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'profilePicture' => '/assets/img/avatars/1.png',
+            'CreatorUserId' => Auth::id(),
         ]);
 
         if (isset($userCreated))

@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
 
     Route::get('/periods', [AcademicPeriodController::class, 'index'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.index');
+    Route::post('/periods', [AcademicPeriodController::class, 'store'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.periods.store');
 });
 
 Route::group(['prefix' => 'invitado'], function () {

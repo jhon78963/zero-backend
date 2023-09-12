@@ -49,5 +49,10 @@ class PermissionSeeder extends Seeder
         $permission->name = 'pages.period';
         $permission->roleId = 1;
         $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.period.modify';
+        $permission->roleId = 1;
+        $permission->save();
     }
 }
