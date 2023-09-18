@@ -144,12 +144,12 @@
             <span class="menu-header-text">Gestión administrativa</span>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="{{ route('admin.periods.index') }}" class="menu-link">
                 <div data-i18n="Account">Periodo Académico</div>
             </a>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="{{ route('admin.calendars.index', $academic_period->name) }}" class="menu-link">
                 <div data-i18n="Account">Calendario Académico</div>
             </a>
         </li>

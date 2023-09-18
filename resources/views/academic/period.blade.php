@@ -203,10 +203,7 @@
                     </div>
                     <h6 class="text-center">Periodo académico</h6>
                     <h6 class="text-center">activo</h6>
-                    <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">
-                        {{ $academic_period->name }}</h3>
-                    <a href="{{ route('admin.periods.home', $academic_period->name) }}"
-                        class="btn rounded-pill btn-primary">Ir</a>
+                    <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">PA-2023</h3>
                 </div>
             </div>
         </div>

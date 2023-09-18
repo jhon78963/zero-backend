@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('userRoles', function (Blueprint $table) {
+        Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::table('userRoles', function (Blueprint $table) {
+        Schema::table('user_roles', function (Blueprint $table) {
             $table->dropForeign(['roleId']);
             $table->dropColumn('roleId');
             $table->dropForeign(['userId']);

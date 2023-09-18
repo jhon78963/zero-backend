@@ -26,6 +26,11 @@ class PermissionSeeder extends Seeder
         $permission->save();
 
         $permission = new Permission();
+        $permission->name = 'pages.user.assign';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
         $permission->name = 'pages.role';
         $permission->roleId = 1;
         $permission->save();
@@ -37,6 +42,16 @@ class PermissionSeeder extends Seeder
 
         $permission = new Permission();
         $permission->name = 'pages.role.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.period';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.period.modify';
         $permission->roleId = 1;
         $permission->save();
     }

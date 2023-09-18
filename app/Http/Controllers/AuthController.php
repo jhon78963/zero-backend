@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
+use App\Models\AcademicPeriod;
 use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
@@ -49,7 +50,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $userExists = User::join('userRoles as ur', 'users.id', 'ur.userId')
+        $userExists = User::join('user_roles as ur', 'users.id', 'ur.userId')
                             ->join('roles as r', 'ur.roleId', 'r.id')
                             ->where('email', $request->email)
                             ->select('users.id as userId', 'r.id as roleId')
@@ -154,6 +155,8 @@ class AuthController extends Controller
     {
         $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
         $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
+        // $currentYear = Carbon::now()->year;
+        // $academic_period = AcademicPeriod::where('year', $currentYear)->first();
         return view('auth.home', compact('diaActual', 'fechaActual'));
     }
 

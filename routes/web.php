@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AcademicCalendarController;
+use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -38,7 +40,16 @@ Route::group(['prefix' => 'admin'], function () {
     Route::put('/users/update/{id}',[UserController::class,'update'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.update');
     Route::get('/users/delete/{id}',[UserController::class,'delete'])->middleware('check.permissions:Admin,pages.user.delete')->name('admin.users.delete');
     Route::post('/users/store',[UserController::class,'create'])->middleware('check.permissions:Admin,pages.user.modify')->name('admin.users.create');
-    Route::post('users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
+    Route::post('/users/assign',[UserController::class,'assign'])->middleware('check.permissions:Admin,pages.user.assign')->name('admin.users.assign');
+
+    Route::get('/periods', [AcademicPeriodController::class, 'index'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.index');
+    Route::post('/periods', [AcademicPeriodController::class, 'store'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.periods.store');
+});
+
+Route::group(['prefix' => '{id}/admin'], function () {
+        Route::get('/inicio', [AcademicPeriodController::class, 'home'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.periods.home');
+        Route::get('/calendario', [AcademicCalendarController::class, 'index'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.calendars.index');
+        Route::post('/calendario', [AcademicCalendarController::class, 'store'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.calendars.store');
 });
 
 Route::group(['prefix' => 'invitado'], function () {

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('academic_calendars', function (Blueprint $table) {
             $table->id();
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
@@ -18,15 +18,17 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->string('name')->unique();
-            $table->boolean('isStatic');
+            $table->string('responsible_person');
+            $table->string('activity');
+            $table->date('start');
+            $table->date('end');
+            $table->string('duration_activity');
+            $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->dropUnique('roles_name_unique');
-        });
+        Schema::dropIfExists('academic_calendars');
     }
 };

@@ -24,7 +24,11 @@ return new class extends Migration
             $table->string('surname')->nullable();
             $table->string('password')->nullable();
             $table->string('phoneNumber')->nullable();
-            $table->string('profilePicture')->nullable();
+            $table->string('address')->nullable();
+            $table->string('district')->nullable();
+            $table->string('province')->nullable();
+            $table->string('department')->nullable();
+            $table->string('profilePicture')->default('/assets/img/avatars/1.png');
             $table->string('googleId')->nullable();
         });
     }
