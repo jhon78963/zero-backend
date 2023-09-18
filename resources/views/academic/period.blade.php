@@ -197,7 +197,7 @@
                 <div class="card-body text-center"> <!-- Agrega la clase "text-center" aquí -->
                     <div class="card-title align-items-start justify-content-between">
                         <div class="avatar flex-shrink-0">
-                            <img src="{{ asset('assets/img/icons/unicons/periodo1.png') }}" alt="Academic Period"
+                            <img src="{{ asset('assets/img/icons/unicons/periodo.png') }}" alt="Academic Period"
                                 class="rounded">
                         </div>
                     </div>
