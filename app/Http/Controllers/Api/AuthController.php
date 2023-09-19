@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['only' => ['logout','home']]);
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     public function login(Request $request)
@@ -24,7 +24,7 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        $token = Auth::attempt($credentials);
+        $token = Auth::guard('api')->attempt($credentials);
 
         if (!$token) {
             return response()->json([
@@ -33,7 +33,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
 
         return response()->json([
             'status' => 'success',
@@ -41,11 +41,12 @@ class AuthController extends Controller
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
+                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
             ]
         ]);
     }
 
-        public function register(Request $request){
+    public function register(Request $request){
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
