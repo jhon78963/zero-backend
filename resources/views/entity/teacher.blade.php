@@ -1,13 +1,13 @@
 @extends('layout.template')
 
 @section('title')
-    Usuario
+    Docente
 @endsection
 
 @section('content')
     <div class="card">
         <div class="d-flex align-items-center">
-            <h5 class="card-header">Gestión de usuarios</h5>
+            <h5 class="card-header">Gestión de docentes</h5>
             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" data-bs-toggle="modal"
                 data-bs-target="#modalCreateUser">
                 <span class="tf-icons bx bx-list-plus"></span>
@@ -17,9 +17,10 @@
             <table class="table" id="tabla-users">
                 <thead>
                     <tr>
+                        <th>Code</th>
                         <th>Nombre</th>
                         <th>Email</th>
-                        <th>Role</th>
+                        <th>Salón</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>

@@ -1,4 +1,9 @@
 @extends('layout.template')
+
+@section('title')
+    Perido Académico
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-lg-4 col-md-4 order-1">

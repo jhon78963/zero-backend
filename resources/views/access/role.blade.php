@@ -1,4 +1,9 @@
 @extends('layout.template')
+
+@section('title')
+    Rol
+@endsection
+
 @section('content')
     <div class="card">
         <div class="d-flex align-items-center">
