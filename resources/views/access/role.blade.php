@@ -18,7 +18,7 @@
                     <tr>
                         <th>Role</th>
                         <th>Permisos</th>
-                        <th>Opciones</th>
+                        <th width="5%">Opciones</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -94,6 +94,15 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('css')
+    <style>
+        .badge {
+            text-transform: none !important;
+            font-size: 0.85rem;
+        }
+    </style>
 @endsection
 
 @section('js')
