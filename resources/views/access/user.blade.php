@@ -278,7 +278,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "/admin/users/store/",
+                url: "{{ route('admin.users.create') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#userCreateForm")[0]),

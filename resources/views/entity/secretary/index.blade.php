@@ -95,7 +95,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "/admin/secretarias/store/",
+                url: "{{ route('admin.secretaries.create') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createSecretaryForm")[0]),
