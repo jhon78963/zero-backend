@@ -1,7 +1,7 @@
 <div class="modal fade" id="createTeacherModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="createTeacherForm">
+        <form id="createTeacherForm" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
