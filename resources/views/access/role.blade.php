@@ -122,13 +122,17 @@
                     for (const item of data.data) {
                         const permissionsNames = item.permissions
                             .map(permission =>
-                                `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                                `<span class="badge bg-label-primary mb-1 me-1">${permission.name.replace('pages.', '')}</span>`
                             ).join(' ');
 
                         filas += `
                             <tr>
                                 <td>${item.name}</td>
-                                <td>${permissionsNames}</td>
+                                <td>
+                                    <div class="d-flex flex-wrap">
+                                        ${permissionsNames}
+                                    </div>
+                                </td>
                                 <td>
                                     <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
                                         id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
@@ -309,11 +313,15 @@
                             for (const item of data.data) {
                                 const permissionsNames = item.permissions
                                     .map(permission =>
-                                        `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                                        `<span class="badge bg-label-primary mb-1 me-1">${permission.name.replace('pages.', '')}</span>`
                                     ).join(' ');
 
                                 filas += `<tr><td>${item.name}</td>
-                                  <td>${permissionsNames}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap">
+                                            ${permissionsNames}
+                                        </div>
+                                    </td>
                                   <td>
                                     <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
                                         id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
@@ -376,16 +384,20 @@
                             for (const item of data.data) {
                                 const permissionsNames = item.permissions
                                     .map(permission =>
-                                        `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                                        `<span class="badge bg-label-primary mb-1 me-1">${permission.name.replace('pages.', '')}</span>`
                                     ).join(' ');
 
                                 filas += `<tr><td>${item.name}</td>
-                                  <td>${permissionsNames}</td>
-                                  <td>
-                                    <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
-                                        id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
-                                    <span class="tf-icons bx bx-edit-alt"></span>
-                                    </button>`;
+                                    <td>
+                                        <div class="d-flex flex-wrap">
+                                            ${permissionsNames}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
+                                            id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
+                                        <span class="tf-icons bx bx-edit-alt"></span>
+                                        </button>`;
                                 if (item.id !== 1) {
                                     filas += `<button type="button" class="btn rounded-pill btn-icon btn-outline-danger" data-role-id="${item.id}" id="btnDelete" data-bs-toggle="modal" data-bs-target="#modalDeleteRole">
                                         <span class="tf-icons bx bx-trash"></span>
@@ -477,11 +489,15 @@
                             for (const item of data.data) {
                                 const permissionsNames = item.permissions
                                     .map(permission =>
-                                        `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                                        `<span class="badge bg-label-primary mb-1 me-1">${permission.name.replace('pages.', '')}</span>`
                                     ).join(' ');
 
                                 filas += `<tr><td>${item.name}</td>
-                                  <td>${permissionsNames}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap">
+                                            ${permissionsNames}
+                                        </div>
+                                    </td>
                                   <td>
                                     <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
                                         id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
