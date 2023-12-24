@@ -54,5 +54,60 @@ class PermissionSeeder extends Seeder
         $permission->name = 'pages.period.modify';
         $permission->roleId = 1;
         $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.calendar';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.calendar.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.teacher';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.teacher.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.teacher.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.student';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.student.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.student.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.secretary';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.secretary.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.secretary.delete';
+        $permission->roleId = 1;
+        $permission->save();
     }
 }

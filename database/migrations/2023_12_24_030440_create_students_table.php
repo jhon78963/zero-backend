@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('teachers', function (Blueprint $table) {
+        Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('surname', 15);
             $table->string('mother_surname', 15)->nullable();
             $table->string('dni', 8);
-            $table->string('code', 4);
+            $table->string('code', 10);
             $table->string('intitutional_email', 190);
             $table->string('phone', 9)->nullable();
             $table->string('address')->nullable();
@@ -33,6 +33,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('teachers');
+        Schema::dropIfExists('students');
     }
 };

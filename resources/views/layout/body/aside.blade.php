@@ -107,17 +107,17 @@
             <ul class="menu-sub">
                 @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.students.index') }}" class="menu-link">
                             <div data-i18n="Account">Estudiantes</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.teachers.index') }}" class="menu-link">
                             <div data-i18n="Notifications">Docentes</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.secretaries.index') }}" class="menu-link">
                             <div data-i18n="Notifications">Secretarias</div>
                         </a>
                     </li>

@@ -74,7 +74,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('api')->logout();
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
@@ -83,11 +83,12 @@ class AuthController extends Controller
 
     public function refresh()
     {
+        $auth = Auth::guard('api');
         return response()->json([
             'status' => 'success',
-            'user' => Auth::user(),
+            'user' => $auth->user(),
             'authorisation' => [
-                'token' => Auth::refresh(),
+                'token' => $auth->refresh(),
                 'type' => 'bearer',
             ]
         ]);

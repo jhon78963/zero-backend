@@ -6,6 +6,9 @@ use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SecretaryController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -45,14 +48,33 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('/periods', [AcademicPeriodController::class, 'index'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.index');
     Route::post('/periods', [AcademicPeriodController::class, 'store'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.periods.store');
+
+    Route::get('/profesores', [TeacherController::class, 'index'])->middleware('check.permissions:Admin,pages.teacher')->name('admin.teachers.index');
+    Route::get('/profesores/getAll', [TeacherController::class, 'getAll'])->middleware('check.permissions:Admin,pages.teacher')->name('admin.teachers.getall');
+    Route::get('/profesores/get/{id}', [TeacherController::class, 'get'])->middleware('check.permissions:Admin,pages.teacher')->name('admin.teachers.get');
+    Route::get('/profesores/delete/{id}', [TeacherController::class, 'delete'])->middleware('check.permissions:Admin,pages.teacher.delete')->name('admin.teachers.delete');
+    Route::put('/profesores/update/{id}', [TeacherController::class, 'update'])->middleware('check.permissions:Admin,pages.teacher.modify')->name('admin.teachers.update');
+    Route::post('/profesores/store', [TeacherController::class, 'create'])->middleware('check.permissions:Admin,pages.teacher.modify')->name('admin.teachers.create');
+
+    Route::get('/estudiantes', [StudentController::class, 'index'])->middleware('check.permissions:Admin,pages.student')->name('admin.students.index');
+    Route::get('/estudiantes/getAll', [StudentController::class, 'getAll'])->middleware('check.permissions:Admin,pages.student')->name('admin.students.getall');
+    Route::get('/estudiantes/get/{id}', [StudentController::class, 'get'])->middleware('check.permissions:Admin,pages.student')->name('admin.students.get');
+    Route::get('/estudiantes/delete/{id}', [StudentController::class, 'delete'])->middleware('check.permissions:Admin,pages.student.delete')->name('admin.students.delete');
+    Route::put('/estudiantes/update/{id}', [StudentController::class, 'update'])->middleware('check.permissions:Admin,pages.student.modify')->name('admin.students.update');
+    Route::post('/estudiantes/store', [StudentController::class, 'create'])->middleware('check.permissions:Admin,pages.student.modify')->name('admin.students.create');
+
+    Route::get('/secretarias', [SecretaryController::class, 'index'])->middleware('check.permissions:Admin,pages.secretary')->name('admin.secretaries.index');
+    Route::get('/secretarias/getAll', [SecretaryController::class, 'getAll'])->middleware('check.permissions:Admin,pages.secretary')->name('admin.secretaries.getall');
+    Route::get('/secretarias/get/{id}', [SecretaryController::class, 'get'])->middleware('check.permissions:Admin,pages.secretary')->name('admin.secretaries.get');
+    Route::get('/secretarias/delete/{id}', [SecretaryController::class, 'delete'])->middleware('check.permissions:Admin,pages.secretary.delete')->name('admin.secretaries.delete');
+    Route::put('/secretarias/update/{id}', [SecretaryController::class, 'update'])->middleware('check.permissions:Admin,pages.secretary.modify')->name('admin.secretaries.update');
+    Route::post('/secretarias/store', [SecretaryController::class, 'create'])->middleware('check.permissions:Admin,pages.secretary.modify')->name('admin.secretaries.create');
 });
 
 Route::group(['prefix' => '{id}/admin'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.home');
-    Route::get('/calendario', [AcademicCalendarController::class, 'index'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.calendars.index');
-    Route::post('/calendario', [AcademicCalendarController::class, 'store'])->middleware('check.permissions:Admin,pages.period.modify')->name('admin.calendars.store');
-
-    Route::get('/docente', [TeacherController::class, 'index'])->middleware('check.permissions:Admin,pages.teacher')->name('admin.teachers.index');
+    Route::get('/calendario', [AcademicCalendarController::class, 'index'])->middleware('check.permissions:Admin,pages.calendar.modify')->name('admin.calendars.index');
+    Route::post('/calendario', [AcademicCalendarController::class, 'store'])->middleware('check.permissions:Admin,pages.calendar.modify')->name('admin.calendars.store');
 });
 
 Route::group(['prefix' => 'invitado'], function () {
