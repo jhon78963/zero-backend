@@ -45,8 +45,8 @@
                                 placeholder="Código institucional" />
                         </div>
                         <div class="col-6 mb-3">
-                            <label for="c_intitutional_email" class="form-label">Email</label>
-                            <input type="text" id="c_intitutional_email" name="intitutional_email"
+                            <label for="c_institutional_email" class="form-label">Email</label>
+                            <input type="text" id="c_institutional_email" name="institutional_email"
                                 class="form-control" placeholder="E-mail institucional" />
                         </div>
                     </div>

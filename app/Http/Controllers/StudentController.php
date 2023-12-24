@@ -25,7 +25,7 @@ class StudentController extends Controller
 
     public function create(CreateStudentRequest $request)
     {
-        $emailExists = Student::where('intitutional_email', $request->input('intitutional_email'))->where('IsDeleted', false)->exists();
+        $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
         $codeExists = Student::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
 
         if ($emailExists || $codeExists) {
@@ -42,7 +42,7 @@ class StudentController extends Controller
             'surname' => $request->input('surname'),
             'mother_surname' => $request->input('mother_surname'),
             'code' => $request->input('code'),
-            'intitutional_email' => $request->input('intitutional_email'),
+            'institutional_email' => $request->input('institutional_email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
@@ -57,7 +57,7 @@ class StudentController extends Controller
             'status' => 'success',
             'student' => $student,
             'count' => $count,
-        ], 201);
+        ]);
     }
 
     public function delete($id)
@@ -133,7 +133,7 @@ class StudentController extends Controller
         $student->surname = $request->input('surname');
         $student->mother_surname = $request->input('mother_surname');
         $student->code = $request->input('code');
-        $student->intitutional_email = $request->input('intitutional_email');
+        $student->institutional_email = $request->input('institutional_email');
         $student->phone = $request->input('phone');
         $student->address = $request->input('address');
         $student->LastModificationTime = now()->format('Y-m-d H:i:s');

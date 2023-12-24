@@ -8,11 +8,6 @@ use Illuminate\Database\Seeder;
 
 class AcademicPeriodSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $academic_period = new AcademicPeriod();
@@ -22,5 +17,6 @@ class AcademicPeriodSeeder extends Seeder
         $academic_period->name = 'pa-2023';
         $academic_period->year = '2023';
         $academic_period->yearName = 'Año de la unidad, la paz y el desarrollo';
+        $academic_period->save();
     }
 }

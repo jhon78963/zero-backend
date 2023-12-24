@@ -48,7 +48,7 @@
                     let filas = "";
                     if (data.maxCount == 0) {
                         filas += `
-                            <tr>
+                            <tr id="row-0">
                                 <td class="text-center" colspan="6">NO DATA</td>
                             </tr>
                         `;
@@ -59,7 +59,7 @@
                                 <td>${student.code}</td>
                                 <td>${student.first_name} ${student.other_names  != null ? student.other_names : ''}</td>
                                 <td>${student.surname} ${student.mother_surname  != null ? student.mother_surname : ''}</td>
-                                <td>${student.intitutional_email}</td>
+                                <td>${student.institutional_email}</td>
                                 <td>salon</td>
                                 <td>
                                     <div class="d-flex">
@@ -103,8 +103,8 @@
                 contentType: false,
                 processData: false,
                 beforeSend: function() {
-                    $('#btnCreatestudent').attr("disabled", true);
-                    $('#btnCreatestudent').html(
+                    $('#btnCreateStudent').attr("disabled", true);
+                    $('#btnCreateStudent').html(
                         '<div class="spinner-border spinner-border-sm text-white" role="status"></div> Registrando...'
                     );
                 },
@@ -115,7 +115,7 @@
                         timeOut: 3000
                     });
 
-                     if(data.count == 1){
+                    if (data.count == 1) {
                         $(`#tabla-students tbody #row-0`).html("");
                     }
 
@@ -124,7 +124,7 @@
                             <td>${data.student.code}</td>
                             <td>${data.student.first_name} ${data.student.other_names != null ? data.student.other_names : ''}</td>
                             <td>${data.student.surname} ${data.student.mother_surname != null ? data.student.mother_surname : ''}</td>
-                            <td>${data.student.intitutional_email}</td>
+                            <td>${data.student.institutional_email}</td>
                             <td>salón</td>
                             <td>
                                 <div class="d-flex">
@@ -141,8 +141,8 @@
                     $("#tabla-students tbody").append(fila);
                 },
                 complete: function() {
-                    $('#btnCreatestudent').text('Registrar');
-                    $('#btnCreatestudent').attr("disabled", false);
+                    $('#btnCreateStudent').text('Registrar');
+                    $('#btnCreateStudent').attr("disabled", false);
                 }
             });
         });
@@ -159,7 +159,7 @@
                 $('#e_surname').val(data.student.surname);
                 $('#e_mother_surname').val(data.student.mother_surname);
                 $('#e_code').val(data.student.code);
-                $('#e_intitutional_email').val(data.student.intitutional_email);
+                $('#e_institutional_email').val(data.student.institutional_email);
                 $('#e_phone').val(data.student.phone);
                 $('#e_address').val(data.student.address);
                 $("input[name=_token]").val();
@@ -194,7 +194,7 @@
                         <td>${data.student.code}</td>
                         <td>${data.student.first_name} ${data.student.other_names != null ? data.student.other_names : ''}</td>
                         <td>${data.student.surname} ${data.student.mother_surname != null ? data.student.mother_surname : ''}</td>
-                        <td>${data.student.intitutional_email}</td>
+                        <td>${data.student.institutional_email}</td>
                         <td>salón</td>
                         <td>
                             <div class="d-flex">
@@ -208,16 +208,6 @@
                         </td>
                     `;
                     $(`#tabla-students tbody #row-${data.student.id}`).html(fila);
-
-                    if (data.count == 0) {
-                        const fila = `
-                            <tr id="row-0">
-                                <td class="text-center" colspan="6">NO DATA</td>
-                            </tr>
-                        `;
-
-                        $(`#tabla-students tbody`).html(fila);
-                    }
                 },
                 complete: function() {
                     $('#btnUpdateStudent').text('Actualizar');
@@ -260,6 +250,16 @@
                         });
 
                     $(`#tabla-students tbody #row-${data.student.id}`).html("");
+
+                    if (data.count == 0) {
+                        const fila = `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="6">NO DATA</td>
+                            </tr>
+                        `;
+
+                        $(`#tabla-students tbody`).html(fila);
+                    }
                 },
                 complete: function() {
                     $('#btnDeleteStudent').text('Eliminar');

@@ -53,8 +53,8 @@
                         </div>
 
                         <div class="col-6 mb-3">
-                            <label for="e_intitutional_email" class="form-label">Email</label>
-                            <input type="text" id="e_intitutional_email" name="intitutional_email"
+                            <label for="e_institutional_email" class="form-label">Email</label>
+                            <input type="text" id="e_institutional_email" name="institutional_email"
                                 class="form-control" placeholder="E-mail institucional" />
                         </div>
                     </div>

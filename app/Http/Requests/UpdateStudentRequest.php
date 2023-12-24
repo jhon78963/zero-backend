@@ -18,7 +18,7 @@ class UpdateStudentRequest extends FormRequest
             'first_name' => 'required',
             'surname' => 'required',
             'code' => 'required|max:10',
-            'intitutional_email' => 'required',
+            'institutional_email' => 'required',
         ];
     }
 }

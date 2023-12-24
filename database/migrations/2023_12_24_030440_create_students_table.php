@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('mother_surname', 15)->nullable();
             $table->string('dni', 8);
             $table->string('code', 10);
-            $table->string('intitutional_email', 190);
+            $table->string('institutional_email', 190);
             $table->string('phone', 9)->nullable();
             $table->string('address')->nullable();
         });

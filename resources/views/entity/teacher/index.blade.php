@@ -48,7 +48,7 @@
                     let filas = "";
                     if (data.maxCount == 0) {
                         filas += `
-                            <tr>
+                            <tr id="row-0">
                                 <td class="text-center" colspan="6">NO DATA</td>
                             </tr>
                         `;
@@ -59,7 +59,7 @@
                                 <td>${teacher.code}</td>
                                 <td>${teacher.first_name} ${teacher.other_names != null ? teacher.other_names : ''}</td>
                                 <td>${teacher.surname} ${teacher.mother_surname != null ? teacher.mother_surname : ''}</td>
-                                <td>${teacher.intitutional_email}</td>
+                                <td>${teacher.institutional_email}</td>
                                 <td>salon</td>
                                 <td>
                                     <div class="d-flex">
@@ -122,9 +122,9 @@
                     const fila = `
                         <tr id="row-${data.teacher.id}">
                             <td>${data.teacher.code}</td>
-                            <td>${data.teacher.first_name} ${data.teacher.other_names}</td>
-                            <td>${data.teacher.surname} ${data.teacher.mother_surname}</td>
-                            <td>${data.teacher.intitutional_email}</td>
+                            <td>${data.teacher.first_name} ${data.teacher.other_names != null ? data.teacher.other_names : ''}</td>
+                            <td>${data.teacher.surname} ${data.teacher.mother_surname != null ? data.teacher.other_names : ''}</td>
+                            <td>${data.teacher.institutional_email}</td>
                             <td>salón</td>
                             <td>
                                 <div class="d-flex">
@@ -159,7 +159,7 @@
                 $('#e_surname').val(data.teacher.surname);
                 $('#e_mother_surname').val(data.teacher.mother_surname);
                 $('#e_code').val(data.teacher.code);
-                $('#e_intitutional_email').val(data.teacher.intitutional_email);
+                $('#e_institutional_email').val(data.teacher.institutional_email);
                 $('#e_phone').val(data.teacher.phone);
                 $('#e_address').val(data.teacher.address);
                 $("input[name=_token]").val();
@@ -192,9 +192,9 @@
 
                     const fila = `
                         <td>${data.teacher.code}</td>
-                        <td>${data.teacher.first_name} ${data.teacher.other_names}</td>
-                        <td>${data.teacher.surname} ${data.teacher.mother_surname}</td>
-                        <td>${data.teacher.intitutional_email}</td>
+                        <td>${data.teacher.first_name} ${data.teacher.other_names != null ? data.teacher.other_names : ''}</td>
+                        <td>${data.teacher.surname} ${data.teacher.mother_surname != null ? data.teacher.mother_surname : ''}</td>
+                        <td>${data.teacher.institutional_email}</td>
                         <td>salón</td>
                         <td>
                             <div class="d-flex">

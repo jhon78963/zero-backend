@@ -25,7 +25,7 @@ class TeacherController extends Controller
 
     public function create(CreateTeacherRequest $request)
     {
-        $emailExists = Teacher::where('intitutional_email', $request->input('intitutional_email'))->where('IsDeleted', false)->exists();
+        $emailExists = Teacher::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
         $codeExists = Teacher::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
 
         if ($emailExists || $codeExists) {
@@ -42,7 +42,7 @@ class TeacherController extends Controller
             'surname' => $request->input('surname'),
             'mother_surname' => $request->input('mother_surname'),
             'code' => $request->input('code'),
-            'intitutional_email' => $request->input('intitutional_email'),
+            'institutional_email' => $request->input('institutional_email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
@@ -133,7 +133,7 @@ class TeacherController extends Controller
         $teacher->surname = $request->input('surname');
         $teacher->mother_surname = $request->input('mother_surname');
         $teacher->code = $request->input('code');
-        $teacher->intitutional_email = $request->input('intitutional_email');
+        $teacher->institutional_email = $request->input('institutional_email');
         $teacher->phone = $request->input('phone');
         $teacher->address = $request->input('address');
         $teacher->LastModificationTime = now()->format('Y-m-d H:i:s');

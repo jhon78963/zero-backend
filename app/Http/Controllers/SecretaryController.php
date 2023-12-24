@@ -25,7 +25,7 @@ class SecretaryController extends Controller
 
     public function create(CreateSecretaryRequest $request)
     {
-        $emailExists = Secretary::where('intitutional_email', $request->input('intitutional_email'))->where('IsDeleted', false)->exists();
+        $emailExists = Secretary::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
         $codeExists = Secretary::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
 
         if ($emailExists || $codeExists) {
@@ -42,7 +42,7 @@ class SecretaryController extends Controller
             'surname' => $request->input('surname'),
             'mother_surname' => $request->input('mother_surname'),
             'code' => $request->input('code'),
-            'intitutional_email' => $request->input('intitutional_email'),
+            'institutional_email' => $request->input('institutional_email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
@@ -133,7 +133,7 @@ class SecretaryController extends Controller
         $secretary->surname = $request->input('surname');
         $secretary->mother_surname = $request->input('mother_surname');
         $secretary->code = $request->input('code');
-        $secretary->intitutional_email = $request->input('intitutional_email');
+        $secretary->institutional_email = $request->input('institutional_email');
         $secretary->phone = $request->input('phone');
         $secretary->address = $request->input('address');
         $secretary->LastModificationTime = now()->format('Y-m-d H:i:s');

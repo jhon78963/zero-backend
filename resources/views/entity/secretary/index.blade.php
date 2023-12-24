@@ -58,7 +58,7 @@
                                 <td>${secretary.code}</td>
                                 <td>${secretary.first_name} ${secretary.other_names != null ? secretary.other_names : ''}</td>
                                 <td>${secretary.surname} ${secretary.mother_surname != null ? secretary.mother_surname : ''}</td>
-                                <td>${secretary.intitutional_email}</td>
+                                <td>${secretary.institutional_email}</td>
                                 <td>salon</td>
                                 <td>
                                     <div class="d-flex">
@@ -123,7 +123,7 @@
                             <td>${data.secretary.code}</td>
                             <td>${data.secretary.first_name} ${data.secretary.other_names != null ? data.secretary.other_names : ''}</td>
                             <td>${data.secretary.surname} ${data.secretary.mother_surname != null ? data.secretary.mother_surname : ''}</td>
-                            <td>${data.secretary.intitutional_email}</td>
+                            <td>${data.secretary.institutional_email}</td>
                             <td>salón</td>
                             <td>
                                 <div class="d-flex">
@@ -158,7 +158,7 @@
                 $('#e_surname').val(data.secretary.surname);
                 $('#e_mother_surname').val(data.secretary.mother_surname);
                 $('#e_code').val(data.secretary.code);
-                $('#e_intitutional_email').val(data.secretary.intitutional_email);
+                $('#e_institutional_email').val(data.secretary.institutional_email);
                 $('#e_phone').val(data.secretary.phone);
                 $('#e_address').val(data.secretary.address);
                 $("input[name=_token]").val();
@@ -193,7 +193,7 @@
                         <td>${data.secretary.code}</td>
                         <td>${data.secretary.first_name} ${data.secretary.other_names != null ? data.secretary.other_names : ''}</td>
                         <td>${data.secretary.surname} ${data.secretary.mother_surname != null ? data.secretary.mother_surname : ''}</td>
-                        <td>${data.secretary.intitutional_email}</td>
+                        <td>${data.secretary.institutional_email}</td>
                         <td>salón</td>
                         <td>
                             <div class="d-flex">
