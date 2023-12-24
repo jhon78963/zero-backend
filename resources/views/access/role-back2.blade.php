@@ -102,38 +102,33 @@
     {{-- LIST --}}
     <script>
         window.onload = function() {
-            let roleData;
             $.ajax({
                 url: "{{ route('admin.roles.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
-                    roleData = data;
+                    console.log(data);
                     let filas = "";
-                    for (const item of data.data) {
-                        const permissionsNames = item.permissions
-                            .map(permission =>
-                                `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
-                            ).join(' ');
+                    $.each(data.roles, function(index, role) {
+                        const permissionsNames = role.permissions.map(permission =>
+                            `<span class="badge bg-label-primary me-1">${permission.name.replace('pages.', '')}</span>`
+                        ).join(' ');
 
                         filas += `
                             <tr>
-                                <td>${item.name}</td>
+                                <td>${role.name}</td>
                                 <td>${permissionsNames}</td>
                                 <td>
-                                    <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
-                                        id="btnEdit" data-role-id="${item.id}" data-role-name="${item.name}">
-                                    <span class="tf-icons bx bx-edit-alt"></span>
-                                    </button>`;
-
-                        if (item.id !== 1) {
-                            filas += `<button type="button" class="btn rounded-pill btn-icon btn-outline-danger" data-role-id="${item.id}" id="btnDelete" data-bs-toggle="modal" data-bs-target="#modalDeleteRole">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" onclick="onRoleUpdate(${role.id})">
+                                        <span class="tf-icons bx bx-edit-alt"></span>
+                                    </button>
+                                    <button type="button" class="btn rounded-pill btn-icon btn-outline-danger" onclick="onRoleDelete(${role.id})">
                                         <span class="tf-icons bx bx-trash"></span>
-                                      </button>`;
-                        }
-
-                        filas += `</td></tr>`;
-                    }
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
 
                     $("#tabla-roles tbody").html(filas);
                 },
@@ -168,7 +163,6 @@
             });
 
             $(document).on('click', '#btnCreate', function() {
-                // TODO
                 $('#card_edit').hide();
                 $('#card_create').show();
             });
@@ -176,17 +170,18 @@
             $(document).on('click', '#btnAddCreate', function() {
                 const permissionsContainer = $('#permissionsContainerCreate');
 
-                const checkboxHtml = `<div class="input-group mt-2">
-                                <div class="input-group-text">
-                                  <input class="form-check-input mt-0" type="checkbox" checked
-                                    aria-label="Checkbox for following text input" name="permissions[]">
-                                </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox"
-                                    placeholder="ingrese nuevo permiso e: pages.rol.permiso" name="permissions-text[]" required>
-                                <button class="btn btn-outline-danger" type="button" id="btnAddedDelete">
-                                    <i class="bx bx-trash cursor-pointer"></i>
-                                </button>
-                              </div>`;
+                const checkboxHtml = `
+                    <div class="input-group mt-2">
+                        <div class="input-group-text">
+                          <input class="form-check-input mt-0" type="checkbox" checked
+                            aria-label="Checkbox for following text input" name="permissions[]">
+                        </div>
+                        <input type="text" class="form-control" aria-label="Text input with checkbox"
+                            placeholder="ingrese nuevo permiso e: pages.rol.permiso" name="permissions-text[]" required>
+                        <button class="btn btn-outline-danger" type="button" id="btnAddedDelete">
+                            <i class="bx bx-trash cursor-pointer"></i>
+                        </button>
+                    </div>`;
                 permissionsContainer.append(checkboxHtml);
             });
 
