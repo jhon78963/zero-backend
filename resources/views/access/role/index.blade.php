@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    @include('access.role-delete-modal')
+    @include('access.role.role-delete-modal')
 @endsection
 
 @section('css')

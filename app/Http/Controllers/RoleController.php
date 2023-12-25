@@ -20,7 +20,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        return view('access.role');
+        return view('access.role.index');
     }
 
     public function create(CreateRoleRequest $request)

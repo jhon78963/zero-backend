@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('access.user');
+        return view('access.user.index');
     }
 
     public function create(CreateUserRequest $request)
@@ -51,9 +51,11 @@ class UserController extends Controller
 
         $user->save();
 
+        $user->userRoles->pluck('role.name');
+
         return response()->json([
             'status' => 'success',
-            'data' => $user
+            'user' => $user
         ],201);
     }
 
@@ -73,9 +75,11 @@ class UserController extends Controller
         $user->DeletionTime = now()->format('Y-m-d H:i:s');
         $user->save();
 
+        UserRole::where('userId', $user->id)->delete();
+
         return response()->json([
             'status' => 'success',
-            'data' => $user
+            'user' => $user
         ]);
     }
 
@@ -109,7 +113,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $data
+            'user' => $data
         ]);
     }
 
@@ -120,7 +124,6 @@ class UserController extends Controller
         $data = [];
 
         foreach ($users as $user) {
-            $roles = $user->userRoles->pluck('role.name');
             $data[] = [
                 'id' => $user->id,
                 'username' => $user->username,
@@ -129,7 +132,7 @@ class UserController extends Controller
                 'surname' => $user->surname,
                 'phoneNumber' => $user->phoneNumber,
                 'profilePicture' => $user->profilePicture,
-                'roles' => $roles
+                'roles' => $user->userRoles->pluck('role.name')
             ];
         }
 
@@ -138,7 +141,7 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'maxCount' => $count,
-            'data' => $data
+            'users' => $data
         ]);
     }
 
@@ -160,9 +163,11 @@ class UserController extends Controller
         $user->LastModifierUserId = Auth::id();
         $user->save();
 
+        $user->userRoles->pluck('role.name');
+
         return response()->json([
             'status' => 'success',
-            'data' => $user
+            'user' => $user
         ]);
     }
 
@@ -237,7 +242,7 @@ class UserController extends Controller
 
         $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
         $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();
-        $permission_exists = Permission::where('id', $request->permissionId)->first();
+        // $permission_exists = Permission::where('id', $request->permissionId)->first();
 
 
         if (empty($user_exist) || empty($role_exist)) {
@@ -247,7 +252,7 @@ class UserController extends Controller
             ], 400);
         }
 
-        $user_roles = UserRole::where('userId', $request->userId)->pluck('roleId')->toArray();
+        // $user_roles = UserRole::where('userId', $request->userId)->pluck('roleId')->toArray();
 
         $user = User::findOrFail($request->userId);
 
@@ -277,9 +282,12 @@ class UserController extends Controller
             ]);
         }
 
+        $userFinal = User::findOrFail($assigned_role->userId);
+        $userFinal->userRoles->pluck('role.name');
+
         return response()->json([
             'status' => 'success',
-            'data' => $assigned_role
+            'user' => $userFinal
         ]);
     }
 }
