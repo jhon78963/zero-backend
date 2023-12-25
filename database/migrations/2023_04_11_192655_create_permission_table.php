@@ -25,12 +25,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->dropUnique('permissions_name_unique');
-            $table->dropForeign(['roleId']);
-            $table->dropColumn('roleId');
-            $table->dropForeign(['userId']);
-            $table->dropColumn('userId');
-        });
+        Schema::dropIfExists('permissions');
     }
 };
