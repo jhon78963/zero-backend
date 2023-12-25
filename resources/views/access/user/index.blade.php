@@ -236,37 +236,23 @@
         function assignUser(user_id) {
             $.get('/admin/users/get/' + user_id, function(userData) {
                 $('#a_id').val(userData.user.id);
-                console.log();
                 $('#a_message').html(`Selecciona un <b>rol</b> de la lista a asignar`);
                 const rolesContainer = $('#rolesContainerCreate');
 
                 $.get('/admin/roles/getAll', function(data) {
                     rolesContainer.empty()
                     for (const role of data.roles) {
-                        let checkboxHtml = null;
-                        if (role.id == userData.user.role_id[0]) {
-                            checkboxHtml =
-                                `<div class="input-group mt-2">
+                        let checkboxHtml = `
+                            <div class="input-group mt-2">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="radio" value="${role.id}" aria-label="Checkbox for following text input" name="roleId" checked>
+                                    <input class="form-check-input mt-0" type="radio" value="${role.id}" aria-label="Checkbox for following text input" name="roleId" ${role.id == userData.user.role_id[0] ? 'checked' : ''}>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${role.name}" readonly name="roles-text[]"
-                                style="background-color: white;color: #697a8d;">
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${role.name}" readonly name="roles-text[]" style="background-color: white;color: #697a8d;">
                             </div>`;
-                            rolesContainer.append(checkboxHtml);
-                        } else {
-                            checkboxHtml =
-                                `<div class="input-group mt-2">
-                                <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="radio" value="${role.id}" aria-label="Checkbox for following text input" name="roleId">
-                                </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${role.name}" readonly name="roles-text[]"
-                                style="background-color: white;color: #697a8d;">
-                            </div>`;
-                            rolesContainer.append(checkboxHtml);
-                        }
+                        rolesContainer.append(checkboxHtml);
                     }
                 });
+
                 $("input[name=_token]").val();
                 $('#modalAssignUser').modal('toggle');
             })

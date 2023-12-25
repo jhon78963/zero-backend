@@ -186,7 +186,6 @@
                     methodInput.remove();
                 }
             }
-
         }
     </script>
 
