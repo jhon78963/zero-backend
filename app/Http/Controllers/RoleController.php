@@ -29,14 +29,14 @@ class RoleController extends Controller
         $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->exists();
         $permissions = $request->permissions;
         if ($roleExists) {
-            $role = Role::where('name', $request->name)->first();
+            $role = Role::where('name', $request->name)->where('IsDeleted', 0)->first();
             $existing_permissions = $role->permissions()->whereIn('name', $permissions)->get();
 
             // Agregar solo los permisos que no existen
             $new_permissions = array_diff($permissions, $existing_permissions->pluck('name')->toArray());
 
             $permissionsToSave = [];
-            foreach($new_permissions as $permissionName){
+            foreach ($new_permissions as $permissionName) {
                 $permissionsToSave[] = [
                     'CreatorUserId' => Auth::id(),
                     'name' => $permissionName,
@@ -68,7 +68,7 @@ class RoleController extends Controller
 
         $role->save();
 
-        foreach($permissions as $permission){
+        foreach ($permissions as $permission) {
             $permission_save = new Permission([
                 'CreatorUserId' => Auth::id(),
                 'name' => $permission,
@@ -81,8 +81,8 @@ class RoleController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $role
-        ],201);
+            'role' => $role
+        ], 201);
     }
 
     public function delete($id)
@@ -96,17 +96,16 @@ class RoleController extends Controller
             ], 404);
         }
 
-        Permission::where('roleId', $role->id)->delete();
+        Permission::where('roleId', $id)->delete();
 
         $role->IsDeleted = true;
         $role->DeleterUserId = Auth::id();
         $role->DeletionTime = now()->format('Y-m-d H:i:s');
-        $role->name = $role->name.$role->id;
         $role->save();
 
         return response()->json([
             'status' => 'success',
-            'data' => $role
+            'role' => $role
         ]);
     }
 
@@ -122,16 +121,15 @@ class RoleController extends Controller
         }
 
         $role = Role::where('IsDeleted', false)->findOrFail($id);
-
-        $permissions = $role->permissions;
+        $role->permissions;
 
         return response()->json([
             'status' => 'success',
-            'data' => $role
+            'role' => $role
         ]);
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
         $roles = Role::where('IsDeleted', false)->get();
 
@@ -146,28 +144,68 @@ class RoleController extends Controller
             ];
         }
 
-        $count = count($roles);
-
-        $roles = Role::where('IsDeleted', false)->paginate(5);
+        // $roles = Role::where('IsDeleted', false)->paginate(5);
 
         $permissions = Permission::distinct('name')
             ->whereNotIn('id', $roles->pluck('name'))
             ->get(['name']);
 
+        $count = count($roles);
+
         return response()->json([
             'status' => 'success',
             'maxCount' => $count,
-            'data' => $data,
-            'role' => $roles,
+            'roles' => $data,
+            // 'role' => $roles,
             'all_permissions' => $permissions
         ]);
     }
 
     public function update(UpdateRoleRequest $request, $id)
     {
-        // Verificar si el rol ya existe
+        // Validar si el rol ya existe
+        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->exists();
+        $permissions = $request->permissions;
+        $roleSetting = Role::where('name', $request->name)->where('IsDeleted', 0)->first();
+
+        if ($roleExists && $roleSetting->id != $id) {
+            $existing_permissions = $roleSetting->permissions()->whereIn('name', $permissions)->get();
+
+            // Agregar solo los permisos que no existen
+            $new_permissions = array_diff($permissions, $existing_permissions->pluck('name')->toArray());
+
+            // Agregar nuevos permisos
+            $permissionsToSave = [];
+            foreach ($new_permissions as $permissionName) {
+                $permissionsToSave[] = [
+                    'CreatorUserId' => Auth::id(),
+                    'name' => $permissionName,
+                    'roleId' => $roleSetting->id
+                ];
+            }
+
+            if (!empty($permissionsToSave)) {
+                // Inserta los nuevos permisos
+                Permission::insert($permissionsToSave);
+
+                $permissions = $roleSetting->permissions;
+
+                return response()->json([
+                    'status' => 'success',
+                    'role' => $roleSetting
+                ], 201);
+            }
+
+            // No hay cambios, ya que ni nuevos permisos ni eliminación de permisos
+            return response()->json([
+                'status' => 'info',
+                'msg' => 'No changes made. The role and all permissions already exist.'
+            ], 200);
+        }
+
         $role = Role::where('id', $id)->where('IsDeleted', false)->first();
 
+        // Verificar si el rol no existe
         if (empty($role)) {
             return response()->json([
                 'status' => 'error',
@@ -188,7 +226,7 @@ class RoleController extends Controller
         $new_permissions = array_diff($permissions, $role->permissions->pluck('name')->toArray());
 
         // Agregar los nuevos permisos
-        foreach($new_permissions as $permissionName){
+        foreach ($new_permissions as $permissionName) {
             Permission::create([
                 'name' => $permissionName,
                 'roleId' => $role->id
@@ -208,9 +246,13 @@ class RoleController extends Controller
         $role->update(['name' => $request->name]);
         $permissions = $role->permissions;
 
+        $roleReturn = Role::find($id);
+        $roleReturn->permissions;
+
+
         return response()->json([
             'status' => 'success',
-            'data' => $role
+            'role' => $roleReturn
         ], 201);
     }
 
