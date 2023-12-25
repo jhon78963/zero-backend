@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->boolean('isStatic');
         });
     }

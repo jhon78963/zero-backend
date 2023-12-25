@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->string('username')->unique()->nullable();
-            $table->string('email')->unique();
+            $table->string('username')->nullable();
+            $table->string('email');
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
             $table->string('password')->nullable();
