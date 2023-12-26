@@ -18,7 +18,7 @@
     <div class="modal fade" id="modalCreateCalendar" data-backdrop="static" data-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{ route('admin.calendars.store', $academic_period->name) }}" method="POST">
+            {{-- <form action="{{ route('admin.calendars.store', $academic_period->name) }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -58,7 +58,7 @@
                         <button type="submit" class="btn btn-primary" id="btnCreateUser">Registrar</button>
                     </div>
                 </div>
-            </form>
+            </form> --}}
         </div>
     </div>
 
@@ -75,7 +75,7 @@
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @foreach ($academic_calendars as $academic_calendar)
+                    {{-- @foreach ($academic_calendars as $academic_calendar)
                         <tr>
                             <td>{{ $academic_calendar->activity }}
                                 <strong>({{ $academic_calendar->responsible_person }})</strong>
@@ -94,7 +94,7 @@
                                 </button>
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
         </div>

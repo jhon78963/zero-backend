@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AcademicPeriodController;
+use App\Http\Controllers\AcedemicSilabusController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
@@ -75,6 +76,7 @@ Route::group(['prefix' => '{id}/admin'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->middleware('check.permissions:Admin,pages.period')->name('admin.periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->middleware('check.permissions:Admin,pages.calendar.modify')->name('admin.calendars.index');
     Route::post('/calendario', [AcademicCalendarController::class, 'store'])->middleware('check.permissions:Admin,pages.calendar.modify')->name('admin.calendars.store');
+    Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->middleware('check.permissions:Admin,pages.silabus')->name('admin.silabus.index');
 });
 
 Route::group(['prefix' => 'invitado'], function () {
