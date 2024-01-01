@@ -19,6 +19,10 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('check.permissions:Admin,pages.user')->only(['index', 'getAll', 'get']);
+        $this->middleware('check.permissions:Admin,pages.user.modify')->only(['create', 'update']);
+        $this->middleware('check.permissions:Admin,pages.user.delete')->only(['delete']);
+        $this->middleware('check.permissions:Admin,pages.user.assign')->only(['assign']);
     }
 
     public function index()

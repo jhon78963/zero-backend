@@ -10,6 +10,13 @@ use Carbon\Carbon;
 
 class AcademicPeriodController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('check.permissions:Admin,pages.period')->only(['index', 'home']);
+        $this->middleware('check.permissions:Admin,pages.period.modify')->only(['store']);
+    }
+
     public function index()
     {
         $academic_periods = AcademicPeriod::where('IsDeleted', false)->get();

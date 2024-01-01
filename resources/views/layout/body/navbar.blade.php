@@ -28,61 +28,32 @@
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    @if (auth()->user()->userRoles()->first()->role->name == 'Admin')
-                        <li>
-                            <a class="dropdown-item" href="{{ route('admin.auth.home') }}">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0 me-3">
-                                        <div class="avatar avatar-online">
-                                            <img src="{{ auth()->user()->profilePicture }}" alt
-                                                class="w-px-40 h-auto rounded-circle" />
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
-                                        <small
-                                            class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('auth.home') }}">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <img src="{{ auth()->user()->profilePicture }}" alt
+                                            class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                 </div>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('admin.auth.profile') }}">
-                                <i class="bx bx-user me-2"></i>
-                                <span class="align-middle">Mi perfil</span>
-                            </a>
-                        </li>
-                    @elseif(auth()->user()->userRoles()->first()->role->name == 'Guest')
-                        <li>
-                            <a class="dropdown-item" href="{{ route('guest.auth.profile') }}">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0 me-3">
-                                        <div class="avatar avatar-online">
-                                            <img src="{{ auth()->user()->profilePicture }}" alt
-                                                class="w-px-40 h-auto rounded-circle" />
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
-                                        <small
-                                            class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
-                                    </div>
+                                <div class="flex-grow-1">
+                                    <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
+                                    <small
+                                        class="text-muted">{{ auth()->user()->userRoles()->first()->role->name }}</small>
                                 </div>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('guest.auth.profile') }}">
-                                <i class="bx bx-user me-2"></i>
-                                <span class="align-middle">Mi perfil</span>
-                            </a>
-                        </li>
-                    @endif
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('auth.profile') }}">
+                            <i class="bx bx-user me-2"></i>
+                            <span class="align-middle">Mi perfil</span>
+                        </a>
+                    </li>
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>

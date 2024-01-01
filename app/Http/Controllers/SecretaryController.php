@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSecretaryRequest;
 use App\Http\Requests\UpdateSecretaryRequest;
+use App\Models\Api\User;
 use App\Models\Secretary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
 
 class SecretaryController extends Controller
 {
@@ -15,7 +18,11 @@ class SecretaryController extends Controller
 
     public function __construct()
     {
-        $this->academic_period = view()->shared('academic_period');
+        $this->middleware('auth');
+        $this->middleware('check.permissions:Admin-Secretaria,pages.secretary')->only(['index', 'getAll', 'get']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.secretary.modify')->only(['create', 'update']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.secretary.delete')->only(['delete']);
+        $this->academic_period = View::shared('academic_period');
     }
 
     public function index()
@@ -51,6 +58,8 @@ class SecretaryController extends Controller
 
         $secretary->save();
 
+        $this->generateUser($secretary);
+
         $count = Secretary::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
 
         return response()->json([
@@ -58,6 +67,30 @@ class SecretaryController extends Controller
             'secretary' => $secretary,
             'count' => $count,
         ], 201);
+    }
+
+    public function generateUser($secretary)
+    {
+        $user = new User([
+            'username' => $secretary->code,
+            'email' => $secretary->institutional_email,
+            'name' => $secretary->first_name,
+            'surname' => $secretary->surname,
+            'password' => Hash::make('123456789'),
+            'phoneNumber' => $secretary->phone,
+            'profilePicture' => '/assets/img/avatars/1.png',
+            'CreatorUserId' => Auth::id(),
+            'TenantId' => $this->academic_period->id,
+        ]);
+
+        $user->save();
+
+        DB::table('user_roles')->insert([
+            'roleId' => 2,
+            'userId' => $user->id,
+            'CreatorUserId' => Auth::id(),
+            'TenantId' => $this->academic_period->id,
+        ]);
     }
 
     public function delete($id)

@@ -5,7 +5,7 @@
             <div class="card mb-4">
                 <h5 class="card-header">Perfil de Usuario</h5>
                 <!-- Account -->
-                <form action="{{ route('admin.auth.profile.store', auth()->user()->id) }}" method="POST"
+                <form action="{{ route('auth.profile.store', auth()->user()->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('put')

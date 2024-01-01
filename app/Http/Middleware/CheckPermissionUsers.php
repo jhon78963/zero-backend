@@ -14,18 +14,19 @@ class CheckPermissionUsers
     public function handle(Request $request, Closure $next, $role_name, $permission)
     {
         $user = Auth::user();
+        $roles_name = explode('-', $role_name);
 
         if (!$user) {
             abort(401, 'Unauthorized');
         }
 
-        $role_user = $user->userRoles()->first();
+        $role_user = $user->userRoles->first();
 
         if (!$role_user) {
             abort(403, 'No tienes asignado un rol. Por favor contacta con un administrador.');
         }
 
-        if ($role_user->role->name != $role_name) {
+        if (!in_array($role_user->role->name, $roles_name)) {
             abort(403, 'No tienes el rol requerido. Por favor contacta con un administrador.');
         }
 

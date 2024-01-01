@@ -58,7 +58,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('admin.roles.getall') }}",
+                url: "{{ route('roles.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -192,7 +192,7 @@
     {{-- EDIT --}}
     <script>
         function onRoleUpdate(roleId) {
-            $.get('/admin/roles/get/' + roleId, function(data) {
+            $.get('/roles/get/' + roleId, function(data) {
                 $('#role_id').val(data.role.id);
                 $('#role-name').val(data.role.name);
 
@@ -285,7 +285,7 @@
                 },
             };
 
-            let ajaxUrl = (!roleId) ? "{{ route('admin.roles.create') }}" : `/admin/roles/update/${roleId}`;
+            let ajaxUrl = (!roleId) ? "{{ route('roles.create') }}" : `/roles/update/${roleId}`;
 
             $.ajax({
                 url: ajaxUrl,
@@ -297,7 +297,7 @@
     {{-- DELETE --}}
     <script>
         function onRoleDelete(roleId) {
-            $.get('/admin/roles/get/' + roleId, function(data) {
+            $.get('/roles/get/' + roleId, function(data) {
                 $('#d_id').val(data.role.id);
                 $('#d_message').html(
                     `Deseas eliminar el rol <b>${data.role.name}</b> de la lista?`
@@ -311,7 +311,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/admin/roles/delete/" + d_id,
+                url: "/roles/delete/" + d_id,
                 beforeSend: function() {
                     $('#btnDeleteRole').attr("disabled", true);
                     $('#btnDeleteRole').html(

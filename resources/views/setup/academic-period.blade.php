@@ -13,7 +13,7 @@
     <div class="modal fade" id="modalCreatePeriod" data-backdrop="static" data-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{ route('admin.periods.store') }}" method="POST">
+            <form action="{{ route('periods.store') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -65,7 +65,7 @@
                                 <p class="card-text">
                                     <small class="text-muted">
                                         <a class="text-muted"
-                                            href="{{ route('admin.periods.home', $academic_period->name) }}">Ingrese
+                                            href="{{ route('periods.home', $academic_period->name) }}">Ingrese
                                             aquí</a>
                                     </small>
                                 </p>

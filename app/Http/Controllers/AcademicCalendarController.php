@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AcademicCalendar;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
 
 class AcademicCalendarController extends Controller
 {
@@ -13,7 +14,10 @@ class AcademicCalendarController extends Controller
 
     public function __construct()
     {
-        $this->academic_period = view()->shared('academic_period');
+        $this->middleware('auth');
+        $this->middleware('check.permissions:Admin,pages.calendar')->only(['index']);
+        $this->middleware('check.permissions:Admin,pages.calendar.modify')->only(['store']);
+        $this->academic_period = View::shared('academic_period');
     }
 
     public function index()

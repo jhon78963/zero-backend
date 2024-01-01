@@ -40,7 +40,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('admin.secretaries.getall') }}",
+                url: "{{ route('secretaries.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -95,7 +95,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('admin.secretaries.create') }}",
+                url: "{{ route('secretaries.create') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createSecretaryForm")[0]),
@@ -150,7 +150,7 @@
     {{-- EDIT --}}
     <script>
         function openEditSecretaryModal(secretaryId) {
-            $.get('/admin/secretarias/get/' + secretaryId, function(data) {
+            $.get('/secretarias/get/' + secretaryId, function(data) {
                 $('#e_id').val(data.secretary.id);
                 $('#e_dni').val(data.secretary.dni);
                 $('#e_first_name').val(data.secretary.first_name);
@@ -170,7 +170,7 @@
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/admin/secretarias/update/" + e_id,
+                url: "/secretarias/update/" + e_id,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editSecretaryForm")[0]),
@@ -220,7 +220,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteSecretaryModal(secretaryId) {
-            $.get('/admin/secretarias/get/' + secretaryId, function(data) {
+            $.get('/secretarias/get/' + secretaryId, function(data) {
                 $('#d_id').val(data.secretary.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${data.secretary.first_name || ''} ${data.secretary.surname || ''}</b> de la lista?`
@@ -234,7 +234,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/admin/secretarias/delete/" + d_id,
+                url: "/secretarias/delete/" + d_id,
                 beforeSend: function() {
                     $('#btnDeleteSecretary').attr("disabled", true);
                     $('#btnDeleteSecretary').html(

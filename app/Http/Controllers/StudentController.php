@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\Api\User;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
@@ -15,7 +18,11 @@ class StudentController extends Controller
 
     public function __construct()
     {
-        $this->academic_period = view()->shared('academic_period');
+        $this->middleware('auth');
+        $this->middleware('check.permissions:Admin-Secretaria,pages.student')->only(['index', 'getAll', 'get']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.student.modify')->only(['create', 'update']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.student.delete')->only(['delete']);
+        $this->academic_period = View::shared('academic_period');
     }
 
     public function index()
@@ -51,12 +58,38 @@ class StudentController extends Controller
 
         $student->save();
 
+        $this->generateUser($student);
+
         $count = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
 
         return response()->json([
             'status' => 'success',
             'student' => $student,
             'count' => $count,
+        ]);
+    }
+
+    public function generateUser($student)
+    {
+        $user = new User([
+            'username' => $student->code,
+            'email' => $student->institutional_email,
+            'name' => $student->first_name,
+            'surname' => $student->surname,
+            'password' => Hash::make('123456789'),
+            'phoneNumber' => $student->phone,
+            'profilePicture' => '/assets/img/avatars/1.png',
+            'CreatorUserId' => Auth::id(),
+            'TenantId' => $this->academic_period->id,
+        ]);
+
+        $user->save();
+
+        DB::table('user_roles')->insert([
+            'roleId' => 4,
+            'userId' => $user->id,
+            'CreatorUserId' => Auth::id(),
+            'TenantId' => $this->academic_period->id,
         ]);
     }
 

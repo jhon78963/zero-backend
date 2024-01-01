@@ -7,7 +7,7 @@
 @section('content')
     <div class="card mb-4" style="padding-right: 1rem">
         <div class="d-flex align-items-center justify-content-between ">
-            <h5 class="card-header">Sílabu</h5>
+            <h5 class="card-header">Sílabus</h5>
             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" data-bs-toggle="modal"
                 data-bs-target="#modalCreateCalendar">
                 <span class="tf-icons bx bx-list-plus"></span>
@@ -18,7 +18,7 @@
     <div class="modal fade" id="modalCreateCalendar" data-backdrop="static" data-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            {{-- <form action="{{ route('admin.calendars.store', $academic_period->name) }}" method="POST">
+            {{-- <form action="{{ route('calendars.store', $academic_period->name) }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -67,11 +67,10 @@
             <table class="table" id="tabla-roles">
                 <thead>
                     <tr>
-                        <th width="60%">Actividad (Responsable)</th>
-                        <th class="text-center">Duración</th>
-                        <th class="text-center">Inicio</th>
-                        <th class="text-center">Fin</th>
-                        <th class="text-center">Opciones</th>
+                        <th width="60%">Docente</th>
+                        <th class="text-center">Curso</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">PDF</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">

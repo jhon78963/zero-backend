@@ -41,7 +41,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('admin.teachers.getall') }}",
+                url: "{{ route('teachers.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -96,7 +96,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('admin.teachers.create') }}",
+                url: "{{ route('teachers.create') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createTeacherForm")[0]),
@@ -151,7 +151,7 @@
     {{-- EDIT --}}
     <script>
         function openEditTeacherModal(teacherId) {
-            $.get('/admin/profesores/get/' + teacherId, function(data) {
+            $.get('/profesores/get/' + teacherId, function(data) {
                 $('#e_id').val(data.teacher.id);
                 $('#e_dni').val(data.teacher.dni);
                 $('#e_first_name').val(data.teacher.first_name);
@@ -171,7 +171,7 @@
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/admin/profesores/update/" + e_id,
+                url: "/profesores/update/" + e_id,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editTeacherForm")[0]),
@@ -221,7 +221,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteTeacherModal(teacherId) {
-            $.get('/admin/profesores/get/' + teacherId, function(data) {
+            $.get('/profesores/get/' + teacherId, function(data) {
                 $('#d_id').val(data.teacher.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${data.teacher.first_name || ''} ${data.teacher.surname || ''}</b> de la lista?`
@@ -235,7 +235,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/admin/profesores/delete/" + d_id,
+                url: "/profesores/delete/" + d_id,
                 beforeSend: function() {
                     $('#btnDeleteTeacher').attr("disabled", true);
                     $('#btnDeleteTeacher').html(

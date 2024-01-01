@@ -10,12 +10,16 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\View;
 
 class RoleController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('check.permissions:Admin,pages.role')->only(['index', 'getAll', 'get']);
+        $this->middleware('check.permissions:Admin,pages.role.modify')->only(['create', 'update']);
+        $this->middleware('check.permissions:Admin,pages.role.delete')->only(['delete']);
     }
 
     public function index()
