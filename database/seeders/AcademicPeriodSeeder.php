@@ -14,9 +14,9 @@ class AcademicPeriodSeeder extends Seeder
         $academic_period->CreatorUserId = 1;
         $academic_period->IsDeleted = 0;
         $academic_period->TenantId = 1;
-        $academic_period->name = 'pa-2023';
-        $academic_period->year = '2023';
-        $academic_period->yearName = 'Año de la unidad, la paz y el desarrollo';
+        $academic_period->name = 'pa-2024';
+        $academic_period->year = '2024';
+        $academic_period->yearName = 'Año del Bicentenario, de la consolidación de nuestra Independencia, y de la conmemoración de las heroicas batallas de Junín y Ayacucho';
         $academic_period->save();
     }
 }
