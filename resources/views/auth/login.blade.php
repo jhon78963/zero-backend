@@ -72,7 +72,8 @@
 
         <!--JS & jQuery-->
         <script type="text/javascript" src="{{ asset('loginn/js/script.js') }}"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+        <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>

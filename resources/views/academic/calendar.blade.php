@@ -63,7 +63,7 @@
     </div>
 
     <div class="card">
-        <div class="table-responsive text-nowrap mt-1">
+        <div class="text-nowrap mt-1">
             <table class="table" id="tabla-roles">
                 <thead>
                     <tr>

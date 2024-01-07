@@ -92,23 +92,23 @@
                     <div data-i18n="Account">Calendario Académico</div>
                 </a>
             </li>
-        @endif
-
-        @if ($roleName == 'Admin' || $roleName == 'Secretaria' || $roleName == 'Docente')
             <li class="menu-item">
-                <a href="{{ route('silabus.index', $academic_period->name) }}" class="menu-link">
-                    <div data-i18n="Account">Sílabus</div>
+                <a href="{{ route('class-room.index', $academic_period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Aulas</div>
                 </a>
             </li>
-        @endif
 
-        @if ($roleName == 'Admin' || $roleName == 'Secretaria')
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-dock-top"></i>
                     <div data-i18n="Account Settings">Carga Horaria</div>
                 </a>
                 <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">
+                            <div data-i18n="Account">Cursos</div>
+                        </a>
+                    </li>
                     <li class="menu-item">
                         <a href="#" class="menu-link">
                             <div data-i18n="Account">Docente</div>
@@ -121,7 +121,17 @@
                     </li>
                 </ul>
             </li>
+        @endif
 
+        @if ($roleName == 'Admin' || $roleName == 'Secretaria' || $roleName == 'Docente')
+            <li class="menu-item">
+                <a href="{{ route('silabus.index', $academic_period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Sílabus</div>
+                </a>
+            </li>
+        @endif
+
+        @if ($roleName == 'Admin' || $roleName == 'Secretaria')
             <li class="menu-item">
                 <a href="#" class="menu-link">
                     <div data-i18n="Account">Matriculas</div>

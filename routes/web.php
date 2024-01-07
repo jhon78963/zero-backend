@@ -5,9 +5,12 @@ use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AcedemicSilabusController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClassRoomController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SecretaryController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
@@ -70,11 +73,26 @@ Route::get('/secretarias/delete/{id}', [SecretaryController::class, 'delete'])->
 Route::post('/secretarias/store', [SecretaryController::class, 'create'])->name('secretaries.create');
 Route::put('/secretarias/update/{id}', [SecretaryController::class, 'update'])->name('secretaries.update');
 
+
+Route::get('/grados/getAll', [GradeController::class, 'getAll'])->name('grades.getall');
+Route::post('/grados/store', [GradeController::class, 'create'])->name('grades.create');
+
+Route::get('/secciones/getAll', [SectionController::class, 'getAll'])->name('sections.getall');
+Route::post('/secciones/store', [SectionController::class, 'create'])->name('sections.create');
+
+Route::get('/aulas/getAll', [ClassRoomController::class, 'getAll'])->name('class-room.getall');
+Route::get('/aulas/get/{grade_id}/{section_id}', [ClassRoomController::class, 'get'])->name('class-room.get');
+Route::get('/aulas/delete/{id}', [ClassRoomController::class, 'delete'])->name('class-room.delete');
+Route::post('/aulas/store', [ClassRoomController::class, 'create'])->name('class-room.create');
+Route::put('/aulas/update/{grade_id}/{section_id}', [ClassRoomController::class, 'update'])->name('class-room.update');
+
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
     Route::post('/calendario', [AcademicCalendarController::class, 'store'])->name('calendars.store');
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
+
+    Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
 });
 
 // Auth
