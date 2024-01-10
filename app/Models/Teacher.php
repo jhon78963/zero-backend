@@ -12,4 +12,14 @@ class Teacher extends Model
     protected $guarded = [''];
 
     public $timestamps = false;
+
+    public function teacherClassrooms()
+    {
+        return $this->hasMany(TeacherClassroom::class, 'teacher_id');
+    }
+
+    public function teacherCourses()
+    {
+        return $this->hasMany(TeacherCourse::class, 'teacher_id');
+    }
 }

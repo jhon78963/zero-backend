@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseGrade extends Model
+class GradeSchedule extends Model
 {
     use HasFactory;
 
-    protected $table = 'course_grades';
+    protected $table = 'grade_schedules';
 
     protected $guarded = [''];
 
@@ -18,10 +18,5 @@ class CourseGrade extends Model
     public function course()
     {
         return $this->belongsTo(Course::class, 'course_id');
-    }
-
-    public function grade()
-    {
-        return $this->belongsTo(Grade::class, 'grade_id');
     }
 }

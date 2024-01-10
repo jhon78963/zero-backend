@@ -32,9 +32,19 @@
         </div>
     </div>
 
+    @include('academic.course.course-assign-modal')
     @include('academic.course.course-create-modal')
     @include('academic.course.course-edit-modal')
     @include('academic.course.course-delete-modal')
+@endsection
+
+@section('css')
+    <style>
+        .badge {
+            text-transform: none !important;
+            font-size: 0.85rem;
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -95,13 +105,99 @@
             ).join(' ');
             return gradesNames;
         }
+
+        function getGradesNameTransaction(grades) {
+            const gradesNames = grades.map(grade =>
+                `<span class="badge bg-label-primary mb-1 me-1">${grade.grade.description}</span>`
+            ).join(' ');
+            return gradesNames;
+        }
+
+        function isChecked(gradeId, courseData) {
+            return courseData.course.grade_id.includes(gradeId);
+        }
     </script>
 
     {{-- ASSIGN --}}
     <script>
         function openAssignCourseModal(courseId) {
+            $.get('/cursos/get/' + courseId, function(courseData) {
 
+                $('#a_id').val(courseData.course.id);
+                $('#a_message').html(`Selecciona uno o mas <b>grados</b> de la lista a asignar`);
+                const gradesContainer = $('#gradesContainerCreate');
+
+                $.get('/grados/getAll', function(data) {
+                    gradesContainer.empty()
+                    $.each(data.grades, function(index, grade) {
+                        let checkboxHtml = `
+                            <div class="input-group mt-2">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value="${grade.id}" aria-label="Checkbox for following text input" name="grades[]" ${isChecked(grade.id, courseData) ? 'checked' : ''}>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" value="${grade.description}" readonly name="roles-text[]" style="background-color: white;color: #697a8d;">
+                            </div>`;
+                        gradesContainer.append(checkboxHtml);
+                    });
+                });
+
+                $("input[name=_token]").val();
+                $('#assignCourseModal').modal('toggle');
+            })
         }
+
+        $('#assignCourseForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('courses.assign') }}",
+                method: 'POST',
+                dataType: 'json',
+                data: new FormData($("#assignCourseForm")[0]),
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    $('#btnAssignCourse').attr("disabled", true);
+                    $('#btnAssignCourse').html(
+                        '<div class="spinner-border spinner-border-sm text-white" role="status"></div> Asignando...'
+                    );
+                },
+                success: function(data) {
+                    $('#assignCourseModal').modal('hide');
+                    $('#assignCourseForm')[0].reset();
+                    toastr.success('El(os) grados fueron asignados correctamente.',
+                        'Grados Asignados', {
+                            timeOut: 3000
+                        });
+
+                    let fila = `
+                        <td>${data.position}</td>
+                        <td>${data.course.description}</td>
+                        <td>
+                            <div class="d-flex flex-wrap">
+                                ${getGradesNameTransaction(data.course.course_grades)}
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" onclick="openEditCourseModal(${data.course.id})">
+                                <span class="tf-icons bx bx-edit-alt"></span>
+                            </button>
+                            <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" onclick="openAssignCourseModal(${data.course.id})">
+                                <span class="tf-icons bx bx-check-square"></span>
+                            </button>
+                            <button type="button" class="btn rounded-pill btn-icon btn-outline-danger me-1" onclick="openDeleteCourseModal(${data.course.id})">
+                                <span class="tf-icons bx bx-trash"></span>
+                            </button>
+                        </td>
+                    `;
+
+                    $(`#tabla-courses tbody #row-${data.course.id}`).html(fila);
+                },
+                complete: function() {
+                    $('#btnAssignCourse').text('Asignar');
+                    $('#btnAssignCourse').attr("disabled", false);
+                }
+            });
+        });
     </script>
 
     {{-- CREATE --}}
@@ -140,6 +236,11 @@
                         <tr id="row-${data.course.id}">
                             <td>${data.count}</td>
                             <td>${data.course.description}</td>
+                            <td>
+                                <div class="d-flex flex-wrap">
+                                    ${getGradesNameTransaction(data.course.course_grades)}
+                                </div>
+                            </td>
                             <td>
                                 <div class="d-flex">
                                     <button class="btn rounded-pill btn-icon btn-outline-primary me-1" onclick="openEditCourseModal(${data.course.id})">
@@ -206,6 +307,11 @@
                     const fila = `
                         <td>${data.position}</td>
                         <td>${data.course.description}</td>
+                        <td>
+                            <div class="d-flex flex-wrap">
+                                ${getGradesNameTransaction(data.course.course_grades)}
+                            </div>
+                        </td>
                         <td>
                             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" onclick="openEditCourseModal(${data.course.id})">
                                 <span class="tf-icons bx bx-edit-alt"></span>

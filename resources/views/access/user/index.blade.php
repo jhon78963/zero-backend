@@ -235,6 +235,7 @@
     <script>
         function assignUser(user_id) {
             $.get('/users/get/' + user_id, function(userData) {
+                console.log(userData);
                 $('#a_id').val(userData.user.id);
                 $('#a_message').html(`Selecciona un <b>rol</b> de la lista a asignar`);
                 const rolesContainer = $('#rolesContainerCreate');

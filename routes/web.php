@@ -15,6 +15,7 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,8 +91,12 @@ Route::put('/aulas/update/{grade_id}/{section_id}', [ClassRoomController::class,
 Route::get('/cursos/getAll', [CourseController::class, 'getAll'])->name('courses.getall');
 Route::get('/cursos/get/{id}', [CourseController::class, 'get'])->name('courses.get');
 Route::get('/cursos/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+Route::post('/cursos/assign', [CourseController::class, 'assign'])->name('courses.assign');
 Route::post('/cursos/store', [CourseController::class, 'create'])->name('courses.create');
 Route::put('/cursos/update/{id}', [CourseController::class, 'update'])->name('courses.update');
+
+Route::get('carga-horario/getAll', [WorkloadController::class, 'getAll'])->name('workload.getall');
+Route::post('save', [WorkloadController::class, 'saveSchedule'])->name('save-schedule');
 
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
@@ -100,6 +105,8 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
     Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
     Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('/carga-horario/docentes', [WorkloadController::class, 'teacher'])->name('workload.teacher');
+    Route::get('/carga-horario/estudiantes', [WorkloadController::class, 'student'])->name('workload.student');
 });
 
 // Auth

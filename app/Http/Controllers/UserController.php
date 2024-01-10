@@ -60,7 +60,7 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'user' => $user
-        ],201);
+        ], 201);
     }
 
     public function delete($id)
@@ -104,16 +104,16 @@ class UserController extends Controller
         $role_id = $user->userRoles->pluck('role.id');
 
         $data = [
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email,
-                'name' => $user->name,
-                'surname' => $user->surname,
-                'phoneNumber' => $user->phoneNumber,
-                'profilePicture' => $user->profilePicture,
-                'roles' => $roles,
-                'role_id' => $role_id,
-            ];
+            'id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+            'name' => $user->name,
+            'surname' => $user->surname,
+            'phoneNumber' => $user->phoneNumber,
+            'profilePicture' => $user->profilePicture,
+            'roles' => $roles,
+            'role_id' => $role_id,
+        ];
 
         return response()->json([
             'status' => 'success',
@@ -190,9 +190,9 @@ class UserController extends Controller
 
         $roles = $user->userRoles->pluck('role.name');
         $data[] = [
-                'id' => $user->id,
-                'roles' => $roles
-            ];
+            'id' => $user->id,
+            'roles' => $roles
+        ];
 
         return response()->json([
             'status' => 'success',
@@ -219,7 +219,7 @@ class UserController extends Controller
         if (empty($user_role)) {
             return response()->json([
                 'status' => 'error',
-                'msg' => 'The role '.$role->name.' is not assigned to the user'
+                'msg' => 'The role ' . $role->name . ' is not assigned to the user'
             ], 400);
         }
 
@@ -236,7 +236,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'msg' => 'The role '.$role->name.' was successfully unassigned from the user'
+            'msg' => 'The role ' . $role->name . ' was successfully unassigned from the user'
         ]);
     }
 
@@ -265,7 +265,7 @@ class UserController extends Controller
                 $role_name = $user_role->role->name;
                 return response()->json([
                     'status' => 'error',
-                    'msg' => 'The role '.$role_name.' is already assigned to the user'
+                    'msg' => 'The role ' . $role_name . ' is already assigned to the user'
                 ], 400);
             }
         }

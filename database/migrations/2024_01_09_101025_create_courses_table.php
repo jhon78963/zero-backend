@@ -20,6 +20,7 @@ return new class extends Migration
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
             $table->string('description');
+            $table->enum('type', ['GENERAL', 'AREA']);
         });
     }
 

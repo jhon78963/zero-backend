@@ -45,6 +45,7 @@ class TeacherController extends Controller
 
         $teacher = new Teacher([
             'dni' => $request->input('dni'),
+            'type' => $request->input('type'),
             'first_name' => $request->input('first_name'),
             'other_names' => $request->input('other_names'),
             'surname' => $request->input('surname'),
@@ -162,6 +163,7 @@ class TeacherController extends Controller
         }
 
         $teacher->dni = $request->input('dni');
+        $teacher->type = $request->input('type');
         $teacher->first_name = $request->input('first_name');
         $teacher->other_names = $request->input('other_names');
         $teacher->surname = $request->input('surname');

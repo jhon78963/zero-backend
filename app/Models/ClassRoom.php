@@ -14,4 +14,9 @@ class ClassRoom extends Model
     protected $guarded = [''];
 
     public $timestamps = false;
+
+    public function teacherClassrooms()
+    {
+        return $this->hasMany(TeacherClassroom::class, 'classroom_id');
+    }
 }

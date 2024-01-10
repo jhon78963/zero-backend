@@ -7,22 +7,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('teacher_classrooms', function (Blueprint $table) {
+        Schema::create('grade_schedules', function (Blueprint $table) {
             $table->id();
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->unsignedBigInteger('teacher_id')->nullable();
-            $table->unsignedBigInteger('classroom_id')->nullable();
-            $table->foreign('teacher_id')->references('id')->on('teachers');
-            $table->foreign('classroom_id')->references('id')->on('class_rooms');
+            $table->unsignedBigInteger('grade_id')->nullable();
+            $table->unsignedBigInteger('course_id')->nullable();
+            $table->string('hour');
+            $table->string('day');
+            $table->foreign('grade_id')->references('id')->on('grades');
+            $table->foreign('course_id')->references('id')->on('courses');
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teacher_classrooms');
+        Schema::dropIfExists('grade_schedules');
     }
 };

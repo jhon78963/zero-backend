@@ -13,6 +13,17 @@
                     <input type="hidden" id="e_id">
                     <div class="row">
                         <div class="col mb-3">
+                            <label for="e_dni" class="form-label">Tipo</label>
+                            <select id="e_type" name="type" class="form-control">
+                                <option value="">Selecione ...</option>
+                                <option value="GENERAL">General</option>
+                                <option value="AREA">Area</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
                             <label for="e_dni" class="form-label">DNI</label>
                             <input type="text" id="e_dni" name="dni" class="form-control"
                                 placeholder="DNI" />

@@ -153,6 +153,7 @@
         function openEditTeacherModal(teacherId) {
             $.get('/profesores/get/' + teacherId, function(data) {
                 $('#e_id').val(data.teacher.id);
+                $('#e_type').val(data.teacher.type);
                 $('#e_dni').val(data.teacher.dni);
                 $('#e_first_name').val(data.teacher.first_name);
                 $('#e_other_names').val(data.teacher.other_names);

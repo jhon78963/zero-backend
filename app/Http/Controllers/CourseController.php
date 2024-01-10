@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseGrade;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -26,9 +28,52 @@ class CourseController extends Controller
         return view('academic.course.index');
     }
 
-    public function assign($id)
+    public function assign(Request $request)
     {
-        //
+        $courseExists = Course::where('id', $request->course_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->exists();
+
+        if (!$courseExists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => '¡El curso no existe!'
+            ], 400);
+        }
+
+        CourseGrade::where('course_id', $request->course_id)->delete();
+
+        $grades = $request->grades;
+
+        foreach ($grades as $grade) {
+            $grade_save = new CourseGrade([
+                'course_id' => $request->input('course_id'),
+                'grade_id' => $grade,
+                'CreatorUserId' => Auth::id(),
+                'TenantId' => $this->academic_period->id,
+            ]);
+
+            $grade_save->save();
+        }
+
+        $course = Course::where('id', $request->course_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        $course->courseGrades->pluck('grade.description');
+
+        $position = Course::where('id', '<=', $course->id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->count();
+
+        return response()->json([
+            'status' => 'success',
+            'course' => $course,
+            'position' => $position,
+        ], 201);
     }
 
     public function create(Request $request)
@@ -52,6 +97,8 @@ class CourseController extends Controller
         ]);
 
         $course->save();
+
+        $course->courseGrades->pluck('grade.description');
 
         $count = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
 
@@ -94,9 +141,19 @@ class CourseController extends Controller
             ->where('TenantId', $this->academic_period->id)
             ->first();
 
+        $grades = $course->courseGrades->pluck('grade.description');
+        $grade_id = $course->courseGrades->pluck('grade.id');
+
+        $data = [
+            'id' => $course->id,
+            'description' => $course->description,
+            'grades' => $grades,
+            'grade_id' => $grade_id,
+        ];
+
         return response()->json([
             'status' => 'success',
-            'course' => $course
+            'course' => $data
         ]);
     }
 
@@ -156,6 +213,8 @@ class CourseController extends Controller
         $course->LastModificationTime = now()->format('Y-m-d H:i:s');
         $course->LastModifierUserId = Auth::id();
         $course->save();
+
+        $course->courseGrades->pluck('grade.description');
 
         $position = Course::where('id', '<=', $course->id)
             ->where('IsDeleted', false)

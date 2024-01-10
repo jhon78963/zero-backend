@@ -110,12 +110,12 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('workload.teacher', $academic_period->name) }}" class="menu-link">
                             <div data-i18n="Account">Docente</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('workload.student', $academic_period->name) }}" class="menu-link">
                             <div data-i18n="Notifications">Alumno</div>
                         </a>
                     </li>
