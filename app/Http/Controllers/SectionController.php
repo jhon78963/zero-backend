@@ -14,9 +14,9 @@ class SectionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('check.permissions:Admin-Secretaria,pages.teacher')->only(['index', 'getAll', 'get']);
-        $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.modify')->only(['create', 'update']);
-        $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.delete')->only(['delete']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.section')->only(['index', 'getAll', 'get']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.section.modify')->only(['create', 'update']);
+        $this->middleware('check.permissions:Admin-Secretaria,pages.section.delete')->only(['delete']);
         $this->academic_period = View::shared('academic_period');
     }
 

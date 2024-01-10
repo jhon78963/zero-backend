@@ -6,6 +6,7 @@ use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AcedemicSilabusController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassRoomController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
@@ -86,13 +87,19 @@ Route::get('/aulas/delete/{id}', [ClassRoomController::class, 'delete'])->name('
 Route::post('/aulas/store', [ClassRoomController::class, 'create'])->name('class-room.create');
 Route::put('/aulas/update/{grade_id}/{section_id}', [ClassRoomController::class, 'update'])->name('class-room.update');
 
+Route::get('/cursos/getAll', [CourseController::class, 'getAll'])->name('courses.getall');
+Route::get('/cursos/get/{id}', [CourseController::class, 'get'])->name('courses.get');
+Route::get('/cursos/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+Route::post('/cursos/store', [CourseController::class, 'create'])->name('courses.create');
+Route::put('/cursos/update/{id}', [CourseController::class, 'update'])->name('courses.update');
+
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
     Route::post('/calendario', [AcademicCalendarController::class, 'store'])->name('calendars.store');
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
-
     Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
+    Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
 });
 
 // Auth

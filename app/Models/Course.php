@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Grade extends Model
+class Course extends Model
 {
     use HasFactory;
 
-    protected $table = 'grades';
+    protected $table = 'courses';
 
     protected $guarded = [''];
 
@@ -17,6 +17,6 @@ class Grade extends Model
 
     public function courseGrades()
     {
-        return $this->hasMany(CourseGrade::class, 'grade_id');
+        return $this->hasMany(CourseGrade::class, 'course_id');
     }
 }

@@ -87,8 +87,6 @@
         </div>
     </div>
 
-
-
     @include('academic.grade.grade-create-modal')
     @include('academic.grade.grade-edit-modal')
     @include('academic.grade.grade-delete-modal')
@@ -114,7 +112,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('grades.getall') }}",
+                url: "{{ route('courses.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {

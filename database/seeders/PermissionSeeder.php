@@ -136,6 +136,71 @@ class PermissionSeeder extends Seeder
         $permission->save();
 
         $permission = new Permission();
+        $permission->name = 'pages.grades';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.grades.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.grades.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.modify';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.delete';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.assign';
+        $permission->roleId = 1;
+        $permission->save();
+
+        $permission = new Permission();
         $permission->name = 'pages.period';
         $permission->roleId = 2;
         $permission->save();
@@ -208,6 +273,71 @@ class PermissionSeeder extends Seeder
 
         $permission = new Permission();
         $permission->name = 'pages.secretary.delete';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.grades';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.grades.modify';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.grades.delete';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section.modify';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.section.delete';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom.modify';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.classroom.delete';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.modify';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.delete';
+        $permission->roleId = 2;
+        $permission->save();
+
+        $permission = new Permission();
+        $permission->name = 'pages.course.assign';
         $permission->roleId = 2;
         $permission->save();
 

@@ -105,7 +105,7 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('courses.index', $academic_period->name) }}" class="menu-link">
                             <div data-i18n="Account">Cursos</div>
                         </a>
                     </li>

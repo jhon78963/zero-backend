@@ -11,8 +11,6 @@ return new class extends Migration
     {
         Schema::create('class_rooms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('grade_id');
-            $table->unsignedBigInteger('section_id');
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
             $table->datetime('LastModificationTime')->nullable();
@@ -21,6 +19,8 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
+            $table->unsignedBigInteger('grade_id');
+            $table->unsignedBigInteger('section_id');
             $table->string('description');
             $table->integer('limit');
             $table->integer('students_number')->default(0);
