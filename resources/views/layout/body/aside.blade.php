@@ -133,7 +133,7 @@
 
         @if ($roleName == 'Admin' || $roleName == 'Secretaria')
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('school-registration.index', $academic_period->name) }}" class="menu-link">
                     <div data-i18n="Account">Matriculas</div>
                 </a>
             </li>

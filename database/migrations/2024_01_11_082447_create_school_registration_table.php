@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('school_registration', function (Blueprint $table) {
             $table->id();
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
@@ -19,21 +19,18 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->string('first_name', 15);
-            $table->string('other_names', 30)->nullable();
-            $table->string('surname', 15);
-            $table->string('mother_surname', 15)->nullable();
-            $table->string('dni', 8);
-            $table->string('code', 10);
-            $table->string('institutional_email', 190);
-            $table->string('phone', 9)->nullable();
-            $table->string('address')->nullable();
-            $table->char('status', 1)->default('0');
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('classroom_id');
+            $table->dateTime('created_date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->char('year', 4);
+            $table->string('status', 50)->default('ACTIVE');
+            $table->foreign('student_id')->references('id')->on('students');
+            $table->foreign('classroom_id')->references('id')->on('class_rooms');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('school_registration');
     }
 };

@@ -112,7 +112,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('courses.getall') }}",
+                url: "{{ route('grades.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {

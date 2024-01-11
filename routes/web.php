@@ -10,6 +10,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SchoolRegistrationController;
 use App\Http\Controllers\SecretaryController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
@@ -98,6 +99,9 @@ Route::put('/cursos/update/{id}', [CourseController::class, 'update'])->name('co
 Route::get('carga-horario/getAll', [WorkloadController::class, 'getAll'])->name('workload.getall');
 Route::post('save', [WorkloadController::class, 'saveSchedule'])->name('save-schedule');
 
+Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
+Route::post('/matriculas/store', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
+
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
@@ -107,6 +111,8 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
     Route::get('/carga-horario/docentes', [WorkloadController::class, 'teacher'])->name('workload.teacher');
     Route::get('/carga-horario/estudiantes', [WorkloadController::class, 'student'])->name('workload.student');
+    Route::get('/matriculas', [SchoolRegistrationController::class, 'index'])->name('school-registration.index');
+    Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'register'])->name('school-registration.register');
 });
 
 // Auth
