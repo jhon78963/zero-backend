@@ -47,23 +47,6 @@
                                             placeholder="nro dni" required="required">
                                     </div>
                                 </div>
-                                <div class="col-4">
-                                    <div class="form-group mb-2">
-                                        <label for="nombres">Sexo: </label>
-                                        <select name="alum_sexo" id="alum_sexo" class="form-control" required="required">
-                                            <option value="0">Seleccione el sexo</option>
-                                            <option value="Femenino">Femenino</option>
-                                            <option value="Masculino">Masculino</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group mb-2">
-                                        <label for="nombres">Fecha Nacimiento: </label>
-                                        <input type="date" name="alum_fechaNacimiento" id="alum_fechaNacimiento"
-                                            class="form-control" placeholder="nro celular" required="required">
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="form-group mb-2">
@@ -103,13 +86,6 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group mb-2">
-                                        <label for="nombres">Telefono: </label>
-                                        <input type="text" name="alum_telefono" id="alum_telefono"
-                                            class="form-control" placeholder="nro telefono" required="required">
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group mb-2">
                                         <label for="nombres">Celuar: </label>
                                         <input type="text" name="alum_celular" id="alum_celular" class="form-control"
                                             placeholder="nro celular" required="required">
@@ -134,7 +110,7 @@
                             <div class="form-group mb-2">
                                 <label for="nombres">Año Académico: </label>
                                 <input type="text" name="matr_año_ingreso" id="matr_año_ingreso"
-                                    class="form-control text-center" placeholder="año academico" value="2022"
+                                    class="form-control text-center" placeholder="año academico" value="2024"
                                     required="required" readonly>
                             </div>
 
@@ -160,7 +136,7 @@
 
                             <div class="form-group">
                                 <input type="text" name="aula_id" id="aula_id" class="form-control text-center"
-                                    required="required"  readonly>
+                                    required="required" hidden="true" readonly>
                             </div>
 
                             <div class="form-group">

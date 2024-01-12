@@ -84,20 +84,22 @@ class SchoolRegistrationController extends Controller
             $alumno_seccion->save();
 
             $curso_secciones = CourseGrade::where('course_id', $request->grado_id)->get();
-            $course_competencias = CourseCompetencia::where('TenantId', $this->academic_period->id)->get();
+            $course_competencias = DB::table('course_competencias as cc')
+                ->join('course_grades as cg', 'cg.course_id', 'cc.course_id')
+                ->join('class_rooms as cr', 'cr.grade_id', 'cg.grade_id')
+                ->where('cc.TenantId', $this->academic_period->id)
+                ->where('cr.section_id', $request->secc_id)
+                ->select('cc.id as course_competencia_id')
+                ->get();
 
-            foreach ($curso_secciones as $curso_seccion) {
-                foreach ($course_competencias as $course_competencia) {
-                    if (is_object($course_competencia) && $curso_seccion->course_id == $course_competencia->course_id) {
-                        $nota = new StudentCompetencia();
-                        $nota->student_id = $request->alum_id;
-                        $nota->classroom_id = $request->aula_id;
-                        $nota->course_competencia_id = $curso_seccion->id;
-                        $nota->CreatorUserId = Auth::id();
-                        $nota->TenantId = $this->academic_period->id;
-                        $nota->save();
-                    }
-                }
+            foreach ($course_competencias as $course_competencia) {
+                $nota = new StudentCompetencia();
+                $nota->student_id = $request->alum_id;
+                $nota->classroom_id = $request->aula_id;
+                $nota->course_competencia_id = $course_competencia->course_competencia_id;
+                $nota->CreatorUserId = Auth::id();
+                $nota->TenantId = $this->academic_period->id;
+                $nota->save();
             }
 
             return redirect()->route('school-registration.index', $this->academic_period->name)->with('datos', 'Matricula Registrada ...!');
@@ -135,20 +137,22 @@ class SchoolRegistrationController extends Controller
             $alumno_seccion->save();
 
             $curso_secciones = CourseGrade::where('course_id', $request->grado_id)->get();
-            $course_competencias = CourseCompetencia::where('TenantId', $this->academic_period->id)->get();
+            $course_competencias = DB::table('course_competencias as cc')
+                ->join('course_grades as cg', 'cg.course_id', 'cc.course_id')
+                ->join('class_rooms as cr', 'cr.grade_id', 'cg.grade_id')
+                ->where('cc.TenantId', $this->academic_period->id)
+                ->where('cr.section_id', $request->secc_id)
+                ->select('cc.id as course_competencia_id')
+                ->get();
 
-            foreach ($curso_secciones as $curso_seccion) {
-                foreach ($course_competencias as $course_competencia) {
-                    if ($curso_seccion->course_id === $course_competencia->course_id) {
-                        $nota = new StudentCompetencia();
-                        $nota->student_id = $student->id;
-                        $nota->classroom_id = $request->aula_id;
-                        $nota->course_competencia_id = $curso_seccion->id;
-                        $nota->CreatorUserId = Auth::id();
-                        $nota->TenantId = $this->academic_period->id;
-                        $nota->save();
-                    }
-                }
+            foreach ($course_competencias as $course_competencia) {
+                $nota = new StudentCompetencia();
+                $nota->student_id = $student->id;
+                $nota->classroom_id = $request->aula_id;
+                $nota->course_competencia_id = $course_competencia->course_competencia_id;
+                $nota->CreatorUserId = Auth::id();
+                $nota->TenantId = $this->academic_period->id;
+                $nota->save();
             }
 
             return redirect()->route('school-registration.index', $this->academic_period->name)->with('datos', 'Matricula Registrada ...!');
