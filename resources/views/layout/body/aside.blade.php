@@ -115,8 +115,8 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{ route('workload.student', $academic_period->name) }}" class="menu-link">
-                            <div data-i18n="Notifications">Alumno</div>
+                        <a href="{{ route('workload.index', $academic_period->name) }}" class="menu-link">
+                            <div data-i18n="Notifications">Horario</div>
                         </a>
                     </li>
                 </ul>

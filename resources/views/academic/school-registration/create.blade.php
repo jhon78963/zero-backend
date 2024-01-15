@@ -86,7 +86,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group mb-2">
-                                        <label for="nombres">Celuar: </label>
+                                        <label for="nombres">Celular: </label>
                                         <input type="text" name="alum_celular" id="alum_celular" class="form-control"
                                             placeholder="nro celular" required="required">
                                     </div>

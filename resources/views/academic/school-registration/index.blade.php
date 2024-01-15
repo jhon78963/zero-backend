@@ -45,7 +45,7 @@
                     if (data.maxCount == 0) {
                         filas += `
                             <tr id="row-0">
-                                <td class="text-center" colspan="3">NO DATA</td>
+                                <td class="text-center" colspan="5">NO DATA</td>
                             </tr>
                         `;
                     } else {

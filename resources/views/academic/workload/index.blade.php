@@ -6,7 +6,29 @@
 
 @section('content')
     <div class="card mb-4">
-        <h5 class="card-header">Carga horaria para el alumno</h5>
+        <div class="d-flex align-items-center justify-content-between ">
+            <h5 class="card-header">Horario</h5>
+            <div style="padding-right: 1rem">
+                <button type="button" class="btn btn-outline-primary me-1" onclick="openCreateScheduleModal()">
+                    Guardar Selección
+                </button>
+            </div>
+        </div>
+
+        <form action="{{ route('workload.index', $academic_period->name) }}" method="GET">
+            <div class="d-flex align-items-center justify-content-center">
+                <select name="classroom_id" id="classroom_id" class="form-control text-center" style="width: 30%;">
+                    <option value="">Seleccione ...</option>
+                    @foreach ($classrooms as $classroom)
+                        <option value="{{ $classroom->id }}" {{ $classroom->id == $classroom_id ? 'selected' : '' }}>
+                            {{ $classroom->description }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+
 
         <div class="table-responsive text-nowrap">
             <table>
@@ -37,25 +59,30 @@
                 </tbody>
             </table>
 
-            <button id="saveSchedule">Guardar Selección</button>
+            {{-- <button id="saveSchedule">Guardar Selección</button>
 
-            <form id="courseForm" style="display: none;" method="POST" action="{{ route('save-schedule') }}">
+            <form id="courseForm" method="POST" action="{{ route('save-schedule') }}">
                 @csrf
                 <label for="courseSelect">Seleccionar Curso:</label>
-                <select id="courseSelect" name="course_id">
+                <select id="courseSelect" name="course_id" class="form-control" style="25%;">
                     @foreach ($courses as $course)
                         <option value="{{ $course->id }}">{{ $course->description }}</option>
                     @endforeach
                 </select>
 
                 <input type="text" name="selected_blocks" id="selected_blocks" class="form-control">
+                <input type="text" name="classroom_id" id="selected-classroom_id" value="{{ $classroom_id }}">
 
                 <button type="submit">Guardar</button>
-            </form>
+            </form> --}}
         </div>
-    </div>
 
-    {{-- @include('academic.course.course-assign-modal') --}}
+        @include('academic.workload.schedule-create-modal', [
+            'courses' => $courses,
+            'classroom_id' => $classroom_id,
+            'classroom_description' => $request_classroom ? $request_classroom->description : null,
+        ])
+    </div>
 @endsection
 
 @section('css')
@@ -109,12 +136,21 @@
             });
 
             // Manejar clic en el botón de guardar selección
-            $('#saveSchedule').on('click', function() {
-                if (selectedBlocks.length > 0) {
-                    // Mostrar el formulario de curso si hay bloques seleccionados
-                    $('#courseForm').show();
-                }
-            });
+            // $('#saveSchedule').on('click', function() {
+            //     if (selectedBlocks.length > 0) {
+            //         // Mostrar el formulario de curso si hay bloques seleccionados
+            //         $('#courseForm').show();
+            //     }
+            // });
         });
+
+        // $("#classroom_id").on("change", function() {
+        //     const classroom_id = $(this).val();
+        //     $('#selected-classroom_id').val(classroom_id)
+        // });
+
+        function openCreateScheduleModal() {
+            $('#createScheduleModal').modal('toggle');
+        }
     </script>
 @endsection

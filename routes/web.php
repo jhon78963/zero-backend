@@ -109,8 +109,8 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
     Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
     Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('/carga-horario', [WorkloadController::class, 'index'])->name('workload.index');
     Route::get('/carga-horario/docentes', [WorkloadController::class, 'teacher'])->name('workload.teacher');
-    Route::get('/carga-horario/estudiantes', [WorkloadController::class, 'student'])->name('workload.student');
     Route::get('/matriculas', [SchoolRegistrationController::class, 'index'])->name('school-registration.index');
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'register'])->name('school-registration.register');
 });
