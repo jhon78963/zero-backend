@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card mb-4">
-        <h5 class="card-header">Carga horaria para el docente</h5>
+        <h5 class="card-header">Asignar Aula/curso para el docente</h5>
 
         <div class="table-responsive text-nowrap">
             <table class="table" id="tabla-workload">
@@ -24,7 +24,12 @@
         </div>
     </div>
 
-    {{-- @include('academic.course.course-assign-modal') --}}
+    @include('academic.workload.teacher-assign-course-modal', [
+        'courses' => $courses,
+    ])
+    @include('academic.workload.teacher-assign-classroom-modal', [
+        'classrooms' => $classrooms
+    ])
 @endsection
 
 @section('js')
@@ -56,12 +61,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" onclick="openAssignCourseModal(${teacher.id})">
-                                            <span class="tf-icons bx bx-check-square"></span>
-                                        </button>
-                                        <button type="button" class="btn rounded-pill btn-icon btn-outline-danger me-1" onclick="openDeleteCourseModal(${teacher.id})">
-                                            <span class="tf-icons bx bx-trash"></span>
-                                        </button>
+                                        ${getButtons(teacher.type, teacher.id)}
                                     </td>
                                 </tr>
                             `;
@@ -96,6 +96,41 @@
                 `<span class="badge bg-label-primary mb-1 me-1">${course}</span>`
             ).join(' ');
             return courseNames;
+        }
+
+        function getButtons(teacherType, teacherId) {
+            let buttons = '';
+            if (teacherType == 'GENERAL') {
+                buttons += `
+                    <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" onclick="openAssignClassroomModal(${teacherId})">
+                        <span class="tf-icons bx bx-check-square"></span>
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-icon btn-outline-danger me-1" onclick="openDeleteClassroomModal(${teacherId})">
+                        <span class="tf-icons bx bx-trash"></span>
+                    </button>
+                `;
+            } else {
+                buttons += `
+                    <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" onclick="openAssignCourseModal(${teacherId})">
+                        <span class="tf-icons bx bx-check-square"></span>
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-icon btn-outline-danger me-1" onclick="openDeleteCourseModal(${teacherId})">
+                        <span class="tf-icons bx bx-trash"></span>
+                    </button>
+                `;
+            }
+            return buttons;
+        }
+    </script>
+
+    {{-- CREATE --}}
+    <script>
+        function openAssignCourseModal() {
+            $('#assignCourseTeacherModal').modal('toggle');
+        }
+
+        function openAssignClassroomModal() {
+            $('#assignClassroomTeacherModal').modal('toggle');
         }
     </script>
 @endsection

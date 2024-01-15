@@ -58,23 +58,6 @@
                     @endforeach
                 </tbody>
             </table>
-
-            {{-- <button id="saveSchedule">Guardar Selección</button>
-
-            <form id="courseForm" method="POST" action="{{ route('save-schedule') }}">
-                @csrf
-                <label for="courseSelect">Seleccionar Curso:</label>
-                <select id="courseSelect" name="course_id" class="form-control" style="25%;">
-                    @foreach ($courses as $course)
-                        <option value="{{ $course->id }}">{{ $course->description }}</option>
-                    @endforeach
-                </select>
-
-                <input type="text" name="selected_blocks" id="selected_blocks" class="form-control">
-                <input type="text" name="classroom_id" id="selected-classroom_id" value="{{ $classroom_id }}">
-
-                <button type="submit">Guardar</button>
-            </form> --}}
         </div>
 
         @include('academic.workload.schedule-create-modal', [

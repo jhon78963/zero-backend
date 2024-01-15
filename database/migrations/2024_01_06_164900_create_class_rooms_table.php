@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('section_id');
             $table->string('description');
             $table->integer('limit');
+            $table->boolean('status')->default(false);
             $table->integer('students_number')->default(0);
             $table->foreign('grade_id')->references('id')->on('grades');
             $table->foreign('section_id')->references('id')->on('sections');

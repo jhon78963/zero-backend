@@ -25,7 +25,9 @@ class WorkloadController extends Controller
 
     public function teacher()
     {
-        return view('academic.workload.teacher');
+        $courses = Course::where('type', 'AREA')->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $classrooms = ClassRoom::where('status', false)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        return view('academic.workload.teacher', compact('courses', 'classrooms'));
     }
 
     public function getAll()
