@@ -26,6 +26,7 @@
 
     @include('academic.workload.teacher-assign-course-modal', [
         'courses' => $courses,
+        'assignCourses' => $assignCourses,
     ])
     @include('academic.workload.teacher-assign-classroom-modal', [
         'classrooms' => $classrooms
@@ -125,12 +126,14 @@
 
     {{-- CREATE --}}
     <script>
-        function openAssignCourseModal() {
+        function openAssignCourseModal(teacherId) {
             $('#assignCourseTeacherModal').modal('toggle');
+            $('#teacher_course_id').val(teacherId);
         }
 
-        function openAssignClassroomModal() {
+        function openAssignClassroomModal(teacherId) {
             $('#assignClassroomTeacherModal').modal('toggle');
+            $('#teacher_classroom_id').val(teacherId);
         }
     </script>
 @endsection

@@ -1,7 +1,7 @@
 <div class="modal fade" id="assignClassroomTeacherModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="assignClassroomTeacherForm">
+        <form id="assignClassroomTeacherForm" action="{{ route('workload.classroom.assign') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -10,8 +10,9 @@
                 </div>
                 <div class="modal-body">
                     <small class="text-light fw-semibold">Lista de aulas</small>
+                    <input type="hidden" name="teacher_id" id="teacher_classroom_id">
                     <div class="demo-inline-spacing mt-3">
-                        <select name="" id="" class="form-control">
+                        <select name="classroom_id" id="classroom_id" class="form-control">
                             <option value="">Seleccione ...</option>
                             @foreach ($classrooms as $classroom)
                                 <option value="{{ $classroom->id }}">{{ $classroom->description }}</option>

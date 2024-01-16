@@ -6,7 +6,11 @@ use App\Models\ClassRoom;
 use App\Models\ClassRoomSchedule;
 use App\Models\Course;
 use App\Models\Teacher;
+use App\Models\TeacherClassroom;
+use App\Models\TeacherCourse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class WorkloadController extends Controller
@@ -25,9 +29,59 @@ class WorkloadController extends Controller
 
     public function teacher()
     {
-        $courses = Course::where('type', 'AREA')->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
         $classrooms = ClassRoom::where('status', false)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
-        return view('academic.workload.teacher', compact('courses', 'classrooms'));
+        $courses = Course::where('type', 'AREA')->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $assignCourses = TeacherCourse::where('TenantId', $this->academic_period->id)->get();
+
+        return view('academic.workload.teacher', compact('courses', 'classrooms', 'assignCourses'));
+    }
+
+    public function assignClassroomTeacher(Request $request)
+    {
+        $lastClassroom = TeacherClassroom::where('teacher_id', $request->teacher_id)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        if ($lastClassroom) {
+            $classRoom = ClassRoom::findOrFail($lastClassroom->classroom_id);
+            $classRoom->status = false;
+            $classRoom->save();
+        }
+
+        $lastClassroom->delete();
+
+        $assignClassroom = new TeacherClassroom();
+        $assignClassroom->CreatorUserId = Auth::id();
+        $assignClassroom->TenantId = $this->academic_period->id;
+        $assignClassroom->teacher_id = $request->teacher_id;
+        $assignClassroom->classroom_id = $request->classroom_id;
+        $assignClassroom->save();
+
+        if ($assignClassroom) {
+            $classRoom = ClassRoom::findOrFail($assignClassroom->classroom_id);
+            $classRoom->status = true;
+            $classRoom->save();
+        }
+
+        return back();
+    }
+
+    public function assignCourseTeacher(Request $request)
+    {
+        TeacherCourse::where('teacher_id', $request->teacher_id)
+            ->where('TenantId', $this->academic_period->id)
+            ->delete();
+
+        foreach ($request->course_id as $course) {
+            $assignCourse = new TeacherCourse();
+            $assignCourse->CreatorUserId = Auth::id();
+            $assignCourse->TenantId = $this->academic_period->id;
+            $assignCourse->teacher_id = $request->teacher_id;
+            $assignCourse->course_id = $course;
+            $assignCourse->save();
+        }
+
+        return back();
     }
 
     public function getAll()

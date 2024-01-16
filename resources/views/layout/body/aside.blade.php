@@ -138,7 +138,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('treasuries.index', $academic_period->name) }}" class="menu-link">
                     <div data-i18n="Account">Tesorería</div>
                 </a>
             </li>

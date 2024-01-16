@@ -15,6 +15,7 @@ use App\Http\Controllers\SecretaryController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TreasuryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkloadController;
 
@@ -98,6 +99,9 @@ Route::put('/cursos/update/{id}', [CourseController::class, 'update'])->name('co
 
 Route::get('carga-horario/getAll', [WorkloadController::class, 'getAll'])->name('workload.getall');
 Route::post('save', [WorkloadController::class, 'saveSchedule'])->name('save-schedule');
+Route::post('carga-horaria/assign/classroom', [WorkloadController::class, 'assignClassroomTeacher'])->name('workload.classroom.assign');
+Route::post('carga-horaria/assign/course', [WorkloadController::class, 'assignCourseTeacher'])->name('workload.course.assign');
+
 
 Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
 Route::post('/matriculas/store', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
@@ -113,6 +117,8 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/carga-horario/docentes', [WorkloadController::class, 'teacher'])->name('workload.teacher');
     Route::get('/matriculas', [SchoolRegistrationController::class, 'index'])->name('school-registration.index');
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'register'])->name('school-registration.register');
+    Route::get('/tesoreria', [TreasuryController::class, 'index'])->name('treasuries.index');
+    Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
 });
 
 // Auth
