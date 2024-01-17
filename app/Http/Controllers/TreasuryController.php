@@ -29,6 +29,7 @@ class TreasuryController extends Controller
             ->join('treasuries as t', 't.id', 'td.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
             ->where('t.TenantId', $this->academic_period->id)
+            ->where('t.IsDeleted', false)
             ->select(
                 't.*',
                 'td.concepto',
@@ -102,6 +103,17 @@ class TreasuryController extends Controller
             $invoice->initial_number += 1;
             $invoice->save();
         }
+
+        return redirect()->route('treasuries.index', $this->academic_period->name);
+    }
+
+    public function cancel($id)
+    {
+        $treasury = Treasury::findOrFail($id);
+        $treasury->IsDeleted = true;
+        $treasury->DeleterUserId = Auth::id();
+        $treasury->DeletionTime = now()->format('Y-m-d H:i:s');
+        $treasury->save();
 
         return redirect()->route('treasuries.index', $this->academic_period->name);
     }

@@ -41,8 +41,16 @@
                                 </td>
                                 <td class="text-center">{{ $treasury->concepto }}</td>
                                 <td class="text-center">{{ $treasury->monto_total }}</td>
-                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                        onclick="openCancelTreasuryModal({{ $treasury->id }})">
+                                        Anular
+                                    </button>
+                                </td>
                             </tr>
+                            @include('treasury.treasury-delete-modal', [
+                                'treasury' => $treasury,
+                            ])
                         @endforeach
                     @else
                         <td colspan="7" class="text-center">NO DATA</td>
@@ -57,4 +65,9 @@
 @endsection
 
 @section('js')
+    <script>
+        function openCancelTreasuryModal(treasuryId) {
+            $(`#cancelTreasuryModal-${treasuryId}`).modal('toggle');
+        }
+    </script>
 @endsection

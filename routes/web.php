@@ -107,6 +107,7 @@ Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll']
 Route::post('/matriculas/store', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
 
 Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
+Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
 
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
