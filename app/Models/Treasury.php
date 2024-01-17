@@ -9,7 +9,6 @@ class Treasury extends Model
 {
     use HasFactory;
     protected $table = 'treasuries';
-    protected $primaryKey = 'treasury_id';
     protected $guarded = [''];
     public $timestamps = false;
 

@@ -32,13 +32,13 @@ return new class extends Migration
             $table->string('tipo_moneda');
             $table->date('fecha_emision');
             $table->time('hora_emision');
-            $table->decimal('porcentaje_igv');
-            $table->decimal('total_igv');
-            $table->decimal('total');
-            $table->string('hash_cpe');
-            $table->string('codigo_qr');
+            $table->decimal('porcentaje_igv')->default(18);
+            $table->decimal('total_igv')->default(0);
+            $table->decimal('total')->default(0);
+            $table->string('hash_cpe')->nullable();
+            $table->string('codigo_qr')->nullable();
 
-            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('student_id')->nullable();
             $table->foreign('student_id')->references('id')->on('students');
         });
     }

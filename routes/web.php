@@ -106,6 +106,8 @@ Route::post('carga-horaria/assign/course', [WorkloadController::class, 'assignCo
 Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
 Route::post('/matriculas/store', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
 
+Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
+
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
