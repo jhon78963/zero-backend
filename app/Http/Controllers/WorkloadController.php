@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ClassRoom;
 use App\Models\ClassRoomSchedule;
 use App\Models\Course;
+use App\Models\Student;
+use App\Models\StudentClassroom;
 use App\Models\Teacher;
 use App\Models\TeacherClassroom;
 use App\Models\TeacherCourse;
@@ -184,8 +186,6 @@ class WorkloadController extends Controller
         return $schedule;
     }
 
-
-
     public function saveSchedule(Request $request)
     {
         $courseId = $request->input('course_id');
@@ -207,5 +207,55 @@ class WorkloadController extends Controller
         // return response()->json([
         //     'message' => 'Información guardada correctamente.',
         // ]);
+    }
+
+    public function scheduleTeacher()
+    {
+        $teacher_email = Auth::user()->email;
+        $teacher = Teacher::where('institutional_email', $teacher_email)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        $class_room = TeacherClassroom::where('teacher_id', $teacher->id)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        $classroom_id = $class_room->id;
+        $request_classroom = ClassRoom::where('id', $classroom_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->select('description')
+            ->first();
+
+        $schedule = $this->generateSchedule($classroom_id);
+        $courses = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $classrooms = ClassRoom::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        return view('academic.workload.user.teacher', compact('schedule', 'courses', 'classrooms', 'classroom_id', 'request_classroom'));
+    }
+
+    public function scheduleStudent()
+    {
+        $student_email = Auth::user()->email;
+        $student = Student::where('institutional_email', $student_email)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        $class_room = StudentClassroom::where('student_id', $student->id)
+            ->where('TenantId', $this->academic_period->id)
+            ->first();
+
+        $classroom_id = $class_room->id;
+        $request_classroom = ClassRoom::where('id', $classroom_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $this->academic_period->id)
+            ->select('description')
+            ->first();
+
+        $schedule = $this->generateSchedule($classroom_id);
+        $courses = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $classrooms = ClassRoom::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        return view('academic.workload.user.teacher', compact('schedule', 'courses', 'classrooms', 'classroom_id', 'request_classroom'));
     }
 }

@@ -14,6 +14,7 @@ use App\Http\Controllers\SchoolRegistrationController;
 use App\Http\Controllers\SecretaryController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SyllabusController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TreasuryController;
 use App\Http\Controllers\UserController;
@@ -114,6 +115,7 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
     Route::post('/calendario', [AcademicCalendarController::class, 'store'])->name('calendars.store');
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
+    Route::get('/docente/silabus', [SyllabusController::class, 'index'])->name('teacher.silabus.index');
     Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
     Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
     Route::get('/carga-horario', [WorkloadController::class, 'index'])->name('workload.index');
@@ -122,6 +124,8 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'register'])->name('school-registration.register');
     Route::get('/tesoreria', [TreasuryController::class, 'index'])->name('treasuries.index');
     Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
+    Route::get('/horario/docente', [WorkloadController::class, 'scheduleTeacher'])->name('workload.schedule.teacher');
+    Route::get('/horario/estudiante', [WorkloadController::class, 'scheduleStudent'])->name('workload.schedule.student');
 });
 
 // Auth

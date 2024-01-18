@@ -123,9 +123,17 @@
             </li>
         @endif
 
-        @if ($roleName == 'Admin' || $roleName == 'Secretaria' || $roleName == 'Docente')
+        @if ($roleName == 'Admin' || $roleName == 'Secretaria')
             <li class="menu-item">
                 <a href="{{ route('silabus.index', $academic_period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Sílabus</div>
+                </a>
+            </li>
+        @endif
+
+        @if ($roleName == 'Docente')
+            <li class="menu-item">
+                <a href="{{ route('teacher.silabus.index', $academic_period->name) }}" class="menu-link">
                     <div data-i18n="Account">Sílabus</div>
                 </a>
             </li>
@@ -144,9 +152,17 @@
             </li>
         @endif
 
-        @if ($roleName == 'Docente' || $roleName == 'Estudiante')
+        @if ($roleName == 'Docente')
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('workload.schedule.teacher', $academic_period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Horario</div>
+                </a>
+            </li>
+        @endif
+
+        @if ($roleName == 'Estudiante')
+            <li class="menu-item">
+                <a href="{{ route('workload.schedule.student', $academic_period->name) }}" class="menu-link">
                     <div data-i18n="Account">Horario</div>
                 </a>
             </li>

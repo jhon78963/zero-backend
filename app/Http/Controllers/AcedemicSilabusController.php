@@ -18,7 +18,7 @@ class AcedemicSilabusController extends Controller
 
     public function index()
     {
-        return view('academic.silabus');
+        return view('academic.silabus.admin.index');
     }
 
     public function create()

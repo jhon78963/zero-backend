@@ -21,8 +21,10 @@ return new class extends Migration
             $table->integer('TenantId')->nullable();
             $table->unsignedBigInteger('teacher_id')->nullable();
             $table->unsignedBigInteger('course_id')->nullable();
+            $table->unsignedBigInteger('classroom_id')->nullable();
             $table->foreign('teacher_id')->references('id')->on('teachers');
             $table->foreign('course_id')->references('id')->on('courses');
+            $table->foreign('classroom_id')->references('id')->on('class_rooms');
         });
     }
 
