@@ -158,6 +158,20 @@
                     <div data-i18n="Account">Horario</div>
                 </a>
             </li>
+
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Gestión académica</span>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('attendance.teacher.index', $academic_period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Asistencias</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">
+                    <div data-i18n="Account">Notas</div>
+                </a>
+            </li>
         @endif
 
         @if ($roleName == 'Estudiante')
@@ -166,25 +180,20 @@
                     <div data-i18n="Account">Horario</div>
                 </a>
             </li>
-        @endif
 
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Gestión académica</span>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <div data-i18n="Account">Asistencias</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <div data-i18n="Account">Notas</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <div data-i18n="Account">Aula Virtual</div>
-            </a>
-        </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Gestión académica</span>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">
+                    <div data-i18n="Account">Asistencias</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">
+                    <div data-i18n="Account">Notas</div>
+                </a>
+            </li>
+        @endif
     </ul>
 </aside>

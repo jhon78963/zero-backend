@@ -69,3 +69,6 @@ Route::get('class-room/{grade_id}/{section_id}', function ($grade_id, $section_i
         ->first();
     return $aulas;
 });
+
+Route::get('/consulta-dni/{cust_dni}', [App\Http\Controllers\ConsultaController::class, 'consultaDNI']);
+Route::get('/consulta-ruc/{cust_ruc}', [App\Http\Controllers\ConsultaController::class, 'consultaRUC']);

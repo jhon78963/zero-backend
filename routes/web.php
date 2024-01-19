@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AcedemicSilabusController;
+use App\Http\Controllers\AttendanceTeacherController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\CourseController;
@@ -110,6 +111,11 @@ Route::post('/matriculas/store', [SchoolRegistrationController::class, 'create']
 Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
 Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
 
+Route::post('/desactivar-token/{fecha_id}', [AttendanceTeacherController::class, 'disableToken'])->name('attendance.disable');
+Route::post('/activar-token', [AttendanceTeacherController::class, 'enableToken'])->name('attendance.enable');
+Route::post('/marcar-asistencia/{fecha}', [AttendanceTeacherController::class, 'mark'])->name('attendance.mark');
+Route::post('/marcar-asistencia/{fecha}/{student_id}', [AttendanceTeacherController::class, 'change'])->name('attendance.change');
+
 Route::group(['prefix' => '{id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
     Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
@@ -126,6 +132,9 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
     Route::get('/horario/docente', [WorkloadController::class, 'scheduleTeacher'])->name('workload.schedule.teacher');
     Route::get('/horario/estudiante', [WorkloadController::class, 'scheduleStudent'])->name('workload.schedule.student');
+    Route::get('/asistencia/docente', [AttendanceTeacherController::class, 'index'])->name('attendance.teacher.index');
+    Route::get('/asistencia/docente/registrar', [AttendanceTeacherController::class, 'create'])->name('attendance.teacher.create');
+    Route::get('/asistencia/estudiante/registrar/{fecha_id}', [AttendanceTeacherController::class, 'registerAttendance'])->name('attendance.student.create');
 });
 
 // Auth

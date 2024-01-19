@@ -29,7 +29,7 @@
                     <label for="numero_documento_cliente">DNI</label>
                     <div class="d-flex">
                         <input name="numero_documento_cliente" id="numero_documento_cliente" class="form-control me-2">
-                        <button class="btn btn-primary btn-sm" type="button">
+                        <button class="btn btn-primary btn-sm" type="button" onclick="searchDni()">
                             <i class='bx bx-search-alt-2'></i>
                         </button>
                     </div>
@@ -137,6 +137,16 @@
             var row = button.parentNode.parentNode;
             var table = document.getElementById("table-payment");
             table.deleteRow(row.rowIndex);
+        }
+
+        function searchDni() {
+            const dni = $('#numero_documento_cliente').val();
+            if (dni.length == 8) {
+                $.get('/api/consulta-dni/' + dni, function(data) {
+                    $('#nombre_cliente').val(data.nombre);
+                    $('#direccion_cliente').val(data.direccion);
+                });
+            }
         }
     </script>
 @endsection
