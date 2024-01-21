@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['only' => ['logout','home']]);
+        $this->middleware('auth', ['only' => ['logout', 'home']]);
     }
 
     public function index()
@@ -27,19 +27,21 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ],
-        [
-            'email.required'=>'El email es requerido',
-            'email.max'=>'Maximo 20 caracteres para el username del usuario',
-            'email.email'=>'El email debe tener un formato válido',
-            'password.required'=>'La contraseña es requerida',
-            'password.max'=>'Maximo 20 caracteres permitidos',
-            'password.min'=>'Mínimo 8 caracteres permitidos',
+        $request->validate(
+            [
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ],
+            [
+                'email.required' => 'El email es requerido',
+                'email.max' => 'Maximo 20 caracteres para el username del usuario',
+                'email.email' => 'El email debe tener un formato válido',
+                'password.required' => 'La contraseña es requerida',
+                'password.max' => 'Maximo 20 caracteres permitidos',
+                'password.min' => 'Mínimo 8 caracteres permitidos',
 
-        ]);
+            ]
+        );
 
         $credentials = $request->only('email', 'password');
 
@@ -51,10 +53,10 @@ class AuthController extends Controller
         }
 
         $userExists = User::join('user_roles as ur', 'users.id', 'ur.userId')
-                            ->join('roles as r', 'ur.roleId', 'r.id')
-                            ->where('email', $request->email)
-                            ->select('users.id as userId', 'r.id as roleId')
-                            ->first();
+            ->join('roles as r', 'ur.roleId', 'r.id')
+            ->where('email', $request->email)
+            ->select('users.id as userId', 'r.id as roleId')
+            ->first();
 
         Auth::loginUsingId($userExists->userId);
 
@@ -63,7 +65,6 @@ class AuthController extends Controller
             'message' => 'Bienvenido al sistema',
             'role' => $userExists->roleId
         ], 200);
-
     }
 
     public function create()
@@ -71,37 +72,39 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'cpassword' => 'required|string|min:8',
-        ],
-        [
-            'name.required'=>'El nombre es requerido',
-            'name.max'=>'Maximo 20 caracteres para el nombre del usuario',
-            'email.required'=>'El email es requerido',
-            'email.max'=>'Maximo 20 caracteres para el username del usuario',
-            'email.email'=>'El email debe tener un formato válido',
-            'email.unique'=>'El email ya existe en nuestra base de datos',
-            'password.required'=>'La contraseña es requerida',
-            'password.max'=>'Maximo 20 caracteres permitidos',
-            'password.min'=>'Mínimo 8 caracteres permitidos',
-            'cpassword.required'=>'La contraseña para validar es requerida',
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8',
+                'cpassword' => 'required|string|min:8',
+            ],
+            [
+                'name.required' => 'El nombre es requerido',
+                'name.max' => 'Maximo 20 caracteres para el nombre del usuario',
+                'email.required' => 'El email es requerido',
+                'email.max' => 'Maximo 20 caracteres para el username del usuario',
+                'email.email' => 'El email debe tener un formato válido',
+                'email.unique' => 'El email ya existe en nuestra base de datos',
+                'password.required' => 'La contraseña es requerida',
+                'password.max' => 'Maximo 20 caracteres permitidos',
+                'password.min' => 'Mínimo 8 caracteres permitidos',
+                'cpassword.required' => 'La contraseña para validar es requerida',
 
-        ]);
+            ]
+        );
 
-        if($request->password != $request->cpassword){
+        if ($request->password != $request->cpassword) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Las contraseñas no coinciden, Porfavor verifique!',
             ], 401);
         }
 
-        if(empty($request->termino))
-        {
+        if (empty($request->termino)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Porfavor aceptar los terminos y condiciones',
@@ -109,10 +112,10 @@ class AuthController extends Controller
         }
 
         if (User::all()->count()) {
-                $last_user_id = User::all()->last()->id+1;
-            } else {
-                $last_user_id = 1;
-            }
+            $last_user_id = User::all()->last()->id + 1;
+        } else {
+            $last_user_id = 1;
+        }
 
         $userCreated = User::create([
             'id' => $last_user_id,
@@ -122,8 +125,7 @@ class AuthController extends Controller
             'profilePicture' => '/assets/img/avatars/1.png',
         ]);
 
-        if (isset($userCreated))
-        {
+        if (isset($userCreated)) {
             $user_role = UserRole::create([
                 "userId" => $last_user_id,
                 "roleId" => 2
@@ -160,20 +162,28 @@ class AuthController extends Controller
         return view('auth.home', compact('diaActual', 'fechaActual'));
     }
 
+    public function homePrincipal()
+    {
+        $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
+        $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
+        return view('home.principal', compact('diaActual', 'fechaActual'));
+    }
+
     public function recovery(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ],
-        [
-            'email.required'=>'El email es requerido',
-            'email.email'=>'El email debe tener un formato válido',
-        ]);
+        $request->validate(
+            [
+                'email' => 'required|email',
+            ],
+            [
+                'email.required' => 'El email es requerido',
+                'email.email' => 'El email debe tener un formato válido',
+            ]
+        );
 
         $userExists = User::where('email', $request->email)->exists();
 
-        if(!$userExists)
-        {
+        if (!$userExists) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'El email no existe en nuestra base de datos',
@@ -184,7 +194,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        $user_fullName = $user->name.' '.$user->surname;
+        $user_fullName = $user->name . ' ' . $user->surname;
 
         User::where('email', $request->email)->update([
             'password' => Hash::make($password_default),
@@ -235,6 +245,5 @@ class AuthController extends Controller
         $user->save();
 
         return back();
-
     }
 }

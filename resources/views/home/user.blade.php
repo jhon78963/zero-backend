@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout-home.template')
 
 @section('title')
     Usuario
@@ -41,7 +41,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('users.getall') }}",
+                url: "{{ route('users.home.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -111,7 +111,7 @@
         $('#userCreateForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('users.create') }}",
+                url: "{{ route('users.home.create') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#userCreateForm")[0]),
@@ -165,7 +165,7 @@
     {{-- EDIT --}}
     <script>
         function editUser(user_id) {
-            $.get('/academico/users/get/' + user_id, function(data) {
+            $.get('/users/get/' + user_id, function(data) {
                 $('#e_id').val(data.user.id);
                 $('#e_username').val(data.user.username);
                 $('#e_role').val(data.user.roles[0]);
@@ -182,7 +182,7 @@
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/academico/users/update/" + e_id,
+                url: "/users/update/" + e_id,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#userUpdateForm")[0]),
@@ -234,7 +234,7 @@
     {{-- Assign --}}
     <script>
         function assignUser(user_id) {
-            $.get('/academico/users/get/' + user_id, function(userData) {
+            $.get('/users/get/' + user_id, function(userData) {
                 console.log(userData);
                 $('#a_id').val(userData.user.id);
                 $('#a_message').html(`Selecciona un <b>rol</b> de la lista a asignar`);
@@ -265,7 +265,7 @@
         $('#userAssignForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('users.assign') }}",
+                url: "{{ route('users.home.assign') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#userAssignForm")[0]),
@@ -331,7 +331,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/academico/users/delete/" + d_id,
+                url: "/users/delete/" + d_id,
                 beforeSend: function() {
                     $('#btnDeleteUser').attr("disabled", true);
                     $('#btnDeleteUser').html(

@@ -36,12 +36,12 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="{{ route('roles.index') }}" class="menu-link">
+                        <a href="{{ route('roles.index', $academic_period->name) }}" class="menu-link">
                             <div data-i18n="Account">Roles</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{ route('users.index') }}" class="menu-link">
+                        <a href="{{ route('users.index', $academic_period->name) }}" class="menu-link">
                             <div data-i18n="Notifications">Usuarios</div>
                         </a>
                     </li>
@@ -82,16 +82,6 @@
         </li>
 
         @if ($roleName == 'Admin' || $roleName == 'Secretaria')
-            <li class="menu-item">
-                <a href="{{ route('periods.index') }}" class="menu-link">
-                    <div data-i18n="Account">Periodo Académico</div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="{{ route('calendars.index', $academic_period->name) }}" class="menu-link">
-                    <div data-i18n="Account">Calendario Académico</div>
-                </a>
-            </li>
             <li class="menu-item">
                 <a href="{{ route('class-room.index', $academic_period->name) }}" class="menu-link">
                     <div data-i18n="Account">Aulas</div>

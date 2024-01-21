@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout-home.template')
 
 @section('title')
     Rol
@@ -58,7 +58,7 @@
     <script>
         window.onload = function() {
             $.ajax({
-                url: "{{ route('roles.getall') }}",
+                url: "{{ route('roles.home.getall') }}",
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -192,7 +192,7 @@
     {{-- EDIT --}}
     <script>
         function onRoleUpdate(roleId) {
-            $.get('/academico/roles/get/' + roleId, function(data) {
+            $.get('/roles/get/' + roleId, function(data) {
                 $('#role_id').val(data.role.id);
                 $('#role-name').val(data.role.name);
 
@@ -285,7 +285,7 @@
                 },
             };
 
-            let ajaxUrl = (!roleId) ? "{{ route('roles.create') }}" : `/academico/roles/update/${roleId}`;
+            let ajaxUrl = (!roleId) ? "{{ route('roles.home.create') }}" : `/roles/update/${roleId}`;
 
             $.ajax({
                 url: ajaxUrl,
@@ -297,7 +297,7 @@
     {{-- DELETE --}}
     <script>
         function onRoleDelete(roleId) {
-            $.get('/academico/roles/get/' + roleId, function(data) {
+            $.get('/roles/get/' + roleId, function(data) {
                 $('#d_id').val(data.role.id);
                 $('#d_message').html(
                     `Deseas eliminar el rol <b>${data.role.name}</b> de la lista?`
@@ -311,7 +311,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/academico/roles/delete/" + d_id,
+                url: "/roles/delete/" + d_id,
                 beforeSend: function() {
                     $('#btnDeleteRole').attr("disabled", true);
                     $('#btnDeleteRole').html(

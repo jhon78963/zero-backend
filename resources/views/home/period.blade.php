@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout-home.template')
 
 @section('title')
     Perido Académico

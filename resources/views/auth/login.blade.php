@@ -126,7 +126,13 @@
                                 }
                             }).then((result) => {
                                 if (result.dismiss === Swal.DismissReason.timer) {
-                                    window.location.href = '{{ route('auth.home') }}';
+                                    if (data.role == 1) {
+                                        window.location.href =
+                                            '{{ route('auth.home.principal') }}';
+                                    } else {
+                                        window.location.href = '{{ route('auth.home') }}';
+                                    }
+                                    //window.location.href = '{{ route('auth.home') }}';
                                 }
                             })
                         },

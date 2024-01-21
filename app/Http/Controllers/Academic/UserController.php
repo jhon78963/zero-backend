@@ -1,21 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Academic;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AssignRoleRequest;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\AssignRoleRequest;
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\UserRole;
+use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
+    private $academic_period;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -23,17 +26,18 @@ class UserController extends Controller
         $this->middleware('check.permissions:Admin,pages.user.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin,pages.user.delete')->only(['delete']);
         $this->middleware('check.permissions:Admin,pages.user.assign')->only(['assign']);
+        $this->academic_period = View::shared('academic_period');
     }
 
     public function index()
     {
-        return view('home.user');
+        return view('access.user.index');
     }
 
     public function create(CreateUserRequest $request)
     {
-        $emailExists = User::where('email', $request->input('email'))->where('IsDeleted', false)->exists();
-        $usernameExists = User::where('username', $request->input('username'))->where('IsDeleted', false)->exists();
+        $emailExists = User::where('email', $request->input('email'))->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->exists();
+        $usernameExists = User::where('username', $request->input('username'))->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->exists();
 
         if ($emailExists || $usernameExists) {
             return response()->json([
@@ -65,7 +69,7 @@ class UserController extends Controller
 
     public function delete($id)
     {
-        $user = User::where('id', $id)->where('IsDeleted', false)->first();
+        $user = User::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
 
         if (empty($user)) {
             return response()->json([
@@ -89,7 +93,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $userExist = DB::table('users')->where('id', $id)->first();
+        $userExist = DB::table('users')->where('id', $id)->where('TenantId', $this->academic_period->id)->first();
 
         if (empty($userExist)) {
             return response()->json([
@@ -123,7 +127,7 @@ class UserController extends Controller
 
     public function getAll()
     {
-        $users = User::where('IsDeleted', false)->get();
+        $users = User::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
 
         $data = [];
 
@@ -151,7 +155,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, $id)
     {
-        $user = User::where('id', $id)->where('IsDeleted', false)->first();
+        $user = User::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
 
         if (empty($user)) {
             return response()->json([
@@ -177,7 +181,7 @@ class UserController extends Controller
 
     public function getRoles($id)
     {
-        $userExist = DB::table('users')->where('id', $id)->get();
+        $userExist = DB::table('users')->where('id', $id)->where('TenantId', $this->academic_period->id)->get();
 
         if (empty($userExist)) {
             return response()->json([
@@ -202,8 +206,8 @@ class UserController extends Controller
 
     public function unassign(AssignRoleRequest $request)
     {
-        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
-        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();
+        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
 
         if (empty($user_exist) || empty($role_exist)) {
             return response()->json([
@@ -212,7 +216,7 @@ class UserController extends Controller
             ], 400);
         }
 
-        $user_role = UserRole::where('userId', $request->userId)->where('roleId', $request->roleId)->first();
+        $user_role = UserRole::where('userId', $request->userId)->where('roleId', $request->roleId)->where('TenantId', $this->academic_period->id)->first();
 
         $role = Role::findOrFail($request->roleId);
 
@@ -242,10 +246,10 @@ class UserController extends Controller
 
     public function assign(AssignRoleRequest $request)
     {
-        UserRole::where('userId', $request->userId)->delete();
+        UserRole::where('userId', $request->userId)->where('TenantId', $this->academic_period->id)->delete();
 
-        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->first();
-        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->first();
+        $user_exist = User::where('id', $request->userId)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $role_exist = Role::where('id', $request->roleId)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
         // $permission_exists = Permission::where('id', $request->permissionId)->first();
 
 

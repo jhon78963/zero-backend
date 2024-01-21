@@ -17,6 +17,12 @@ class AcademicPeriodController extends Controller
         $this->middleware('check.permissions:Admin,pages.period.modify')->only(['store']);
     }
 
+    public function periodHome()
+    {
+        $academic_periods = AcademicPeriod::where('IsDeleted', false)->get();
+        return view('home.period', compact('academic_periods'));
+    }
+
     public function index()
     {
         $academic_periods = AcademicPeriod::where('IsDeleted', false)->get();
@@ -28,7 +34,7 @@ class AcademicPeriodController extends Controller
         $currentYear = Carbon::now()->year;
 
         if (AcademicPeriod::all()->count()) {
-            $last_period_id = AcademicPeriod::all()->last()->id+1;
+            $last_period_id = AcademicPeriod::all()->last()->id + 1;
         } else {
             $last_period_id = 1;
         }

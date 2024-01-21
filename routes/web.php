@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Academic\RoleController as AcademicRoleController;
+use App\Http\Controllers\Academic\UserController as AcademicUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AcademicPeriodController;
@@ -9,7 +11,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
-use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolRegistrationController;
 use App\Http\Controllers\SecretaryController;
@@ -36,27 +37,37 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('bienvenido', [AuthController::class, 'home'])->name('auth.home');
-Route::get('perfil', [AuthController::class, 'profile'])->name('auth.profile');
-Route::put('perfil/{id}', [AuthController::class, 'storeProfile'])->name('auth.profile.store');
-
-Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-Route::get('/roles/getAll', [RoleController::class, 'getAll'])->name('roles.getall');
-Route::get('/roles/get/{id}', [RoleController::class, 'get'])->name('roles.get');
-Route::get('/roles/delete/{id}', [RoleController::class, 'delete'])->name('roles.delete');
-Route::post('/roles/store', [RoleController::class, 'create'])->name('roles.create');
-Route::put('/roles/update/{id}', [RoleController::class, 'update'])->name('roles.update');
-
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/getAll', [UserController::class, 'getAll'])->name('users.getall');
-Route::get('/users/get/{id}', [UserController::class, 'get'])->name('users.get');
-Route::get('/users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
-Route::post('/users/store', [UserController::class, 'create'])->name('users.create');
-Route::post('/users/assign', [UserController::class, 'assign'])->name('users.assign');
-Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
+// SIN PERIODO ACADEMICO
 
 Route::get('/periods', [AcademicPeriodController::class, 'index'])->name('periods.index');
 Route::post('/periods', [AcademicPeriodController::class, 'store'])->name('periods.store');
+Route::get('/periodo-academico', [AcademicPeriodController::class, 'periodHome'])->name('periods.home.index');
+
+Route::get('/calendario-academico', [AcademicCalendarController::class, 'index'])->name('calendars.home.index');
+Route::post('/calendario', [AcademicCalendarController::class, 'store'])->name('calendars.store');
+Route::put('/calendario-academico/{id}/actualizar', [AcademicCalendarController::class, 'update'])->name('calendars.update');
+Route::delete('/calendario-academico/{id}/eliminar', [AcademicCalendarController::class, 'destroy'])->name('calendars.delete');
+
+Route::get('/roles-academico', [RoleController::class, 'index'])->name('roles.home.index');
+Route::get('/roles/getAll', [RoleController::class, 'getAll'])->name('roles.home.getall');
+Route::get('/roles/get/{id}', [RoleController::class, 'get'])->name('roles.home.get');
+Route::get('/roles/delete/{id}', [RoleController::class, 'delete'])->name('roles.home.delete');
+Route::post('/roles/store', [RoleController::class, 'create'])->name('roles.home.create');
+Route::put('/roles/update/{id}', [RoleController::class, 'update'])->name('roles.home.update');
+
+Route::get('/users-academico', [UserController::class, 'index'])->name('users.home.index');
+Route::get('/users/getAll', [UserController::class, 'getAll'])->name('users.home.getall');
+Route::get('/users/get/{user_id}', [UserController::class, 'get'])->name('users.home.get');
+Route::get('/users/delete/{user_id}', [UserController::class, 'delete'])->name('users.home.delete');
+Route::post('/users/store', [UserController::class, 'create'])->name('users.home.create');
+Route::post('/users/assign', [UserController::class, 'assign'])->name('users.home.assign');
+Route::put('/users/update/{user_id}', [UserController::class, 'update'])->name('users.home.update');
+
+// PERIODO ACADEMICO
+Route::get('principal', [AuthController::class, 'homePrincipal'])->name('auth.home.principal');
+Route::get('bienvenido', [AuthController::class, 'home'])->name('auth.home');
+Route::get('perfil', [AuthController::class, 'profile'])->name('auth.profile');
+Route::put('perfil/{id}', [AuthController::class, 'storeProfile'])->name('auth.profile.store');
 
 Route::get('/profesores', [TeacherController::class, 'index'])->name('teachers.index');
 Route::get('/profesores/getAll', [TeacherController::class, 'getAll'])->name('teachers.getall');
@@ -116,10 +127,8 @@ Route::post('/activar-token', [AttendanceTeacherController::class, 'enableToken'
 Route::post('/marcar-asistencia/{fecha}', [AttendanceTeacherController::class, 'mark'])->name('attendance.mark');
 Route::post('/marcar-asistencia/{fecha}/{student_id}', [AttendanceTeacherController::class, 'change'])->name('attendance.change');
 
-Route::group(['prefix' => '{id}/'], function () {
+Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/inicio', [AcademicPeriodController::class, 'home'])->name('periods.home');
-    Route::get('/calendario', [AcademicCalendarController::class, 'index'])->name('calendars.index');
-    Route::post('/calendario', [AcademicCalendarController::class, 'store'])->name('calendars.store');
     Route::get('/silabus', [AcedemicSilabusController::class, 'index'])->name('silabus.index');
     Route::get('/docente/silabus', [SyllabusController::class, 'index'])->name('teacher.silabus.index');
     Route::get('/aulas', [ClassRoomController::class, 'index'])->name('class-room.index');
@@ -135,7 +144,28 @@ Route::group(['prefix' => '{id}/'], function () {
     Route::get('/asistencia/docente', [AttendanceTeacherController::class, 'index'])->name('attendance.teacher.index');
     Route::get('/asistencia/docente/registrar', [AttendanceTeacherController::class, 'create'])->name('attendance.teacher.create');
     Route::get('/asistencia/estudiante/registrar/{fecha_id}', [AttendanceTeacherController::class, 'registerAttendance'])->name('attendance.student.create');
+
+    //users
+    Route::get('/users', [AcademicUserController::class, 'index'])->name('users.index');
+
+    //roles
+    Route::get('/roles', [AcademicRoleController::class, 'index'])->name('roles.index');
 });
+
+//users
+Route::get('/academico/users/getAll', [AcademicUserController::class, 'getAll'])->name('users.getall');
+Route::get('/academico/users/get/{user_id}', [AcademicUserController::class, 'get'])->name('users.get');
+Route::get('/academico/users/delete/{user_id}', [AcademicUserController::class, 'delete'])->name('users.delete');
+Route::post('/academico/users/store', [AcademicUserController::class, 'create'])->name('users.create');
+Route::post('/academico/users/assign', [AcademicUserController::class, 'assign'])->name('users.assign');
+Route::put('/academico/users/update/{user_id}', [AcademicUserController::class, 'update'])->name('users.update');
+
+//roles
+Route::get('/academico/roles/getAll', [AcademicRoleController::class, 'getAll'])->name('roles.getall');
+Route::get('/academico/roles/get/{id}', [AcademicRoleController::class, 'get'])->name('roles.get');
+Route::get('/academico/roles/delete/{id}', [AcademicRoleController::class, 'delete'])->name('roles.delete');
+Route::post('/academico/roles/store', [AcademicRoleController::class, 'create'])->name('roles.create');
+Route::put('/academico/roles/update/{id}', [AcademicRoleController::class, 'update'])->name('roles.update');
 
 // Auth
 Route::get('login', [AuthController::class, 'index'])->name('auth.login');

@@ -19,11 +19,13 @@ return new class extends Migration
             $table->integer('DeleterUserId')->nullable();
             $table->datetime('DeletionTime')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->string('responsible_person');
+            $table->unsignedBigInteger('responsible_person');
             $table->string('activity');
             $table->date('start');
             $table->date('end');
             $table->string('duration_activity');
+
+            $table->foreign('responsible_person')->references('id')->on('roles');
         });
     }
 
