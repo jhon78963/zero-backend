@@ -19,7 +19,6 @@ class StudentController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
         $this->middleware('check.permissions:Admin-Secretaria,pages.student')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.student.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.student.delete')->only(['delete']);
