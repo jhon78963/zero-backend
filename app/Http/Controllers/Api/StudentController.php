@@ -19,9 +19,6 @@ class StudentController extends Controller
 
     public function __construct()
     {
-        $this->middleware('check.permissions:Admin-Secretaria,pages.student')->only(['index', 'getAll', 'get']);
-        $this->middleware('check.permissions:Admin-Secretaria,pages.student.modify')->only(['create', 'update']);
-        $this->middleware('check.permissions:Admin-Secretaria,pages.student.delete')->only(['delete']);
         $this->academic_period = View::shared('academic_period');
     }
 
