@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 // use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Api\StudentController;
 use App\Models\ClassRoom;
 use App\Models\Permission;
 use App\Models\Role;
@@ -72,3 +73,11 @@ Route::get('class-room/{grade_id}/{section_id}', function ($grade_id, $section_i
 
 Route::get('/consulta-dni/{cust_dni}', [App\Http\Controllers\ConsultaController::class, 'consultaDNI']);
 Route::get('/consulta-ruc/{cust_ruc}', [App\Http\Controllers\ConsultaController::class, 'consultaRUC']);
+
+//students
+
+Route::post('students', [StudentController::class, 'create']);
+Route::delete('students/{id}', [StudentController::class, 'delete']);
+Route::get('students/{id}', [StudentController::class, 'get']);
+Route::get('students', [StudentController::class, 'getAll']);
+Route::put('students/{id}', [StudentController::class, 'update']);
