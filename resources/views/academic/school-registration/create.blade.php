@@ -12,7 +12,7 @@
     </div>
 
     <div class="">
-        <form method="POST" action="{{ route('school-registration.create') }}">
+        <form method="POST" action="{{ route('school-registration.store', $period->id) }}">
             @csrf
             <div class="row">
                 <div class="col-md-7">
@@ -155,7 +155,7 @@
 
                         <div class="card-footer text-center">
                             <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="#" class="btn btn-secondary"> Regresar</a>
+                            <a href="{{ route('school-registration.index', $period->name) }}" class="btn btn-secondary"> Regresar</a>
                         </div>
 
                     </div>
@@ -163,10 +163,13 @@
             </div>
         </form>
     </div>
+
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
 @endsection
 
 @section('js')
     <script>
+        const periodId = $('#period_id').val();
         $(function() {
             $('#grado_id').on('change', gradoCambio);
             $('#secc_id').on('change', vacanteCambio);
@@ -176,7 +179,7 @@
         function gradoCambio() {
             var grade_id = $(this).val();
 
-            $.get(`/api/grade/${grade_id}/section`, function(sections) {
+            $.get(`/api/grade/${grade_id}/section/${periodId}`, function(sections) {
                 $('#aula_capacidad').val("");
                 $('#aula_id').val("");
 
@@ -196,7 +199,7 @@
             var grado_id = $('#grado_id').val();
             var secc_id = $(this).val();
 
-            $.get('/api/class-room/' + grado_id + '/' + secc_id, function(data) {
+            $.get(`/api/class-room/${grado_id}/${secc_id}/${periodId}`, function(data) {
                 let vacante = data.limit - data.students_number;
                 $('#aula_id').val(data.id);
                 $('#aula_capacidad').val(vacante);
@@ -206,7 +209,7 @@
         function alumnoChange() {
             var alum_id = $(this).val();
 
-            $.get('/estudiantes/get/' + alum_id, function(data) {
+            $.get(`/${periodId}/estudiantes/get/${alum_id}`, function(data) {
                 $('#alum_id').val(data.student.id);
                 $('#alum_dni').val(data.student.dni);
                 $('#alum_primerNombre').val(data.student.first_name);

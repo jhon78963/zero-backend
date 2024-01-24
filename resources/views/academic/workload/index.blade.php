@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <form action="{{ route('workload.index', $academic_period->name) }}" method="GET">
+        <form action="{{ route('workload.index', $period->name) }}" method="GET">
             <div class="d-flex align-items-center justify-content-center">
                 <select name="classroom_id" id="classroom_id" class="form-control text-center" style="width: 30%;">
                     <option value="">Seleccione ...</option>
@@ -60,10 +60,13 @@
             </table>
         </div>
 
+        <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
         @include('academic.workload.schedule-create-modal', [
             'courses' => $courses,
             'classroom_id' => $classroom_id,
             'classroom_description' => $request_classroom ? $request_classroom->description : null,
+            'period' => $period
         ])
     </div>
 @endsection

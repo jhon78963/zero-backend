@@ -31,6 +31,9 @@
             </table>
         </div>
     </div>
+
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
     @include('entity.teacher.teacher-create-modal')
     @include('entity.teacher.teacher-edit-modal')
     @include('entity.teacher.teacher-delete-modal')
@@ -39,9 +42,10 @@
 @section('js')
     {{-- LIST --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('teachers.getall') }}",
+                url: `/${periodId}/profesores/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -96,7 +100,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('teachers.create') }}",
+                url: `/${periodId}/profesores/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createTeacherForm")[0]),
@@ -151,7 +155,7 @@
     {{-- EDIT --}}
     <script>
         function openEditTeacherModal(teacherId) {
-            $.get('/profesores/get/' + teacherId, function(data) {
+            $.get(`/${periodId}/profesores/get/${teacherId}`, function(data) {
                 $('#e_id').val(data.teacher.id);
                 $('#e_type').val(data.teacher.type);
                 $('#e_dni').val(data.teacher.dni);
@@ -172,7 +176,7 @@
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/profesores/update/" + e_id,
+                url: `/${periodId}/profesores/update/${e_id}`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editTeacherForm")[0]),
@@ -222,7 +226,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteTeacherModal(teacherId) {
-            $.get('/profesores/get/' + teacherId, function(data) {
+            $.get(`/${periodId}/profesores/get/${teacherId}`, function(data) {
                 $('#d_id').val(data.teacher.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${data.teacher.first_name || ''} ${data.teacher.surname || ''}</b> de la lista?`
@@ -236,7 +240,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/profesores/delete/" + d_id,
+                url: `/${periodId}/profesores/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteTeacher').attr("disabled", true);
                     $('#btnDeleteTeacher').html(

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Academic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -14,29 +15,27 @@ use Illuminate\Support\Facades\View;
 
 class RoleController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin,pages.role')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin,pages.role.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin,pages.role.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('access.role.index');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('access.role.index', compact('period'));
     }
 
-    public function create(CreateRoleRequest $request)
+    public function create(CreateRoleRequest $request, $period_id)
     {
         // Verificar si el rol ya existe
-        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $this->academic_period->id)->exists();
+        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $period_id)->exists();
         $permissions = $request->permissions;
         if ($roleExists) {
-            $role = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $this->academic_period->id)->first();
+            $role = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $period_id)->first();
             $existing_permissions = $role->permissions()->whereIn('name', $permissions)->get();
 
             // Agregar solo los permisos que no existen
@@ -46,7 +45,7 @@ class RoleController extends Controller
             foreach ($new_permissions as $permissionName) {
                 $permissionsToSave[] = [
                     'CreatorUserId' => Auth::id(),
-                    'TenantId' => $this->academic_period->id,
+                    'TenantId' => $period_id,
                     'name' => $permissionName,
                     'roleId' => $role->id
                 ];
@@ -70,7 +69,7 @@ class RoleController extends Controller
 
         $role = new Role([
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
             'name' => $request->name,
             'isStatic' => false,
         ]);
@@ -80,7 +79,7 @@ class RoleController extends Controller
         foreach ($permissions as $permission) {
             $permission_save = new Permission([
                 'CreatorUserId' => Auth::id(),
-                'TenantId' => $this->academic_period->id,
+                'TenantId' => $period_id,
                 'name' => $permission,
                 'roleId' => $role->id
             ]);
@@ -95,9 +94,9 @@ class RoleController extends Controller
         ], 201);
     }
 
-    public function delete($id)
+    public function delete($period_id, $id)
     {
-        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($role)) {
             return response()->json([
@@ -106,7 +105,7 @@ class RoleController extends Controller
             ], 404);
         }
 
-        Permission::where('roleId', $id)->where('TenantId', $this->academic_period->id)->delete();
+        Permission::where('roleId', $id)->where('TenantId', $period_id)->delete();
 
         $role->IsDeleted = true;
         $role->DeleterUserId = Auth::id();
@@ -119,9 +118,9 @@ class RoleController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($period_id, $id)
     {
-        $roleExist = DB::table('roles')->where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $roleExist = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->get();
 
         if (empty($roleExist)) {
             return response()->json([
@@ -130,7 +129,7 @@ class RoleController extends Controller
             ], 404);
         }
 
-        $role = Role::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->findOrFail($id);
+        $role = Role::where('IsDeleted', false)->where('TenantId', $period_id)->findOrFail($id);
         $role->permissions;
 
         return response()->json([
@@ -139,9 +138,9 @@ class RoleController extends Controller
         ]);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $roles = Role::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $roles = Role::where('IsDeleted', false)->where('TenantId', $period_id)->get();
 
         $data = [];
 
@@ -158,6 +157,7 @@ class RoleController extends Controller
 
         $permissions = Permission::distinct('name')
             ->whereNotIn('id', $roles->pluck('name'))
+            ->where('TenantId', $period_id)
             ->get(['name']);
 
         $count = count($roles);
@@ -166,17 +166,16 @@ class RoleController extends Controller
             'status' => 'success',
             'maxCount' => $count,
             'roles' => $data,
-            // 'role' => $roles,
             'all_permissions' => $permissions
         ]);
     }
 
-    public function update(UpdateRoleRequest $request, $id)
+    public function update(UpdateRoleRequest $request, $period_id, $id)
     {
         // Validar si el rol ya existe
-        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $this->academic_period->id)->exists();
+        $roleExists = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $period_id)->exists();
         $permissions = $request->permissions;
-        $roleSetting = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $this->academic_period->id)->first();
+        $roleSetting = Role::where('name', $request->name)->where('IsDeleted', 0)->where('TenantId', $period_id)->first();
 
         if ($roleExists && $roleSetting->id != $id) {
             $existing_permissions = $roleSetting->permissions()->whereIn('name', $permissions)->get();
@@ -189,7 +188,7 @@ class RoleController extends Controller
             foreach ($new_permissions as $permissionName) {
                 $permissionsToSave[] = [
                     'CreatorUserId' => Auth::id(),
-                    'TenantId' => $this->academic_period->id,
+                    'TenantId' => $period_id,
                     'name' => $permissionName,
                     'roleId' => $roleSetting->id
                 ];
@@ -214,7 +213,7 @@ class RoleController extends Controller
             ], 200);
         }
 
-        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         // Verificar si el rol no existe
         if (empty($role)) {
@@ -240,7 +239,7 @@ class RoleController extends Controller
         foreach ($new_permissions as $permissionName) {
             Permission::create([
                 'CreatorUserId' => Auth::id(),
-                'TenantId' => $this->academic_period->id,
+                'TenantId' => $period_id,
                 'name' => $permissionName,
                 'roleId' => $role->id
             ]);
@@ -249,7 +248,7 @@ class RoleController extends Controller
         // Actualizar los nombres de los permisos modificados
         $permissionsToUpdate = array_intersect($currentPermissions, $permissions);
         foreach ($permissionsToUpdate as $permissionName) {
-            $existingPermission = $role->permissions->where('name', $permissionName)->where('TenantId', $this->academic_period->id)->first();
+            $existingPermission = $role->permissions->where('name', $permissionName)->where('TenantId', $period_id)->first();
             $existingPermission->update(['name' => $permissionName]);
         }
 
@@ -269,10 +268,10 @@ class RoleController extends Controller
         ], 201);
     }
 
-    public function revoke(Request $request, $id)
+    public function revoke(Request $request, $id, $period_id)
     {
         // Verificar si el rol ya existe
-        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $role = Role::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($role)) {
             return response()->json([
@@ -287,7 +286,7 @@ class RoleController extends Controller
 
         foreach ($role_permissions as $role_permission) {
             if ($role_permission->name == $request->name) {
-                Permission::where('name', $request->name)->where('roleId', $id)->where('TenantId', $this->academic_period->id)->delete();
+                Permission::where('name', $request->name)->where('roleId', $id)->where('TenantId', $period_id)->delete();
                 $permissionExists = true;
                 break;
             }

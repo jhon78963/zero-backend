@@ -1,7 +1,7 @@
 <div class="modal fade" id="createScheduleModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="courseForm" method="POST" action="{{ route('save-schedule') }}">
+        <form id="courseForm" method="POST" action="{{ route('save-schedule', $period->id) }}">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">

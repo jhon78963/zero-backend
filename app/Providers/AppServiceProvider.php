@@ -28,8 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $currentYear = Carbon::now('AMERICA/LIMA')->year;
-        View::share('academic_period', AcademicPeriod::where('year', $currentYear)->first());
         View::share('academic_periods', AcademicPeriod::where('status', true)->get());
     }
 }

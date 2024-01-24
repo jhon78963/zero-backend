@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-between align-items-center me-4">
             <h5 class="card-header">Marcar Asistencia</h5>
             @if ($attendanceCheck == false)
-                <form method="post" action="{{ route('attendance.mark', $fecha) }}">
+                <form method="post" action="{{ route('attendance.mark', [$period->id, $fecha]) }}">
                     @csrf
                     <button type="submit" class="btn btn-danger">Marcar Asistencia</button>
                 </form>

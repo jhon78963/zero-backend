@@ -24,21 +24,28 @@
         </div>
     </div>
 
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
+
     @include('academic.workload.teacher-assign-course-modal', [
         'courses' => $courses,
         'assignCourses' => $assignCourses,
+        'period' => $period
     ])
     @include('academic.workload.teacher-assign-classroom-modal', [
-        'classrooms' => $classrooms
+        'classrooms' => $classrooms,
+
+        'period' => $period
     ])
 @endsection
 
 @section('js')
     {{-- LISTS --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('workload.getall') }}",
+                url: `/${periodId}/carga-horario/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {

@@ -32,6 +32,8 @@
         </div>
     </div>
 
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
     @include('academic.course.course-assign-modal')
     @include('academic.course.course-create-modal')
     @include('academic.course.course-edit-modal')
@@ -50,9 +52,10 @@
 @section('js')
     {{-- LIST --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('courses.getall') }}",
+                url: `/${periodId}/cursos/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -60,7 +63,7 @@
                     if (data.maxCount == 0) {
                         filas += `
                             <tr id="row-0">
-                                <td  colspan="3">NO DATA</td>
+                                <td class="text-center" colspan="3">NO DATA</td>
                             </tr>
                         `;
                     } else {
@@ -121,13 +124,13 @@
     {{-- ASSIGN --}}
     <script>
         function openAssignCourseModal(courseId) {
-            $.get('/cursos/get/' + courseId, function(courseData) {
+            $.get(`${periodId}/cursos/get/${courseId}`, function(courseData) {
 
                 $('#a_id').val(courseData.course.id);
                 $('#a_message').html(`Selecciona uno o mas <b>grados</b> de la lista a asignar`);
                 const gradesContainer = $('#gradesContainerCreate');
 
-                $.get('/grados/getAll', function(data) {
+                $.get(`/${periodId}/grados/getAll`, function(data) {
                     gradesContainer.empty()
                     $.each(data.grades, function(index, grade) {
                         let checkboxHtml = `
@@ -149,7 +152,7 @@
         $('#assignCourseForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('courses.assign') }}",
+                url: `/${periodId}/cursos/assign`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#assignCourseForm")[0]),
@@ -209,7 +212,7 @@
         $('#createCourseForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('courses.create') }}",
+                url: `/${periodId}/cursos/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createCourseForm")[0]),
@@ -273,7 +276,7 @@
     <script>
         function openEditCourseModal(courseId) {
 
-            $.get(`/cursos/get/${courseId}`, function(data) {
+            $.get(`/${periodId}/cursos/get/${courseId}`, function(data) {
                 $('#e_id').val(data.course.id);
                 $('#ec_description').val(data.course.description);
                 $("input[name=_token]").val();
@@ -285,7 +288,7 @@
             e.preventDefault();
             var courseId = $('#e_id').val();
             $.ajax({
-                url: `/cursos/update/${courseId}`,
+                url: `/${periodId}/cursos/update/${courseId}`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editCourseForm")[0]),
@@ -341,7 +344,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteCourseModal(courseId) {
-            $.get(`/cursos/get/${courseId}`, function(data) {
+            $.get(`/${periodId}/cursos/get/${courseId}`, function(data) {
                 $('#d_id').val(data.course.id);
                 $('#d_course_message').html(
                     `Deseas eliminar el salón <b>${data.course.description}</b> de la lista?`
@@ -355,7 +358,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/cursos/delete/" + d_id,
+                url: `/${periodId}/cursos/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteCourse').attr("disabled", true);
                     $('#btnDeleteCourse').html(

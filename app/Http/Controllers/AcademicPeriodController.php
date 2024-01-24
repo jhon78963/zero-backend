@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AcademicPeriod;
+use App\Models\InvoiceNumber;
 use Carbon\Carbon;
 
 
@@ -31,8 +32,6 @@ class AcademicPeriodController extends Controller
 
     public function store(Request $request)
     {
-        $currentYear = Carbon::now()->year;
-
         if (AcademicPeriod::all()->count()) {
             $last_period_id = AcademicPeriod::all()->last()->id + 1;
         } else {
@@ -42,19 +41,29 @@ class AcademicPeriodController extends Controller
         AcademicPeriod::create([
             'id' => $last_period_id,
             'TenantId' => $last_period_id,
-            'name' => $request->name,
-            'year' => $currentYear,
+            'name' => 'pa-' . $request->name,
+            'year' => $request->name,
             'yearName' => $request->yearName,
             'CreatorUserId' => Auth::id(),
+        ]);
+
+        InvoiceNumber::create([
+            'type' => 'Boleta electrónica',
+            'serie' => 'B00' . $last_period_id,
+            'initial_number' => 1001,
+            'invoicing_started' => '1',
+            'status' => 'ACTIVO',
+            'TenantId' => $last_period_id
         ]);
 
         return back();
     }
 
-    public function home($id)
+    public function home($period_name)
     {
         $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
         $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
-        return view('academic.period', compact('diaActual', 'fechaActual'));
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('academic.period', compact('diaActual', 'fechaActual', 'period'));
     }
 }

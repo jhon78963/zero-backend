@@ -9,7 +9,7 @@
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Tesoreria</h5>
             <div style="padding-right: 1rem">
-                <a href="{{ route('treasuries.create', $academic_period->name) }}"
+                <a href="{{ route('treasuries.create', $period->name) }}"
                     class="btn btn-outline-primary me-1">Registrar pago</a>
             </div>
         </div>
@@ -50,6 +50,7 @@
                             </tr>
                             @include('treasury.treasury-delete-modal', [
                                 'treasury' => $treasury,
+                                'period' => $period
                             ])
                         @endforeach
                     @else

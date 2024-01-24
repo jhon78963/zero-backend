@@ -1,7 +1,8 @@
 <div class="modal fade" id="assignClassroomTeacherModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="assignClassroomTeacherForm" action="{{ route('workload.classroom.assign') }}" method="POST">
+        <form id="assignClassroomTeacherForm" action="{{ route('workload.classroom.assign', $period->id) }}"
+            method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">

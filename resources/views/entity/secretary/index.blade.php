@@ -30,6 +30,9 @@
             </table>
         </div>
     </div>
+
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
     @include('entity.secretary.secretary-create-modal')
     @include('entity.secretary.secretary-edit-modal')
     @include('entity.secretary.secretary-delete-modal')
@@ -38,9 +41,10 @@
 @section('js')
     {{-- LIST --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('secretaries.getall') }}",
+                url: `/${periodId}/secretarias/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -95,7 +99,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('secretaries.create') }}",
+                url: `/${periodId}/secretarias/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createSecretaryForm")[0]),
@@ -114,7 +118,7 @@
                         timeOut: 3000
                     });
 
-                    if(data.count == 1){
+                    if (data.count == 1) {
                         $(`#tabla-secretaries tbody #row-0`).html("");
                     }
 
@@ -150,7 +154,7 @@
     {{-- EDIT --}}
     <script>
         function openEditSecretaryModal(secretaryId) {
-            $.get('/secretarias/get/' + secretaryId, function(data) {
+            $.get(`/${periodId}/secretarias/get/${secretaryId}`, function(data) {
                 $('#e_id').val(data.secretary.id);
                 $('#e_dni').val(data.secretary.dni);
                 $('#e_first_name').val(data.secretary.first_name);
@@ -170,7 +174,7 @@
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/secretarias/update/" + e_id,
+                url: `/${periodId}/secretarias/update/${e_id}`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editSecretaryForm")[0]),
@@ -220,7 +224,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteSecretaryModal(secretaryId) {
-            $.get('/secretarias/get/' + secretaryId, function(data) {
+            $.get(`/${periodId}/secretarias/get/${secretaryId}`, function(data) {
                 $('#d_id').val(data.secretary.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${data.secretary.first_name || ''} ${data.secretary.surname || ''}</b> de la lista?`
@@ -234,7 +238,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/secretarias/delete/" + d_id,
+                url: `/${periodId}/secretarias/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteSecretary').attr("disabled", true);
                     $('#btnDeleteSecretary').html(
@@ -250,7 +254,7 @@
 
                     $(`#tabla-secretaries tbody #row-${data.secretary.id}`).html("");
 
-                    if(data.count == 0){
+                    if (data.count == 0) {
                         const fila = `
                             <tr id="row-0">
                                 <td class="text-center" colspan="6">NO DATA</td>

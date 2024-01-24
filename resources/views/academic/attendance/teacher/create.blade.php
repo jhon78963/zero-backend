@@ -7,31 +7,35 @@
 @section('content')
     <div class="card mb-4" style="padding-right: 1rem">
         <div class="d-flex align-items-center justify-content-between ">
-            <h5 class="card-header">Asistencias</h5>
+            <h5 class="card-header">Asistencias Fecha: {{ $today }}</h5>
         </div>
     </div>
 
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center me-4">
 
-            <form method="post" action="{{ route('attendance.enable') }}">
-                @csrf
-                <button type="submit" class="btn btn-primary">
-                    Aperturar asistencia
-                </button>
-            </form>
+            @if ($attendance == null)
+                <form method="post" action="{{ route('attendance.enable', $period->id) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">
+                        Aperturar asistencia
+                    </button>
+                </form>
+            @endif
 
-            <form method="post" action="{{ route('attendance.disable', $fecha) }}">
-                @csrf
-                <button type="submit" class="btn btn-danger">Cerrar Asistencia</button>
-            </form>
+            @if ($attendance != null)
+                <form method="post" action="{{ route('attendance.disable', [$period->id, $fecha]) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Cerrar Asistencia</button>
+                </form>
+            @endif
         </div>
 
-        @if (optional($attendance)->status == true)
+        @if ($attendance == null || $attendance->status == true)
             <div class="visible-print text-center">
                 {!! $generateQr !!}
             </div>
-        @else
+        @elseif ($attendance != null && $attendance->status == false)
             <p class="text-center" style="font-size: 3rem;">Asistencia Cerrada</p>
         @endif
 
@@ -55,11 +59,13 @@
                                 </td>
                                 <td> {{ $studentAttendance->status }}</td>
                                 <td>
-                                    <form method="post"
-                                        action="{{ route('attendance.change', [$fecha, $studentAttendance->student_id]) }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger">Cambiar</button>
-                                    </form>
+                                    @if ($attendance != null && $attendance->status == true)
+                                        <form method="post"
+                                            action="{{ route('attendance.change', [$period->id, $fecha, $studentAttendance->student_id]) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">Cambiar</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicPeriod;
 use App\Models\Course;
 use App\Models\CourseGrade;
 use App\Models\Grade;
@@ -11,8 +12,6 @@ use Illuminate\Support\Facades\View;
 
 class CourseController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -20,19 +19,19 @@ class CourseController extends Controller
         $this->middleware('check.permissions:Admin-Secretaria,pages.course.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.course.delete')->only(['delete']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.course.assign')->only(['assign']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('academic.course.index');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('academic.course.index', compact('period'));
     }
 
-    public function assign(Request $request)
+    public function assign(Request $request, $period_id)
     {
         $courseExists = Course::where('id', $request->course_id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if (!$courseExists) {
@@ -42,7 +41,10 @@ class CourseController extends Controller
             ], 400);
         }
 
-        CourseGrade::where('course_id', $request->course_id)->delete();
+        CourseGrade::where('course_id', $request->course_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $period_id)
+            ->delete();
 
         $grades = $request->grades;
 
@@ -51,7 +53,7 @@ class CourseController extends Controller
                 'course_id' => $request->input('course_id'),
                 'grade_id' => $grade,
                 'CreatorUserId' => Auth::id(),
-                'TenantId' => $this->academic_period->id,
+                'TenantId' => $period_id,
             ]);
 
             $grade_save->save();
@@ -59,14 +61,14 @@ class CourseController extends Controller
 
         $course = Course::where('id', $request->course_id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->first();
 
         $course->courseGrades->pluck('grade.description');
 
         $position = Course::where('id', '<=', $course->id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->count();
 
         return response()->json([
@@ -76,11 +78,11 @@ class CourseController extends Controller
         ], 201);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $period_id)
     {
         $courseExists = Course::where('description', $request->input('description'))
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if ($courseExists) {
@@ -93,14 +95,14 @@ class CourseController extends Controller
         $course = new Course([
             'description' => $request->input('description'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $course->save();
 
         $course->courseGrades->pluck('grade.description');
 
-        $count = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Course::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -109,9 +111,9 @@ class CourseController extends Controller
         ], 201);
     }
 
-    public function delete($id)
+    public function delete($period_id, $id)
     {
-        $course = Course::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $course = Course::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($course)) {
             return response()->json([
@@ -125,7 +127,7 @@ class CourseController extends Controller
         $course->DeletionTime = now()->format('Y-m-d H:i:s');
         $course->save();
 
-        $count = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Course::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -134,11 +136,11 @@ class CourseController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($period_id, $id)
     {
         $course = Course::where('id', $id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->first();
 
         $grades = $course->courseGrades->pluck('grade.description');
@@ -157,9 +159,9 @@ class CourseController extends Controller
         ]);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $courses = Course::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $courses = Course::where('IsDeleted', false)->where('TenantId', $period_id)->get();
 
         $data = [];
 
@@ -180,11 +182,11 @@ class CourseController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $period_id, $id)
     {
         $courseIdExists = Course::where('id', $id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if (!$courseIdExists) {
@@ -197,7 +199,7 @@ class CourseController extends Controller
         $coursesExists = Course::where('description', $request->input('description'))
             ->where('id', '!=', $id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if ($coursesExists) {
@@ -218,7 +220,7 @@ class CourseController extends Controller
 
         $position = Course::where('id', '<=', $course->id)
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->count();
 
         return response()->json([

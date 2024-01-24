@@ -34,6 +34,7 @@
             <form id="createPermissionsForm">
                 @csrf
                 <input type="hidden" id="role_id">
+                <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
                 <div id="cardPermissions"></div>
             </form>
         </div>
@@ -56,9 +57,10 @@
 
     {{-- LIST --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('roles.getall') }}",
+                url: `/${periodId}/academico/roles/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -192,7 +194,7 @@
     {{-- EDIT --}}
     <script>
         function onRoleUpdate(roleId) {
-            $.get('/academico/roles/get/' + roleId, function(data) {
+            $.get(`/${periodId}/academico/roles/get/` + roleId, function(data) {
                 $('#role_id').val(data.role.id);
                 $('#role-name').val(data.role.name);
 
@@ -248,6 +250,7 @@
                 </td>
             `;
         }
+
         $("#createPermissionsForm").on("submit", function(e) {
             e.preventDefault();
 
@@ -285,7 +288,7 @@
                 },
             };
 
-            let ajaxUrl = (!roleId) ? "{{ route('roles.create') }}" : `/academico/roles/update/${roleId}`;
+            let ajaxUrl = (!roleId) ? `/${periodId}/academico/roles/store` : `/${periodId}/academico/roles/update/${roleId}`;
 
             $.ajax({
                 url: ajaxUrl,
@@ -297,7 +300,7 @@
     {{-- DELETE --}}
     <script>
         function onRoleDelete(roleId) {
-            $.get('/academico/roles/get/' + roleId, function(data) {
+            $.get(`/${periodId}/academico/roles/get/` + roleId, function(data) {
                 $('#d_id').val(data.role.id);
                 $('#d_message').html(
                     `Deseas eliminar el rol <b>${data.role.name}</b> de la lista?`
@@ -311,7 +314,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/academico/roles/delete/" + d_id,
+                url: `/${periodId}/academico/roles/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteRole').attr("disabled", true);
                     $('#btnDeleteRole').html(

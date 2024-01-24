@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSecretaryRequest;
 use App\Http\Requests\UpdateSecretaryRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Api\User;
 use App\Models\Secretary;
 use Illuminate\Http\Request;
@@ -14,26 +15,24 @@ use Illuminate\Support\Facades\View;
 
 class SecretaryController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin-Secretaria,pages.secretary')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.secretary.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.secretary.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('entity.secretary.index');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('entity.secretary.index', compact('period'));
     }
 
-    public function create(CreateSecretaryRequest $request)
+    public function create(CreateSecretaryRequest $request, $period_id)
     {
-        $emailExists = Secretary::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
-        $codeExists = Secretary::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
+        $emailExists = Secretary::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
+        $codeExists = Secretary::where('code', $request->input('code'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
 
         if ($emailExists || $codeExists) {
             return response()->json([
@@ -53,14 +52,14 @@ class SecretaryController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $secretary->save();
 
-        $this->generateUser($secretary);
+        $this->generateUser($secretary, $period_id);
 
-        $count = Secretary::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Secretary::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -69,7 +68,7 @@ class SecretaryController extends Controller
         ], 201);
     }
 
-    public function generateUser($secretary)
+    public function generateUser($secretary, $period_id)
     {
         $user = new User([
             'username' => $secretary->code,
@@ -80,7 +79,7 @@ class SecretaryController extends Controller
             'phoneNumber' => $secretary->phone,
             'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $user->save();
@@ -89,13 +88,13 @@ class SecretaryController extends Controller
             'roleId' => 2,
             'userId' => $user->id,
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
     }
 
-    public function delete($id)
+    public function delete($period_id, $id)
     {
-        $secretary = Secretary::where('id', $id)->where('IsDeleted', false)->first();
+        $secretary = Secretary::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($secretary)) {
             return response()->json([
@@ -109,7 +108,7 @@ class SecretaryController extends Controller
         $secretary->DeletionTime = now()->format('Y-m-d H:i:s');
         $secretary->save();
 
-        $count = Secretary::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Secretary::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -118,9 +117,9 @@ class SecretaryController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($period_id, $id)
     {
-        $secretaryExist = DB::table('secretaries')->where('id', $id)->first();
+        $secretaryExist = DB::table('secretaries')->where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($secretaryExist)) {
             return response()->json([
@@ -137,9 +136,9 @@ class SecretaryController extends Controller
         ]);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $secretaries = Secretary::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $secretaries = Secretary::where('IsDeleted', false)->where('TenantId', $period_id)->get();
         $count = count($secretaries);
 
         return response()->json([
@@ -149,9 +148,9 @@ class SecretaryController extends Controller
         ]);
     }
 
-    public function update(UpdateSecretaryRequest $request, $id)
+    public function update(UpdateSecretaryRequest $request, $period_id, $id)
     {
-        $secretary = Secretary::where('id', $id)->where('IsDeleted', false)->first();
+        $secretary = Secretary::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($secretary)) {
             return response()->json([

@@ -53,19 +53,23 @@ Route::get('role/permissions', function () {
     return $permissions;
 });
 
-Route::get('grade/{id}/section', function ($grade_id) {
+Route::get('grade/{id}/section/{period_id}', function ($grade_id, $period_id) {
     $sections = DB::table('class_rooms as cr')
         ->join('sections as s', 's.id', 'cr.section_id')
         ->where('grade_id', $grade_id)
+        ->where('s.TenantId', $period_id)
+        ->where('s.IsDeleted', false)
         ->select('s.id', 's.description')
         ->get();
     return $sections;
 });
 
-Route::get('class-room/{grade_id}/{section_id}', function ($grade_id, $section_id) {
+Route::get('class-room/{grade_id}/{section_id}/{period_id}', function ($grade_id, $section_id, $period_id) {
     $aulas = DB::table('class_rooms')
         ->where('grade_id', $grade_id)
         ->where('section_id', $section_id)
+        ->where('TenantId', $period_id)
+        ->where('IsDeleted', false)
         ->select('id', 'limit', 'students_number')
         ->first();
     return $aulas;

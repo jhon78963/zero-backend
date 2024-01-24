@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Api\User;
 use App\Models\Teacher;
 use App\Models\UserRole;
@@ -15,26 +16,24 @@ use Illuminate\Support\Facades\View;
 
 class TeacherController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('entity.teacher.index');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('entity.teacher.index', compact('period'));
     }
 
-    public function create(CreateTeacherRequest $request)
+    public function create(CreateTeacherRequest $request, $period_id)
     {
-        $emailExists = Teacher::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
-        $codeExists = Teacher::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
+        $emailExists = Teacher::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
+        $codeExists = Teacher::where('code', $request->input('code'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
 
         if ($emailExists || $codeExists) {
             return response()->json([
@@ -55,14 +54,14 @@ class TeacherController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $teacher->save();
 
-        $this->generateUser($teacher);
+        $this->generateUser($teacher, $period_id);
 
-        $count = Teacher::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Teacher::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -71,7 +70,7 @@ class TeacherController extends Controller
         ], 201);
     }
 
-    public function generateUser($teacher)
+    public function generateUser($teacher, $period_id)
     {
         $user = new User([
             'username' => $teacher->code,
@@ -82,7 +81,7 @@ class TeacherController extends Controller
             'phoneNumber' => $teacher->phone,
             'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $user->save();
@@ -91,13 +90,13 @@ class TeacherController extends Controller
             'roleId' => 3,
             'userId' => $user->id,
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
     }
 
-    public function delete($id)
+    public function delete($period_id, $id)
     {
-        $teacher = Teacher::where('id', $id)->where('IsDeleted', false)->first();
+        $teacher = Teacher::where('id', $id)->where('IsDeleted', false)->where('TenantId')->first();
 
         if (empty($teacher)) {
             return response()->json([
@@ -111,7 +110,7 @@ class TeacherController extends Controller
         $teacher->DeletionTime = now()->format('Y-m-d H:i:s');
         $teacher->save();
 
-        $count = Teacher::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Teacher::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -120,9 +119,9 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($period_id, $id)
     {
-        $teacherExist = DB::table('teachers')->where('id', $id)->first();
+        $teacherExist = DB::table('teachers')->where('id', $id)->where('TenantId', $period_id)->first();
 
         if (empty($teacherExist)) {
             return response()->json([
@@ -139,9 +138,9 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $teachers = Teacher::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $teachers = Teacher::where('IsDeleted', false)->where('TenantId', $period_id)->get();
         $count = count($teachers);
 
         return response()->json([
@@ -151,9 +150,9 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function update(UpdateTeacherRequest $request, $id)
+    public function update(UpdateTeacherRequest $request, $period_id, $id)
     {
-        $teacher = Teacher::where('id', $id)->where('IsDeleted', false)->first();
+        $teacher = Teacher::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($teacher)) {
             return response()->json([

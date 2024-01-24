@@ -208,7 +208,7 @@
                     </div>
                     <h6 class="text-center">Periodo académico</h6>
                     <h6 class="text-center">activo</h6>
-                    <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">{{  $academic_period->name }}</h3>
+                    <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">{{  $period->name }}</h3>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AssignRoleRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;

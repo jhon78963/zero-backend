@@ -9,7 +9,7 @@
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Gestión de Matriculas</h5>
             <div style="padding-right: 1rem">
-                <a href="{{ route('school-registration.register', $academic_period->name) }}"
+                <a href="{{ route('school-registration.create', $period->name) }}"
                     class="btn rounded-pill btn-icon btn-outline-primary me-1">
                     <span class="tf-icons bx bx-list-plus"></span>
                 </a>
@@ -31,13 +31,16 @@
             </table>
         </div>
     </div>
+
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
 @endsection
 
 @section('js')
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('school-registration.getall') }}",
+                url: `/${periodId}/matriculas/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {

@@ -15,12 +15,13 @@ return new class extends Migration
             $table->integer('CreatorUserId')->nullable();
             $table->integer('TenantId')->nullable();
             $table->integer('cantidad')->default(1);
-            $table->string('concepto');
+            $table->unsignedBigInteger('concepto');
             $table->float('monto');
             $table->float('monto_total');
 
             $table->unsignedBigInteger('treasury_id');
             $table->foreign('treasury_id')->references('id')->on('treasuries');
+            $table->foreign('concepto')->references('id')->on('payments');
         });
     }
 

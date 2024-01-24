@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Api\User;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -14,26 +15,24 @@ use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin-Secretaria,pages.student')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.student.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.student.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('entity.student.index');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        return view('entity.student.index', compact('period'));
     }
 
-    public function create(CreateStudentRequest $request)
+    public function create(CreateStudentRequest $request, $period_id)
     {
-        $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->exists();
-        $codeExists = Student::where('code', $request->input('code'))->where('IsDeleted', false)->exists();
+        $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
+        $codeExists = Student::where('code', $request->input('code'))->where('IsDeleted', false)->where('TenantId', $period_id)->exists();
 
         if ($emailExists || $codeExists) {
             return response()->json([
@@ -53,14 +52,14 @@ class StudentController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $student->save();
 
-        $this->generateUser($student);
+        $this->generateUser($student, $period_id);
 
-        $count = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Student::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -69,7 +68,7 @@ class StudentController extends Controller
         ]);
     }
 
-    public function generateUser($student)
+    public function generateUser($student, $period_id)
     {
         $user = new User([
             'username' => $student->code,
@@ -80,7 +79,7 @@ class StudentController extends Controller
             'phoneNumber' => $student->phone,
             'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $user->save();
@@ -89,13 +88,13 @@ class StudentController extends Controller
             'roleId' => 4,
             'userId' => $user->id,
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
     }
 
-    public function delete($id)
+    public function delete($period_id, $id)
     {
-        $student = Student::where('id', $id)->where('IsDeleted', false)->first();
+        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($student)) {
             return response()->json([
@@ -109,7 +108,7 @@ class StudentController extends Controller
         $student->DeletionTime = now()->format('Y-m-d H:i:s');
         $student->save();
 
-        $count = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Student::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -118,9 +117,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get($period_id, $id)
     {
-        $studentExist = DB::table('students')->where('id', $id)->first();
+        $studentExist = DB::table('students')->where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($studentExist)) {
             return response()->json([
@@ -137,9 +136,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $students = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $students = Student::where('IsDeleted', false)->where('TenantId', $period_id)->get();
         $count = count($students);
 
         return response()->json([
@@ -149,9 +148,9 @@ class StudentController extends Controller
         ]);
     }
 
-    public function update(UpdateStudentRequest $request, $id)
+    public function update(UpdateStudentRequest $request, $period_id, $id)
     {
-        $student = Student::where('id', $id)->where('IsDeleted', false)->first();
+        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($student)) {
             return response()->json([

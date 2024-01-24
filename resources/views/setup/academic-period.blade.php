@@ -23,8 +23,8 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col mb-3">
-                                <label for="name" class="form-label">Nombre del Periodo Académico</label>
-                                <input type="text" id="c_name" name="name" class="form-control"
+                                <label for="name" class="form-label">Año del Periodo Académico</label>
+                                <input type="month" id="c_name" name="name" class="form-control"
                                     placeholder="ej: PA-2023" />
                             </div>
                         </div>

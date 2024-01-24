@@ -87,6 +87,8 @@
         </div>
     </div>
 
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
     @include('academic.grade.grade-create-modal')
     @include('academic.grade.grade-edit-modal')
     @include('academic.grade.grade-delete-modal')
@@ -110,9 +112,10 @@
 @section('js')
     {{-- LISTS --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('grades.getall') }}",
+                url: `/${periodId}/grados/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -151,7 +154,7 @@
             });
 
             $.ajax({
-                url: "{{ route('sections.getall') }}",
+                url: `/${periodId}/secciones/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -190,7 +193,7 @@
             });
 
             $.ajax({
-                url: "{{ route('class-room.getall') }}",
+                url: `/${periodId}/aulas/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -230,7 +233,7 @@
                 }
             });
 
-            $.get('/grados/getAll', function(data) {
+            $.get(`/${periodId}/grados/getAll`, function(data) {
                 let selectElement = $('#ccr-grade_id');
                 $('option', selectElement).not(':first').remove();
 
@@ -242,7 +245,7 @@
                 });
             });
 
-            $.get('/secciones/getAll', function(data) {
+            $.get(`/${periodId}/secciones/getAll`, function(data) {
                 let selectElement = $('#ccr-section_id');
                 $('option', selectElement).not(':first').remove();
 
@@ -254,7 +257,7 @@
                 });
             });
 
-            $.get('/grados/getAll', function(data) {
+            $.get(`/${periodId}/grados/getAll`, function(data) {
                 let selectElement = $('#ecr-grade_id');
                 $('option', selectElement).not(':first').remove();
 
@@ -266,7 +269,7 @@
                 });
             });
 
-            $.get('/secciones/getAll', function(data) {
+            $.get(`/${periodId}/secciones/getAll`, function(data) {
                 let selectElement = $('#ecr-section_id');
                 $('option', selectElement).not(':first').remove();
 
@@ -297,7 +300,7 @@
         $('#createGradeForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('grades.create') }}",
+                url: `/${periodId}/grados/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createGradeForm")[0]),
@@ -363,7 +366,7 @@
         $('#createSectionForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('sections.create') }}",
+                url: `/${periodId}/secciones/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createSectionForm")[0]),
@@ -429,7 +432,7 @@
         $('#createClassRoomForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('class-room.create') }}",
+                url: `/${periodId}/aulas/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createClassRoomForm")[0]),
@@ -492,7 +495,7 @@
         }
 
         function openEditClassRoomModal(gradeId, sectionId) {
-            $.get(`/aulas/get/${gradeId}/${sectionId}`, function(data) {
+            $.get(`/${periodId}/aulas/get/${gradeId}/${sectionId}`, function(data) {
                 $('#e_grade_id').val(data.classRoom.grade_id);
                 $('#e_section_id').val(data.classRoom.section_id);
                 $('#ecr-grade_id').val(data.classRoom.grade_id);
@@ -505,10 +508,11 @@
 
         $('#editClassRoomForm').submit(function(e) {
             e.preventDefault();
-            var gradeId = $('#e_grade_id').val();
-            var sectionId = $('#e_section_id').val();
+            const gradeId = $('#e_grade_id').val();
+            const sectionId = $('#e_section_id').val();
+            console.log(gradeId, sectionId)
             $.ajax({
-                url: `/aulas/update/${gradeId}/${sectionId}`,
+                url: `/${periodId}/aulas/update/${gradeId}/${sectionId}`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editClassRoomForm")[0]),
@@ -563,7 +567,7 @@
         }
 
         function openDeleteClassRoomModal(gradeId, sectionId) {
-            $.get(`/aulas/get/${gradeId}/${sectionId}`, function(data) {
+            $.get(`/${periodId}/aulas/get/${gradeId}/${sectionId}`, function(data) {
                 $('#d_classroom_id').val(data.classRoom.id);
                 $('#d_message_classroom').html(
                     `Deseas eliminar el salón <b>${data.classRoom.description}</b> de la lista?`
@@ -577,7 +581,7 @@
             var d_id = $('#d_classroom_id').val();
 
             $.ajax({
-                url: "/aulas/delete/" + d_id,
+                url: `/${periodId}/aulas/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteClassRoom').attr("disabled", true);
                     $('#btnDeleteClassRoom').html(

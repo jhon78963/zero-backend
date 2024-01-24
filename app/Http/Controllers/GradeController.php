@@ -9,18 +9,15 @@ use Illuminate\Support\Facades\View;
 
 class GradeController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin-Secretaria,pages.grades')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.grades.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.grades.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $period_id)
     {
         if ($request->input('description') == null) {
             return response()->json([
@@ -31,7 +28,7 @@ class GradeController extends Controller
 
         $gradeExists = Grade::where('description', $request->input('description'))
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if ($gradeExists) {
@@ -44,12 +41,12 @@ class GradeController extends Controller
         $grade = new Grade([
             'description' => $request->input('description'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $grade->save();
 
-        $count = Grade::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Grade::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -58,9 +55,9 @@ class GradeController extends Controller
         ], 201);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $grades = Grade::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $grades = Grade::where('IsDeleted', false)->where('TenantId', $period_id)->get();
         $count = count($grades);
 
         return response()->json([
@@ -70,9 +67,9 @@ class GradeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $period_id, $id)
     {
-        $grade = Grade::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $grade = Grade::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
 
         if (empty($grade)) {
             return response()->json([

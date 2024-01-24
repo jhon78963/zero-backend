@@ -55,15 +55,18 @@ class AuthController extends Controller
         $userExists = User::join('user_roles as ur', 'users.id', 'ur.userId')
             ->join('roles as r', 'ur.roleId', 'r.id')
             ->where('email', $request->email)
-            ->select('users.id as userId', 'r.id as roleId')
+            ->select('users.id as userId', 'r.id as roleId', 'users.TenantId')
             ->first();
+
+        $period = AcademicPeriod::where('id', $userExists->TenantId)->first();
 
         Auth::loginUsingId($userExists->userId);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Bienvenido al sistema',
-            'role' => $userExists->roleId
+            'role' => $userExists->roleId,
+            'period' => $period
         ], 200);
     }
 
@@ -153,13 +156,14 @@ class AuthController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function home()
+    public function home($period_name)
     {
         $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
         $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
+        $period = AcademicPeriod::where('name', $period_name)->first();
         // $currentYear = Carbon::now()->year;
         // $academic_period = AcademicPeriod::where('year', $currentYear)->first();
-        return view('auth.home', compact('diaActual', 'fechaActual'));
+        return view('auth.home', compact('diaActual', 'fechaActual', 'period'));
     }
 
     public function homePrincipal()

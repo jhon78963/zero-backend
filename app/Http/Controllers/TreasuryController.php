@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicPeriod;
 use App\Models\InvoiceNumber;
+use App\Models\Payment;
 use App\Models\SchoolRegistration;
 use App\Models\Treasury;
 use App\Models\TreasuryDetail;
@@ -13,22 +15,20 @@ use Illuminate\Support\Facades\View;
 
 class TreasuryController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin,pages.calendar')->only(['index']);
         $this->middleware('check.permissions:Admin,pages.calendar.modify')->only(['store']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
+        $period = AcademicPeriod::where('name', $period_name)->first();
         $treasuries = DB::table('treasury_detail as td')
             ->join('treasuries as t', 't.id', 'td.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
-            ->where('t.TenantId', $this->academic_period->id)
+            ->where('t.TenantId', $period->id)
             ->where('t.IsDeleted', false)
             ->select(
                 't.*',
@@ -41,23 +41,27 @@ class TreasuryController extends Controller
             )
             ->get();
 
-        return view('treasury.index', compact('treasuries'));
+        return view('treasury.index', compact('treasuries', 'period'));
     }
 
-    public function create()
+    public function create($period_name)
     {
-        $invoice = InvoiceNumber::find(1);
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $invoice = InvoiceNumber::where('TenantId', $period->id)->first();
+        $payments = Payment::all();
         $students = DB::table('school_registration as sr')
             ->join('students as s', 's.id', 'sr.student_id')
-            ->where('sr.TenantId', $this->academic_period->id)
+            ->where('sr.TenantId', $period->id)
             ->select('s.*')
             ->get();
 
-        return view('treasury.create', compact('invoice', 'students'));
+        return view('treasury.create', compact('invoice', 'students', 'period', 'payments'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $period_id)
     {
+        $period = AcademicPeriod::where('id', $period_id)->first();
+
         $treasury = new Treasury();
         $treasury->codigo_operacion = $request->serie . $request->numero;
         $treasury->serie = $request->serie;
@@ -77,18 +81,20 @@ class TreasuryController extends Controller
         $treasury->total_igv = 0;
         $treasury->total = 0;
         $treasury->student_id = $request->student_id;
-        $treasury->TenantId = $this->academic_period->id;
+        $treasury->TenantId = $period_id;
         $treasury->CreatorUserId = Auth::id();
         $treasury->save();
 
         for ($i = 0; $i < count($request->description); $i++) {
+            $string = "1_1600";
+            list($concept, $cost) = explode('_', $request->description[$i]);
             $treasury_detail = new TreasuryDetail();
-            $treasury_detail->cantidad = $request->quantity[$i];
-            $treasury_detail->concepto = $request->description[$i];
+            $treasury_detail->cantidad = 1;
+            $treasury_detail->concepto = $concept;
             $treasury_detail->monto = $request->price[$i];
             $treasury_detail->monto_total = $request->total[$i];
             $treasury_detail->treasury_id = $treasury->id;
-            $treasury_detail->TenantId = $this->academic_period->id;
+            $treasury_detail->TenantId = $period_id;
             $treasury_detail->CreatorUserId = Auth::id();
             $treasury_detail->save();
 
@@ -104,17 +110,18 @@ class TreasuryController extends Controller
             $invoice->save();
         }
 
-        return redirect()->route('treasuries.index', $this->academic_period->name);
+        return redirect()->route('treasuries.index', $period->name);
     }
 
-    public function cancel($id)
+    public function cancel($period_id, $id)
     {
+        $period = AcademicPeriod::where('id', $period_id)->first();
         $treasury = Treasury::findOrFail($id);
         $treasury->IsDeleted = true;
         $treasury->DeleterUserId = Auth::id();
         $treasury->DeletionTime = now()->format('Y-m-d H:i:s');
         $treasury->save();
 
-        return redirect()->route('treasuries.index', $this->academic_period->name);
+        return redirect()->route('treasuries.index', $period->name);
     }
 }

@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card mb-4 p-4">
-        <form action="{{ route('treasuries.store') }}" method="POST">
+        <form action="{{ route('treasuries.store', $period->id) }}" method="POST">
             @csrf
             <div class="d-flex justify-content-between align-content-items mb-2">
                 <h5 class="card-header">Registrar pago</h5>
@@ -73,7 +73,6 @@
                     <table class="table" id="table-payment">
                         <thead>
                             <tr>
-                                <th width="5%">Cantidad</th>
                                 <th width="60%">Concepto</th>
                                 <th width="10%">P. Unit</th>
                                 <th width="10%">Total</th>
@@ -82,17 +81,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="5%">
-                                    <input type="text" name="quantity[]" value="1" class="form-control text-center">
-                                </td>
                                 <td width="60%">
-                                    <input type="text" name="description[]" class="form-control">
+                                    <select name="description[]" class="form-control" id="payment-principal">
+                                        <option value="">Selecione conceptop de pago</option>
+                                        @foreach ($payments as $payment)
+                                            <option value="{{ $payment->id }}_{{ $payment->cost }}">
+                                                {{ $payment->description }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td width="10%">
-                                    <input type="text" name="price[]" class="form-control text-center">
+                                    <input type="text" name="price[]" class="form-control text-center"
+                                        id="cost-principal" readonly>
                                 </td>
-                                <td width="5%">
-                                    <input type="text" name="total[]" class="form-control text-center">
+                                <td width="10%">
+                                    <input type="text" name="total[]" class="form-control text-center"
+                                        id="total-principal" readonly>
                                 </td>
                                 <td width="10%"></td>
                             </tr>
@@ -102,8 +106,7 @@
             </div>
 
             <div class="d-flex justify-content-end mt-3">
-                <a href="{{ route('treasuries.index', $academic_period->name) }}"
-                    class="btn btn-secondary me-2">Regresar</a>
+                <a href="{{ route('treasuries.index', $period->name) }}" class="btn btn-secondary me-2">Regresar</a>
                 <button type="submit" class="btn btn-success">Registrar</button>
             </div>
         </form>
@@ -117,13 +120,24 @@
 
 @section('js')
     <script>
+        $("#payment-principal").on("change", function() {
+            const [id, cost] = $(this).val().split('_');
+            $('#cost-principal').val(cost);
+            $('#total-principal').val(cost);
+        });
+    </script>
+    <script>
         function addRow() {
+            const payments = @json($payments);
             fila = `
                 <tr>
-                    <td width="5%"><input type="text" name="quantity[]" value="1" class="form-control text-center"></td>
-                    <td width="60%"><input type="text" name="description[]" class="form-control"></td>
-                    <td width="10%"><input type="text" name="price[]" class="form-control text-center"></td>
-                    <td width="5%"><input type="text" name="total[]" class="form-control text-center"></td>
+                    <td width="60%">
+                        <select name="description[]" class="form-control" onchange="generateCost(this)">
+                            ${generateConcepts(payments)}
+                        </select>
+                    </td>
+                    <td width="10%"><input type="text" name="price[]" class="form-control text-center" readonly></td>
+                    <td width="5%"><input type="text" name="total[]" class="form-control text-center" readonly></td>
                     <td>
                         <button type="button" class="btn btn-danger" onclick="deleteRow(this)"><i class='bx bx-trash-alt'></i></button>
                     </td>
@@ -147,6 +161,25 @@
                     $('#direccion_cliente').val(data.direccion);
                 });
             }
+        }
+
+        function generateConcepts(payments) {
+            let options = `
+                <option value="">Selecione conceptop de pago</option>
+            `;
+            $.each(payments, function(index, payment) {
+                options += `
+                    <option value="${payment.id}_${payment.cost}">${payment.description}</option>
+                `;
+            });
+            return options;
+        }
+
+        function generateCost(payment) {
+            const [id, cost] = payment.value.split('_');
+            const row = $(payment).closest('tr');
+            const priceInput = row.find('input[name="price[]"]').val(cost);
+            const totalInput = row.find('input[name="total[]"]').val(cost);
         }
     </script>
 @endsection

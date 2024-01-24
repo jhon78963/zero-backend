@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicCalendar;
+use App\Models\AcademicPeriod;
 use App\Models\Api\User;
 use App\Models\ClassRoom;
 use App\Models\CourseCompetencia;
@@ -19,32 +21,34 @@ use Illuminate\Support\Facades\View;
 
 class SchoolRegistrationController extends Controller
 {
-    private $academic_period;
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher')->only(['index', 'getAll', 'get']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.modify')->only(['create', 'update']);
         $this->middleware('check.permissions:Admin-Secretaria,pages.teacher.delete')->only(['delete']);
-        $this->academic_period = View::shared('academic_period');
     }
 
-    public function index()
+    public function index($period_name)
     {
-        return view('academic.school-registration.index');
+        $today = now()->format('Y-m-d');
+        $period = AcademicPeriod::where('name', $period_name)->first();
+
+        return view('academic.school-registration.index', compact('period'));
     }
 
-    public function register()
+    public function create($period_name)
     {
-        $grades = Grade::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
-        $students = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
-        return view('academic.school-registration.create', compact('grades', 'students'));
+
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $grades = Grade::where('IsDeleted', false)->where('TenantId', $period->id)->get();
+        $students = Student::where('IsDeleted', false)->where('TenantId', $period->id)->where('status', '0')->get();
+        return view('academic.school-registration.create', compact('grades', 'students', 'period'));
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $schoolRegistration = SchoolRegistration::with('student', 'classroom')->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $schoolRegistration = SchoolRegistration::with('student', 'classroom')->where('IsDeleted', false)->where('TenantId', $period_id)->get();
 
         $count = count($schoolRegistration);
 
@@ -55,13 +59,15 @@ class SchoolRegistrationController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function store(Request $request, $period_id)
     {
+        $period = AcademicPeriod::where('id', $period_id)->first();
+
         $matricula = new SchoolRegistration();
         $matricula->classroom_id = $request->aula_id;
         $matricula->year = $request->matr_año_ingreso;
         $matricula->status = 'ACTIVO';
-        $matricula->TenantId = $this->academic_period->id;
+        $matricula->TenantId = $period_id;
         $matricula->CreatorUserId = Auth::id();
 
         if ($request->alum_id != null) {
@@ -79,16 +85,12 @@ class SchoolRegistrationController extends Controller
             $alumno_seccion = new StudentClassroom();
             $alumno_seccion->student_id = $request->alum_id;
             $alumno_seccion->classroom_id = $request->aula_id;
-            $alumno_seccion->TenantId = $this->academic_period->id;
+            $alumno_seccion->TenantId = $period_id;
             $alumno_seccion->CreatorUserId = Auth::id();
             $alumno_seccion->save();
 
-            $curso_secciones = CourseGrade::where('course_id', $request->grado_id)->get();
             $course_competencias = DB::table('course_competencias as cc')
-                ->join('course_grades as cg', 'cg.course_id', 'cc.course_id')
-                ->join('class_rooms as cr', 'cr.grade_id', 'cg.grade_id')
-                ->where('cc.TenantId', $this->academic_period->id)
-                ->where('cr.section_id', $request->secc_id)
+                ->where('cc.TenantId', $period_id)
                 ->select('cc.id as course_competencia_id')
                 ->get();
 
@@ -98,11 +100,11 @@ class SchoolRegistrationController extends Controller
                 $nota->classroom_id = $request->aula_id;
                 $nota->course_competencia_id = $course_competencia->course_competencia_id;
                 $nota->CreatorUserId = Auth::id();
-                $nota->TenantId = $this->academic_period->id;
+                $nota->TenantId = $period_id;
                 $nota->save();
             }
 
-            return redirect()->route('school-registration.index', $this->academic_period->name)->with('datos', 'Matricula Registrada ...!');
+            return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');
         } else {
             $student = new Student([
                 'dni' => $request->input('alum_dni'),
@@ -115,12 +117,13 @@ class SchoolRegistrationController extends Controller
                 'phone' => $request->input('alum_celular'),
                 'address' => $request->input('alum_direccion'),
                 'CreatorUserId' => Auth::id(),
-                'TenantId' => $this->academic_period->id,
+                'TenantId' => $period_id,
+                'status' => '1',
             ]);
 
             $student->save();
 
-            $this->generateUser($student);
+            $this->generateUser($student, $period);
 
             $matricula->student_id = $student->id;
             $matricula->save();
@@ -133,15 +136,11 @@ class SchoolRegistrationController extends Controller
             $alumno_seccion->student_id = $student->id;
             $alumno_seccion->classroom_id = $request->aula_id;
             $alumno_seccion->CreatorUserId = Auth::id();
-            $alumno_seccion->TenantId = $this->academic_period->id;
+            $alumno_seccion->TenantId = $period_id;
             $alumno_seccion->save();
 
-            $curso_secciones = CourseGrade::where('course_id', $request->grado_id)->get();
             $course_competencias = DB::table('course_competencias as cc')
-                ->join('course_grades as cg', 'cg.course_id', 'cc.course_id')
-                ->join('class_rooms as cr', 'cr.grade_id', 'cg.grade_id')
-                ->where('cc.TenantId', $this->academic_period->id)
-                ->where('cr.section_id', $request->secc_id)
+                ->where('cc.TenantId', $period_id)
                 ->select('cc.id as course_competencia_id')
                 ->get();
 
@@ -151,15 +150,15 @@ class SchoolRegistrationController extends Controller
                 $nota->classroom_id = $request->aula_id;
                 $nota->course_competencia_id = $course_competencia->course_competencia_id;
                 $nota->CreatorUserId = Auth::id();
-                $nota->TenantId = $this->academic_period->id;
+                $nota->TenantId = $period_id;
                 $nota->save();
             }
 
-            return redirect()->route('school-registration.index', $this->academic_period->name)->with('datos', 'Matricula Registrada ...!');
+            return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');
         }
     }
 
-    public function generateUser($student)
+    public function generateUser($student, $period)
     {
         $user = new User([
             'username' => $student->code,
@@ -170,7 +169,7 @@ class SchoolRegistrationController extends Controller
             'phoneNumber' => $student->phone,
             'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period->id,
         ]);
 
         $user->save();
@@ -179,7 +178,7 @@ class SchoolRegistrationController extends Controller
             'roleId' => 4,
             'userId' => $user->id,
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period->id,
         ]);
     }
 }

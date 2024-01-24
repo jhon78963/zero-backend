@@ -31,6 +31,9 @@
             </table>
         </div>
     </div>
+
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+
     @include('entity.student.student-create-modal')
     @include('entity.student.student-edit-modal')
     @include('entity.student.student-delete-modal')
@@ -39,9 +42,10 @@
 @section('js')
     {{-- LIST --}}
     <script>
+        const periodId = $('#period_id').val();
         window.onload = function() {
             $.ajax({
-                url: "{{ route('students.getall') }}",
+                url: `/${periodId}/estudiantes/getAll`,
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -96,7 +100,7 @@
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('students.create') }}",
+                url: `/${periodId}/estudiantes/store`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#createStudentForm")[0]),
@@ -151,7 +155,7 @@
     {{-- EDIT --}}
     <script>
         function openEditStudentModal(studentId) {
-            $.get('/estudiantes/get/' + studentId, function(data) {
+            $.get(`/${periodId}/estudiantes/get/${studentId}`, function(data) {
                 $('#e_id').val(data.student.id);
                 $('#e_dni').val(data.student.dni);
                 $('#e_first_name').val(data.student.first_name);
@@ -164,14 +168,14 @@
                 $('#e_address').val(data.student.address);
                 $("input[name=_token]").val();
                 $('#editStudentModal').modal('toggle');
-            })
+            });
         }
 
         $('#editStudentForm').submit(function(e) {
             e.preventDefault();
             var e_id = $('#e_id').val();
             $.ajax({
-                url: "/estudiantes/update/" + e_id,
+                url: `/${periodId}/estudiantes/update/${e_id}`,
                 method: 'POST',
                 dataType: 'json',
                 data: new FormData($("#editStudentForm")[0]),
@@ -221,7 +225,7 @@
     {{-- DELETE --}}
     <script>
         function openDeleteStudentModal(studentId) {
-            $.get('/estudiantes/get/' + studentId, function(data) {
+            $.get(`/${periodId}/estudiantes/get/${studentId}`, function(data) {
                 $('#d_id').val(data.student.id);
                 $('#d_message').html(
                     `Deseas eliminar el usuario <b>${data.student.first_name || ''} ${data.student.surname || ''}</b> de la lista?`
@@ -235,7 +239,7 @@
             var d_id = $('#d_id').val();
 
             $.ajax({
-                url: "/estudiantes/delete/" + d_id,
+                url: `/${periodId}/estudiantes/delete/${d_id}`,
                 beforeSend: function() {
                     $('#btnDeleteStudent').attr("disabled", true);
                     $('#btnDeleteStudent').html(

@@ -7,11 +7,7 @@
 @section('content')
     <div class="card mb-4" style="padding-right: 1rem">
         <div class="d-flex align-items-center justify-content-between ">
-            <h5 class="card-header">Asistencias</h5>
-            <a class="btn btn-primary"
-                href="{{ route('attendance.teacher.create', $period->name) }}">
-                Registrar Asistencia
-            </a>
+            <h5 class="card-header">Listado de alumnos del {{ $room->description }}</h5>
         </div>
     </div>
 
@@ -20,21 +16,21 @@
             <table class="table" id="tabla-roles">
                 <thead>
                     <tr>
-                        <th width="15%">Fecha</th>
-                        <th class="text-center">Profesor</th>
-                        <th class="text-center">Aula</th>
+                        <th width="15%">#</th>
+                        <th class="text-center">Estudiante</th>
                         <th width="15%" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @if ($attendances->count() > 0)
-                        @foreach ($attendances as $attendace)
+                    @if ($classroom_students->count() > 0)
+                        @foreach ($classroom_students as $classroom_student)
                             <tr>
-                                <td>{{ $attendace->date }}</td>
-                                <td class="text-center">{{ $attendace->teacher->first_name }}
-                                    {{ $attendace->teacher->surname }}</td>
-                                <td class="text-center">{{ $attendace->classroom->description }}</td>
-                                <td class="text-center"></td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $classroom_student->student->first_name }}
+                                    {{ $classroom_student->student->surname }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-rounded">Subir notas</button>
+                                </td>
                             </tr>
                         @endforeach
                     @else

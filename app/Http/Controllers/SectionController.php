@@ -20,7 +20,7 @@ class SectionController extends Controller
         $this->academic_period = View::shared('academic_period');
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $period_id)
     {
         if ($request->input('description') == null) {
             return response()->json([
@@ -31,7 +31,7 @@ class SectionController extends Controller
 
         $sectionExists = Section::where('description', $request->input('description'))
             ->where('IsDeleted', false)
-            ->where('TenantId', $this->academic_period->id)
+            ->where('TenantId', $period_id)
             ->exists();
 
         if ($sectionExists) {
@@ -44,12 +44,12 @@ class SectionController extends Controller
         $section = new Section([
             'description' => $request->input('description'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => $period_id,
         ]);
 
         $section->save();
 
-        $count = Section::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->count();
+        $count = Section::where('IsDeleted', false)->where('TenantId', $period_id)->count();
 
         return response()->json([
             'status' => 'success',
@@ -58,9 +58,9 @@ class SectionController extends Controller
         ], 201);
     }
 
-    public function getAll()
+    public function getAll($period_id)
     {
-        $sections = Section::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $sections = Section::where('IsDeleted', false)->where('TenantId', $period_id)->get();
         $count = count($sections);
 
         return response()->json([

@@ -10,7 +10,7 @@
             <h5 class="card-header">Horario</h5>
         </div>
 
-        <form action="{{ route('workload.index', $academic_period->name) }}" method="GET">
+        <form action="{{ route('workload.index', $period->name) }}" method="GET">
             <div class="d-flex align-items-center justify-content-center">
                 <select name="classroom_id" id="classroom_id" class="form-control text-center" style="width: 30%;" disabled>
                     <option value="">Seleccione ...</option>

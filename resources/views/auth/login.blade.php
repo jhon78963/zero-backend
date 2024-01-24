@@ -130,9 +130,8 @@
                                         window.location.href =
                                             '{{ route('auth.home.principal') }}';
                                     } else {
-                                        window.location.href = '{{ route('auth.home') }}';
+                                        window.location.href = `/${data.period.name}/bienvenido`;
                                     }
-                                    //window.location.href = '{{ route('auth.home') }}';
                                 }
                             })
                         },
