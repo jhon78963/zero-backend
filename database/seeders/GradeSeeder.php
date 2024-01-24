@@ -9,43 +9,36 @@ use Illuminate\Support\Facades\View;
 
 class GradeSeeder extends Seeder
 {
-    private $academic_period;
-
-    public function __construct()
-    {
-        $this->academic_period = View::shared('academic_period');
-    }
-
     public function run()
     {
         $grade = new Grade();
         $grade->description = '1er grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
 
         $grade = new Grade();
         $grade->description = '2do grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
 
         $grade = new Grade();
         $grade->description = '3ero grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
 
         $grade = new Grade();
         $grade->description = '4to grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
 
         $grade = new Grade();
         $grade->description = '5to grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
 
         $grade = new Grade();
         $grade->description = '6to grado';
-        $grade->TenantId = $this->academic_period->id;
+        $grade->TenantId = 1;
         $grade->save();
     }
 }

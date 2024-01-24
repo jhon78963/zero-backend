@@ -9,13 +9,6 @@ use Illuminate\Support\Facades\View;
 
 class TeacherSeeder extends Seeder
 {
-    private $academic_period;
-
-    public function __construct()
-    {
-        $this->academic_period = View::shared('academic_period');
-    }
-
     public function run()
     {
         $teacher = new Teacher();
@@ -25,7 +18,7 @@ class TeacherSeeder extends Seeder
         $teacher->code = '1231';
         $teacher->institutional_email = 'jperez@sage.edu.pe';
         $teacher->type = 'GENERAL';
-        $teacher->TenantId = $this->academic_period->id;
+        $teacher->TenantId = 1;
         $teacher->save();
 
         $teacher = new Teacher();
@@ -35,7 +28,7 @@ class TeacherSeeder extends Seeder
         $teacher->code = '1232';
         $teacher->institutional_email = 'jperalta@sage.edu.pe';
         $teacher->type = 'AREA';
-        $teacher->TenantId = $this->academic_period->id;
+        $teacher->TenantId = 1;
         $teacher->save();
     }
 }

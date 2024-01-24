@@ -9,28 +9,21 @@ use Illuminate\Support\Facades\View;
 
 class SectionSeeder extends Seeder
 {
-    private $academic_period;
-
-    public function __construct()
-    {
-        $this->academic_period = View::shared('academic_period');
-    }
-
     public function run()
     {
         $section = new Section();
         $section->description = 'A';
-        $section->TenantId = $this->academic_period->id;
+        $section->TenantId = 1;
         $section->save();
 
         $section = new Section();
         $section->description = 'B';
-        $section->TenantId = $this->academic_period->id;
+        $section->TenantId = 1;
         $section->save();
 
         $section = new Section();
         $section->description = 'C';
-        $section->TenantId = $this->academic_period->id;
+        $section->TenantId = 1;
         $section->save();
     }
 }
