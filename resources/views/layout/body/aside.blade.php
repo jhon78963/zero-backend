@@ -36,11 +36,6 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
-                        <a href="{{ route('roles.index', $period->name) }}" class="menu-link">
-                            <div data-i18n="Account">Roles</div>
-                        </a>
-                    </li>
-                    <li class="menu-item">
                         <a href="{{ route('users.index', $period->name) }}" class="menu-link">
                             <div data-i18n="Notifications">Usuarios</div>
                         </a>
