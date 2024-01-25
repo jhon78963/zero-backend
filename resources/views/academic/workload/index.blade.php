@@ -66,7 +66,7 @@
             'courses' => $courses,
             'classroom_id' => $classroom_id,
             'classroom_description' => $request_classroom ? $request_classroom->description : null,
-            'period' => $period
+            'period' => $period,
         ])
     </div>
 @endsection

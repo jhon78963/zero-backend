@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-    Sílabus
+    Asistencia
 @endsection
 
 @section('content')

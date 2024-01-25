@@ -223,7 +223,7 @@ class WorkloadController extends Controller
             ->where('TenantId', $period->id)
             ->first();
 
-        $classroom_id = $class_room->id;
+        $classroom_id = $class_room->classroom_id;
         $request_classroom = ClassRoom::where('id', $classroom_id)
             ->where('IsDeleted', false)
             ->where('TenantId', $period->id)
@@ -249,7 +249,7 @@ class WorkloadController extends Controller
             ->where('TenantId', $period->id)
             ->first();
 
-        $classroom_id = $class_room->id;
+        $classroom_id = $class_room->classroom_id;
         $request_classroom = ClassRoom::where('id', $classroom_id)
             ->where('IsDeleted', false)
             ->where('TenantId', $period->id)

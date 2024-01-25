@@ -16,6 +16,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolRegistrationController;
 use App\Http\Controllers\SecretaryController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\StudentCompetenciaController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SyllabusController;
 use App\Http\Controllers\TeacherCompetenciaController;
@@ -184,7 +185,11 @@ Route::group(['prefix' => '{period_id}/'], function () {
 
     //Notas docente
     Route::get('/notas/docente', [TeacherCompetenciaController::class, 'index'])->name('grade.teacher.index');
+    Route::get('/notas/docente/{classroom_id}/registrar/{student_id}', [TeacherCompetenciaController::class, 'create'])->name('grade.teacher.create');
+    Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store'])->name('grade.teacher.store');
 
+    //Notas docente
+    Route::get('/notas/estudiante', [StudentCompetenciaController::class, 'index'])->name('grade.student.index');
 });
 
 // Auth

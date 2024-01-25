@@ -36,10 +36,10 @@
             </div>
         </div>
 
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-8 col-md-6 col-sm-12">
             <div class="row">
                 @foreach ($academic_periods as $period)
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-3 col-sm-12">
                         <div class="card mb-4 p-1">
                             <div class="card-body text-center"> <!-- Agrega la clase "text-center" aquí -->
                                 <div class="card-title align-items-start justify-content-between">

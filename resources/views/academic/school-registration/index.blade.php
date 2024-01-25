@@ -8,12 +8,16 @@
     <div class="card mb-4">
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Gestión de Matriculas</h5>
-            <div style="padding-right: 1rem">
-                <a href="{{ route('school-registration.create', $period->name) }}"
-                    class="btn rounded-pill btn-icon btn-outline-primary me-1">
-                    <span class="tf-icons bx bx-list-plus"></span>
-                </a>
-            </div>
+            @if ($calendar_global->activity == 'Matrículas')
+                <div style="padding-right: 1rem">
+                    <a href="{{ route('school-registration.create', $period->name) }}"
+                        class="btn rounded-pill btn-icon btn-outline-primary me-1">
+                        <span class="tf-icons bx bx-list-plus"></span>
+                    </a>
+                </div>
+            @else
+                <p class="me-4">Está fuera del periodo de matrículas</p>
+            @endif
         </div>
 
         <div class="table-responsive text-nowrap">

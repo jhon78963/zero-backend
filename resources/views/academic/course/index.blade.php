@@ -124,7 +124,7 @@
     {{-- ASSIGN --}}
     <script>
         function openAssignCourseModal(courseId) {
-            $.get(`${periodId}/cursos/get/${courseId}`, function(courseData) {
+            $.get(`/${periodId}/cursos/get/${courseId}`, function(courseData) {
 
                 $('#a_id').val(courseData.course.id);
                 $('#a_message').html(`Selecciona uno o mas <b>grados</b> de la lista a asignar`);

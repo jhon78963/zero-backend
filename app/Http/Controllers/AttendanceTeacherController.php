@@ -97,7 +97,7 @@ class AttendanceTeacherController extends Controller
         $attendance = new Attendance();
         $attendance->date = now()->format('Y-m-d');
         $attendance->teacher_id = $teacher->id;
-        $attendance->classroom_id = $class_room->id;
+        $attendance->classroom_id = $class_room->classroom_id;
         $attendance->TenantId = $period_id;
         $attendance->save();
 

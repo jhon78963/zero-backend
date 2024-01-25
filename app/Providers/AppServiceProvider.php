@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AcademicCalendar;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\AcademicPeriod;
@@ -29,5 +30,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::share('academic_periods', AcademicPeriod::where('status', true)->get());
+
+        $currentDate = Carbon::now();
+
+        $calendar = AcademicCalendar::where('start', '<=', $currentDate)
+            ->where('end', '>=', $currentDate)
+            ->first();
+
+        View::share('calendar_global', $calendar);
     }
 }

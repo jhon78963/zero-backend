@@ -115,22 +115,6 @@
 
         @if ($roleName == 'Admin' || $roleName == 'Secretaria')
             <li class="menu-item">
-                <a href="{{ route('silabus.index', $period->name) }}" class="menu-link">
-                    <div data-i18n="Account">Sílabus</div>
-                </a>
-            </li>
-        @endif
-
-        @if ($roleName == 'Docente')
-            <li class="menu-item">
-                <a href="{{ route('teacher.silabus.index', $period->name) }}" class="menu-link">
-                    <div data-i18n="Account">Sílabus</div>
-                </a>
-            </li>
-        @endif
-
-        @if ($roleName == 'Admin' || $roleName == 'Secretaria')
-            <li class="menu-item">
                 <a href="{{ route('school-registration.index', $period->name) }}" class="menu-link">
                     <div data-i18n="Account">Matriculas</div>
                 </a>
@@ -180,7 +164,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('grade.student.index', $period->name) }}" class="menu-link">
                     <div data-i18n="Account">Notas</div>
                 </a>
             </li>

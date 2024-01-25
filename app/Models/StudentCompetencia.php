@@ -14,4 +14,9 @@ class StudentCompetencia extends Model
     protected $guarded = [''];
 
     public $timestamps = false;
+
+    public function competencia()
+    {
+        return $this->belongsTo(CourseCompetencia::class, 'course_competencia_id');
+    }
 }
