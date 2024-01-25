@@ -64,7 +64,7 @@
                                 <td>${student.first_name} ${student.other_names  != null ? student.other_names : ''}</td>
                                 <td>${student.surname} ${student.mother_surname  != null ? student.mother_surname : ''}</td>
                                 <td>${student.institutional_email}</td>
-                                <td>salon</td>
+                                <td>${student.classroom}</td>
                                 <td>
                                     <div class="d-flex">
                                         <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
@@ -166,6 +166,7 @@
                 $('#e_institutional_email').val(data.student.institutional_email);
                 $('#e_phone').val(data.student.phone);
                 $('#e_address').val(data.student.address);
+                $('#e_gender').val(data.student.gender);
                 $("input[name=_token]").val();
                 $('#editStudentModal').modal('toggle');
             });

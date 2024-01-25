@@ -9,6 +9,7 @@ use App\Models\ClassRoom;
 use App\Models\CourseCompetencia;
 use App\Models\CourseGrade;
 use App\Models\Grade;
+use App\Models\Payment;
 use App\Models\SchoolRegistration;
 use App\Models\Student;
 use App\Models\StudentClassroom;
@@ -33,8 +34,10 @@ class SchoolRegistrationController extends Controller
     {
         $today = now()->format('Y-m-d');
         $period = AcademicPeriod::where('name', $period_name)->first();
+        $payments = Payment::all();
+        $classrooms = ClassRoom::where('IsDeleted', false)->where('TenantId', $period->id)->get();
 
-        return view('academic.school-registration.index', compact('period'));
+        return view('academic.school-registration.index', compact('period', 'payments', 'classrooms'));
     }
 
     public function create($period_name)
@@ -118,6 +121,7 @@ class SchoolRegistrationController extends Controller
                 'address' => $request->input('alum_direccion'),
                 'CreatorUserId' => Auth::id(),
                 'TenantId' => $period_id,
+                'gender' => $request->gender,
                 'status' => '1',
             ]);
 
@@ -180,5 +184,62 @@ class SchoolRegistrationController extends Controller
             'CreatorUserId' => Auth::id(),
             'TenantId' => $period->id,
         ]);
+    }
+
+    public function change(Request $request, $period_id, $registration_id)
+    {
+        $matricula = SchoolRegistration::where('TenantId', $period_id)->where('IsDeleted', false)->find($registration_id);
+
+        $aula_anterior = ClassRoom::where('TenantId', $period_id)->where('IsDeleted', false)->find($matricula->classroom_id);
+        $aula_anterior->students_number -= 1;
+        $aula_anterior->save();
+
+        $aula_nueva = ClassRoom::where('TenantId', $period_id)->where('IsDeleted', false)->find($request->classroom_id);
+        $aula_nueva->students_number += 1;
+        $aula_nueva->save();
+
+        $aula_seccion = StudentClassroom::where('TenantId', $period_id)->where('student_id', $request->student_id)->first();
+        $aula_seccion->classroom_id = $aula_nueva->id;
+        $aula_seccion->save();
+
+        $matricula->classroom_id = $aula_nueva->id;
+        $matricula->save();
+
+        return back();
+    }
+
+    public function deny($period_id, $registration_id)
+    {
+        $matricula = SchoolRegistration::where('TenantId', $period_id)->where('IsDeleted', false)->find($registration_id);
+        $matricula->DeleterUserId = Auth::id();
+        $matricula->IsDeleted = true;
+        $matricula->DeletionTime = now()->format('Y-m-d h:i:s');
+        $matricula->save();
+
+        $alumno = Student::Find($matricula->student_id);
+        $alumno->status = '0';
+        $alumno->save();
+
+        $user = User::where('email', $alumno->institutional_email)->where('TenantId', $period_id)->where('IsDeleted', false)->first();
+
+        DB::table('user_roles')->where('userId', $user->id)->where('roleId', 4)->where('TenantId', $period_id)->delete();
+
+        $user->delete();
+
+        $aula = ClassRoom::where('TenantId', $period_id)->where('IsDeleted', false)->find($matricula->classroom_id);
+        $aula->students_number -= 1;
+        $aula->save();
+
+        StudentClassroom::where('student_id', $matricula->student_id)
+            ->where('classroom_id', $matricula->classroom_id)
+            ->where('TenantId', $period_id)
+            ->delete();
+
+        StudentCompetencia::where('student_id', $matricula->student_id)
+            ->where('classroom_id', $matricula->classroom_id)
+            ->where('TenantId', $period_id)
+            ->delete();
+
+        return back();
     }
 }

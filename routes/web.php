@@ -161,6 +161,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
     Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
     Route::post('/matriculas/store', [SchoolRegistrationController::class, 'store'])->name('school-registration.store');
+    Route::post('/matriculas/{id}/cambiar-aula', [SchoolRegistrationController::class, 'change'])->name('school-registration.change');
+    Route::delete('/matriculas/{id}/anular', [SchoolRegistrationController::class, 'deny'])->name('school-registration.deny');
 
     // Tesorería
     Route::get('/tesoreria', [TreasuryController::class, 'index'])->name('treasuries.index');

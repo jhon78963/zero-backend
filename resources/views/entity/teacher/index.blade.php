@@ -64,7 +64,7 @@
                                 <td>${teacher.first_name} ${teacher.other_names != null ? teacher.other_names : ''}</td>
                                 <td>${teacher.surname} ${teacher.mother_surname != null ? teacher.mother_surname : ''}</td>
                                 <td>${teacher.institutional_email}</td>
-                                <td>salon</td>
+                                <td> ${teacher.type != 'AREA' ? teacher.classroom || '' : teacher.course || ''}</td>
                                 <td>
                                     <div class="d-flex">
                                         <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${teacher.id})">
@@ -119,7 +119,7 @@
                         timeOut: 3000
                     });
 
-                     if(data.count == 1){
+                    if (data.count == 1) {
                         $(`#tabla-teachers tbody #row-0`).html("");
                     }
 
@@ -129,7 +129,7 @@
                             <td>${data.teacher.first_name} ${data.teacher.other_names != null ? data.teacher.other_names : ''}</td>
                             <td>${data.teacher.surname} ${data.teacher.mother_surname != null ? data.teacher.other_names : ''}</td>
                             <td>${data.teacher.institutional_email}</td>
-                            <td>salón</td>
+                            <td></td>
                             <td>
                                 <div class="d-flex">
                                     <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${data.teacher.id})">
@@ -200,7 +200,7 @@
                         <td>${data.teacher.first_name} ${data.teacher.other_names != null ? data.teacher.other_names : ''}</td>
                         <td>${data.teacher.surname} ${data.teacher.mother_surname != null ? data.teacher.mother_surname : ''}</td>
                         <td>${data.teacher.institutional_email}</td>
-                        <td>salón</td>
+                        <td></td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${data.teacher.id})">

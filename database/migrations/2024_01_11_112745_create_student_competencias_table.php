@@ -14,7 +14,10 @@ return new class extends Migration
             $table->datetime('CreationTime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('CreatorUserId')->nullable();
             $table->integer('TenantId')->nullable();
-            $table->char('grade', 1)->nullable();
+            $table->varchar('grade_b_1', 2)->nullable();
+            $table->varchar('grade_b_2', 2)->nullable();
+            $table->varchar('grade_b_3', 2)->nullable();
+            $table->varchar('grade_b_4', 2)->nullable();
             $table->unsignedBigInteger('classroom_id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('course_competencia_id');

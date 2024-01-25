@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('invoice_number', function (Blueprint $table) {
             $table->id();
+            $table->integer('TenantId')->nullable();
             $table->string('type');
             $table->string('serie')->nullable();
             $table->bigInteger('initial_number');

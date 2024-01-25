@@ -10,10 +10,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col mb-3">
+                        <div class="col-4 mb-3">
                             <label for="c_dni" class="form-label">DNI</label>
                             <input type="text" id="c_dni" name="dni" class="form-control"
                                 placeholder="DNI" />
+                        </div>
+
+                        <div class="col-8 mb-3">
+                            <label for="c_gender" class="form-label">Genero: </label>
+                            <select name="c_gender" id="gender" class="form-control">
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">

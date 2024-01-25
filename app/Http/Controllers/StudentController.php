@@ -51,6 +51,7 @@ class StudentController extends Controller
             'institutional_email' => $request->input('institutional_email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
+            'gender' => $request->input('gender'),
             'CreatorUserId' => Auth::id(),
             'TenantId' => $period_id,
         ]);
@@ -138,7 +139,12 @@ class StudentController extends Controller
 
     public function getAll($period_id)
     {
-        $students = Student::where('IsDeleted', false)->where('TenantId', $period_id)->get();
+        $students = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->join('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->where('students.IsDeleted', false)
+            ->where('students.TenantId', $period_id)
+            ->select('students.*', 'c.description as classroom')
+            ->get();
         $count = count($students);
 
         return response()->json([
@@ -168,6 +174,7 @@ class StudentController extends Controller
         $student->institutional_email = $request->input('institutional_email');
         $student->phone = $request->input('phone');
         $student->address = $request->input('address');
+        $student->gender = $request->input('gender');
         $student->LastModificationTime = now()->format('Y-m-d H:i:s');
         $student->LastModifierUserId = Auth::id();
         $student->save();

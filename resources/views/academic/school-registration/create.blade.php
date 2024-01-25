@@ -47,6 +47,15 @@
                                             placeholder="nro dni" required="required">
                                     </div>
                                 </div>
+                                <div class="col-8">
+                                    <div class="form-group mb-2">
+                                        <label for="gender">Genero: </label>
+                                        <select name="gender" id="gender" class="form-control">
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group mb-2">
@@ -155,7 +164,8 @@
 
                         <div class="card-footer text-center">
                             <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="{{ route('school-registration.index', $period->name) }}" class="btn btn-secondary"> Regresar</a>
+                            <a href="{{ route('school-registration.index', $period->name) }}" class="btn btn-secondary">
+                                Regresar</a>
                         </div>
 
                     </div>
@@ -210,14 +220,25 @@
             var alum_id = $(this).val();
 
             $.get(`/${periodId}/estudiantes/get/${alum_id}`, function(data) {
-                $('#alum_id').val(data.student.id);
-                $('#alum_dni').val(data.student.dni);
-                $('#alum_primerNombre').val(data.student.first_name);
-                $('#alum_otrosNombres').val(data.student.other_names);
-                $('#alum_apellidoPaterno').val(data.student.surname);
-                $('#alum_apellidoMaterno').val(data.student.mother_surname);
-                $('#alum_direccion').val(data.student.address);
-                $('#alum_celular').val(data.student.phone);
+                if (data) {
+                    $('#alum_id').val(data.student.id);
+                    $('#alum_dni').val(data.student.dni);
+                    $('#alum_primerNombre').val(data.student.first_name);
+                    $('#alum_otrosNombres').val(data.student.other_names);
+                    $('#alum_apellidoPaterno').val(data.student.surname);
+                    $('#alum_apellidoMaterno').val(data.student.mother_surname);
+                    $('#alum_direccion').val(data.student.address);
+                    $('#alum_celular').val(data.student.phone);
+                    $('#gender').val(data.student.gender);
+                } else {
+                    // Limpiar todos los campos en caso de error o datos no encontrados
+                    $('#alum_id, #alum_dni, #alum_primerNombre, #alum_otrosNombres, #alum_apellidoPaterno, #alum_apellidoMaterno, #alum_direccion, #alum_celular, #gender')
+                        .val('');
+                }
+            }).fail(function() {
+                // Limpiar todos los campos en caso de error
+                $('#alum_id, #alum_dni, #alum_primerNombre, #alum_otrosNombres, #alum_apellidoPaterno, #alum_apellidoMaterno, #alum_direccion, #alum_celular, #gender')
+                    .val('');
             });
         }
     </script>

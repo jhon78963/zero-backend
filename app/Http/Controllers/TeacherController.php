@@ -140,7 +140,21 @@ class TeacherController extends Controller
 
     public function getAll($period_id)
     {
-        $teachers = Teacher::where('IsDeleted', false)->where('TenantId', $period_id)->get();
+        $teachers = Teacher::leftJoin('teacher_classrooms as tc', function ($join) use ($period_id) {
+            $join->on('teachers.id', '=', 'tc.teacher_id')
+                ->where('tc.TenantId', '=', $period_id);
+        })
+            ->leftJoin('class_rooms as c', 'c.id', '=', 'tc.classroom_id')
+            ->leftJoin('teacher_courses as tco', function ($join) use ($period_id) {
+                $join->on('teachers.id', '=', 'tco.teacher_id')
+                    ->where('tco.TenantId', '=', $period_id);
+            })
+            ->leftJoin('courses as co', 'co.id', '=', 'tco.course_id')
+            ->where('teachers.IsDeleted', false)
+            ->where('teachers.TenantId', $period_id)
+            ->select('teachers.*', 'c.description as classroom', 'co.description as course')
+            ->get();
+
         $count = count($teachers);
 
         return response()->json([
