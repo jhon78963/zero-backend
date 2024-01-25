@@ -29,13 +29,17 @@
                                 <td class="text-center">{{ $classroom_student->student->first_name }}
                                     {{ $classroom_student->student->surname }}</td>
                                 <td class="text-center">
-                                    @if (
-                                        $calendar_global->activity == 'Subida de notas I Bimestre' ||
-                                            $calendar_global->activity == 'Subida de notas II Bimestre' ||
-                                            $calendar_global->activity == 'Subida de notas III Bimestre' ||
-                                            $calendar_global->activity == 'Subida de notas IV Bimestre')
-                                        <a href="{{ route('grade.teacher.create', [$period->name, $room->id, $classroom_student->student->id]) }}"
-                                            class="btn btn-primary btn-rounded">Subir notas</a>
+                                    @if ($calendar_notas != null)
+                                        @if (
+                                            $calendar_notas->activity == 'Subida de notas I Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas II Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas III Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas IV Bimestre')
+                                            <a href="{{ route('grade.teacher.create', [$period->name, $room->id, $classroom_student->student->id]) }}"
+                                                class="btn btn-primary btn-rounded">Subir notas</a>
+                                        @else
+                                            <p class="me-4">Está fuera del periodo de registro de notas</p>
+                                        @endif
                                     @else
                                         <p class="me-4">Está fuera del periodo de registro de notas</p>
                                     @endif

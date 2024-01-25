@@ -8,16 +8,21 @@
     <div class="card mb-4">
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Gestión de Matriculas</h5>
-            @if ($calendar_global->activity == 'Matrículas')
-                <div style="padding-right: 1rem">
-                    <a href="{{ route('school-registration.create', $period->name) }}"
-                        class="btn rounded-pill btn-icon btn-outline-primary me-1">
-                        <span class="tf-icons bx bx-list-plus"></span>
-                    </a>
-                </div>
+            @if ($calendar_matriculas != null)
+                @if ($calendar_matriculas->activity == 'Matrículas')
+                    <div style="padding-right: 1rem">
+                        <a href="{{ route('school-registration.create', $period->name) }}"
+                            class="btn rounded-pill btn-icon btn-outline-primary me-1">
+                            <span class="tf-icons bx bx-list-plus"></span>
+                        </a>
+                    </div>
+                @else
+                    <p class="me-4">Está fuera del periodo de matrículas</p>
+                @endif
             @else
                 <p class="me-4">Está fuera del periodo de matrículas</p>
             @endif
+
         </div>
 
         <div class="table-responsive text-nowrap">
@@ -64,7 +69,7 @@
                                 <td class="text-center">${registration.classroom.description}</td>
                                 <td class="text-center">${registration.status}</td>
                                 <td>
-                                    ${generateButtons(registration.id, registration.status)}
+                                    ${generateButtons(registration.id, registration.status, registration)}
                                 </td>
                             </tr>
                         `;
@@ -80,11 +85,81 @@
             });
         }
 
-        function generateButtons(registrationId, status) {
+        function generateButtons(registrationId, status, registration) {
             let buttons = `
-                <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" onclick="openShowRegistrationModal(${registrationId})">
+                <button type="button" class="btn rounded-pill btn-icon btn-outline-warning me-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEnd_${registrationId}" aria-controls="offcanvasEnd">
                     <span class="tf-icons bx bx-show"></span>
                 </button>
+
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd_${registrationId}" aria-labelledby="offcanvasEndLabel">
+                    <div class="offcanvas-header">
+                        <h5 id="offcanvasEndLabel" class="offcanvas-title">Detalles de la matrículas</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>${registrationId}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Estuiante</td>
+                                    <td>${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td>Género</td>
+                                    <td>M</td>
+                                </tr>
+                                <tr>
+                                    <td>Nivel</td>
+                                    <td>Primaria</td>
+                                </tr>
+                                <tr>
+                                    <td>Grado</td>
+                                    <td>${registration.classroom.description}</td>
+                                </tr>
+                                <tr>
+                                    <td>Contacto</td>
+                                    <td>${registration.student.phone}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>${registrationId}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Estuiante</td>
+                                    <td>${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td>Género</td>
+                                    <td>M</td>
+                                </tr>
+                                <tr>
+                                    <td>Nivel</td>
+                                    <td>Primaria</td>
+                                </tr>
+                                <tr>
+                                    <td>Grado</td>
+                                    <td>${registration.classroom.description}</td>
+                                </tr>
+                                <tr>
+                                    <td>Contacto</td>
+                                    <td>${registration.student.phone}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             `;
             if (status == 'ACTIVO') {
                 buttons += `

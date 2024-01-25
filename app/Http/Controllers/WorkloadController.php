@@ -47,9 +47,9 @@ class WorkloadController extends Controller
             $classRoom = ClassRoom::findOrFail($lastClassroom->classroom_id);
             $classRoom->status = false;
             $classRoom->save();
-        }
 
-        $lastClassroom->delete();
+            $lastClassroom->delete();
+        }
 
         $assignClassroom = new TeacherClassroom();
         $assignClassroom->CreatorUserId = Auth::id();

@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SchoolRegistrationController;
 use App\Http\Controllers\SecretaryController;
@@ -190,6 +191,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
 
     //Notas docente
     Route::get('/notas/estudiante', [StudentCompetenciaController::class, 'index'])->name('grade.student.index');
+
+    Route::get('reportes', [ReportController::class, 'index'])->name('reports.index');
 });
 
 // Auth

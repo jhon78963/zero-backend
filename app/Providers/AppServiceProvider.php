@@ -33,10 +33,17 @@ class AppServiceProvider extends ServiceProvider
 
         $currentDate = Carbon::now();
 
-        $calendar = AcademicCalendar::where('start', '<=', $currentDate)
+        $calendar_matriculas = AcademicCalendar::where('start', '<=', $currentDate)
             ->where('end', '>=', $currentDate)
+            ->where('responsible_person', 2)
             ->first();
 
-        View::share('calendar_global', $calendar);
+        $calendar_notas = AcademicCalendar::where('start', '<=', $currentDate)
+            ->where('end', '>=', $currentDate)
+            ->where('responsible_person', 3)
+            ->first();
+
+        View::share('calendar_matriculas', $calendar_matriculas);
+        View::share('calendar_notas', $calendar_notas);
     }
 }

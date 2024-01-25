@@ -169,5 +169,13 @@
                 </a>
             </li>
         @endif
+
+        @if ($roleName != 'Estudiante')
+            <li class="menu-item">
+                <a href="{{ route('reports.index', $period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Reportes</div>
+                </a>
+            </li>
+        @endif
     </ul>
 </aside>
