@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('start')->nullable();
             $table->date('end')->nullable();
             $table->string('duration_activity')->nullable();
-
+            $table->boolean('status')->default(false);
             $table->foreign('responsible_person')->references('id')->on('roles');
         });
     }
