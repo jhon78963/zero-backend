@@ -6,6 +6,7 @@ use App\Models\AcademicPeriod;
 use App\Models\Attendance;
 use App\Models\AttendanceDetail;
 use App\Models\Student;
+use App\Models\StudentClassroom;
 use App\Models\Teacher;
 use App\Models\TeacherClassroom;
 use Illuminate\Http\Request;
@@ -78,6 +79,28 @@ class AttendanceTeacherController extends Controller
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
         $attendance->status = false;
         $attendance->save();
+
+        $studentAttendances = AttendanceDetail::where('attendance_id', $attendance->id)
+            ->pluck('student_id')
+            ->toArray();
+
+        $students = StudentClassroom::where('classroom_id', $attendance->classroom_id)
+            ->pluck('student_id')
+            ->toArray();
+
+
+
+        $studentsWithoutAttendance = array_diff($students, $studentAttendances);
+
+        // Crea registros de asistencia para los estudiantes sin asistencia
+        foreach ($studentsWithoutAttendance as $studentId) {
+            $newAttendanceDetail = new AttendanceDetail();
+            $newAttendanceDetail->TenantId = $period_id;
+            $newAttendanceDetail->status = 'FALTA';
+            $newAttendanceDetail->student_id = $studentId;
+            $newAttendanceDetail->attendance_id = $attendance->id;
+            $newAttendanceDetail->save();
+        }
 
         return redirect()->back();
     }

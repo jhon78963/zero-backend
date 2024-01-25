@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::share('academic_periods', AcademicPeriod::where('status', true)->get());
 
-        $currentDate = Carbon::now();
+        $currentDate = now()->format('Y-m-d');
 
         $calendar_matriculas = AcademicCalendar::where('start', '<=', $currentDate)
             ->where('end', '>=', $currentDate)

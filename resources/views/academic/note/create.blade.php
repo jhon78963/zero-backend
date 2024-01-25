@@ -44,7 +44,7 @@
                                     <td>{{ $competencia['description'] }}</td>
                                     <td>
                                         <select name="nota_1[]" class="form-control text-center" style="width: 80px;"
-                                        {{ $calendar_global->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
+                                        {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"{{ $competencia['grade_b_1'] == 'AD' ? 'selected' : '' }}>
                                                 AD
@@ -61,7 +61,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_2[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas II Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas II Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_2'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -75,7 +75,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_3[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas III Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas III Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_3'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -89,7 +89,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_4[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas IV Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas IV Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_4'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -124,7 +124,7 @@
                                     <td>{{ $competencia['description'] }}</td>
                                     <td>
                                         <select name="nota_1[]" class="form-control text-center" style="width: 80px"
-                                        {{ $calendar_global->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
+                                        {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_1'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -138,7 +138,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_2[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas II Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas II Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_2'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -152,7 +152,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_3[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas III Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas III Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_3'] == 'AD' ? 'selected' : '' }}>AD</option>
@@ -166,7 +166,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_4[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_global->activity == 'Subida de notas IV Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas IV Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_4'] == 'AD' ? 'selected' : '' }}>AD</option>

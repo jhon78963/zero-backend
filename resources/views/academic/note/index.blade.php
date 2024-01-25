@@ -29,7 +29,7 @@
                                 <td class="text-center">{{ $classroom_student->student->first_name }}
                                     {{ $classroom_student->student->surname }}</td>
                                 <td class="text-center">
-                                    @if ($calendar_notas != null)
+                                    @if ($calendar_notas)
                                         @if (
                                             $calendar_notas->activity == 'Subida de notas I Bimestre' ||
                                                 $calendar_notas->activity == 'Subida de notas II Bimestre' ||
