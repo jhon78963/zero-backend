@@ -29,5 +29,10 @@ class RoleSeeder extends Seeder
         $role->name = 'Estudiante';
         $role->isStatic = false;
         $role->save();
+
+        $role = new Role();
+        $role->name = 'Dirección Académica';
+        $role->isStatic = false;
+        $role->save();
     }
 }
