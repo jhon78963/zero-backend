@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ClassRoomSeeder::class);
         $this->call(CourseSeeder::class);
         $this->call(CourseGradeSeeder::class);
-        $this->call(TeacherSeeder::class);
-        $this->call(TeacherClassroomSeeder::class);
-        $this->call(TeacherCourseSeeder::class);
+        //$this->call(TeacherSeeder::class);
+        //$this->call(TeacherClassroomSeeder::class);
+        //$this->call(TeacherCourseSeeder::class);
         $this->call(CourseCompetenciaSeeder::class);
         $this->call(PaymentSeeder::class);
         $this->call(AcademicCalendarSeeder::class);

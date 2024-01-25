@@ -69,7 +69,6 @@ class AcademicCalendarController extends Controller
         AcademicCalendar::findOrFail($id)->update([
             'TenantId' => $request->TenantId,
             'responsible_person' => $request->responsible_person,
-            'activity' => $request->activity,
             'start' => $request->start,
             'end' => $request->end,
             'duration_activity' => $duration_activity,

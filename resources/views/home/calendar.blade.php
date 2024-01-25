@@ -52,7 +52,7 @@
                             <div class="col mb-3">
                                 <label for="name" class="form-label">Actividad</label>
                                 <input type="text" id="c_activity" name="activity" class="form-control"
-                                    placeholder="Detalla en que consitirá la actividad" />
+                                    placeholder="Detalla en que consitirá la actividad" readonly />
                             </div>
                         </div>
                         <div class="row">
