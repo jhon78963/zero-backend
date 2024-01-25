@@ -21,9 +21,9 @@ return new class extends Migration
             $table->integer('TenantId')->nullable();
             $table->unsignedBigInteger('responsible_person');
             $table->string('activity');
-            $table->date('start');
-            $table->date('end');
-            $table->string('duration_activity');
+            $table->date('start')->nullable();
+            $table->date('end')->nullable();
+            $table->string('duration_activity')->nullable();
 
             $table->foreign('responsible_person')->references('id')->on('roles');
         });
