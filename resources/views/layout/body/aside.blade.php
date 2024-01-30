@@ -119,6 +119,26 @@
                     <div data-i18n="Account">Tesorería</div>
                 </a>
             </li>
+
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Gestión académica</span>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('attendance.admin.index', $period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Asistencias</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('grade.admin.index', $period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Notas</div>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('reports.index', $period->name) }}" class="menu-link">
+                    <div data-i18n="Account">Reportes</div>
+                </a>
+            </li>
         @endif
 
         @if ($roleName == 'Docente')
@@ -161,14 +181,6 @@
             <li class="menu-item">
                 <a href="{{ route('grade.student.index', $period->name) }}" class="menu-link">
                     <div data-i18n="Account">Notas</div>
-                </a>
-            </li>
-        @endif
-
-        @if ($roleName != 'Estudiante')
-            <li class="menu-item">
-                <a href="{{ route('reports.index', $period->name) }}" class="menu-link">
-                    <div data-i18n="Account">Reportes</div>
                 </a>
             </li>
         @endif

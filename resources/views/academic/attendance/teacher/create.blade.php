@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-    Sílabus
+    Asistencia
 @endsection
 
 @section('content')
@@ -39,7 +39,7 @@
             <p class="text-center" style="font-size: 3rem;">Asistencia Cerrada</p>
         @endif
 
-        <div class="table-responsive text-nowrap mt-1">
+        <div class="text-nowrap mt-1">
             <table class="table" id="tabla-roles">
                 <thead>
                     <tr>
@@ -60,11 +60,35 @@
                                 <td> {{ $studentAttendance->status }}</td>
                                 <td>
                                     @if ($attendance != null && $attendance->status == true)
-                                        <form method="post"
+                                        {{-- <form method="post"
                                             action="{{ route('attendance.change', [$period->id, $fecha, $studentAttendance->student_id]) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger">Cambiar</button>
-                                        </form>
+                                            @csrf --}}
+
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                class="btn btn-danger btn-icon rounded-pill dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <form method="post"
+                                                        action="{{ route('attendance.change.present', [$period->id, $fecha, $studentAttendance->student_id]) }}">
+                                                        @csrf
+                                                        <button class="dropdown-item" type="button">Presente</button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="post"
+                                                        action="{{ route('attendance.change.missing', [$period->id, $fecha, $studentAttendance->student_id]) }}">
+                                                        @csrf
+                                                        <button class="dropdown-item" type="submit">Falta</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {{-- <button type="submit" class="btn btn-danger">Cambiar</button> --}}
+                                        {{-- </form> --}}
                                     @endif
                                 </td>
                             </tr>

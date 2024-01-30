@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AcademicPeriodController;
 use App\Http\Controllers\AcedemicSilabusController;
+use App\Http\Controllers\AdminCompetenciaController;
+use App\Http\Controllers\AttendanceAdminController;
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\AttendanceTeacherController;
 use App\Http\Controllers\AuthController;
@@ -181,18 +183,28 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::post('/asistencia/aperturar', [AttendanceTeacherController::class, 'openAttendance'])->name('attendance.enable');
     Route::post('/asistencia/cerrar/{fecha_id}', [AttendanceTeacherController::class, 'closeAttendance'])->name('attendance.disable');
     Route::post('/marcar-asistencia/{fecha}', [AttendanceTeacherController::class, 'mark'])->name('attendance.mark');
-    Route::post('/marcar-asistencia/{fecha}/{student_id}', [AttendanceTeacherController::class, 'change'])->name('attendance.change');
+    Route::post('/marcar-asistencia/{fecha}/presente/{student_id}', [AttendanceTeacherController::class, 'changePresent'])->name('attendance.change.present');
+    Route::post('/marcar-asistencia/{fecha}/falta/{student_id}', [AttendanceTeacherController::class, 'changeMissing'])->name('attendance.change.missing');
 
     // Asistencia estudiante
     Route::get('/asistencia/studiante', [AttendanceStudentController::class, 'index'])->name('attendance.student.index');
+
+    // Asistencia admin - secretaria
+    Route::get('/asistencia/admin', [AttendanceAdminController::class, 'index'])->name('attendance.admin.index');
 
     //Notas docente
     Route::get('/notas/docente', [TeacherCompetenciaController::class, 'index'])->name('grade.teacher.index');
     Route::get('/notas/docente/{classroom_id}/registrar/{student_id}', [TeacherCompetenciaController::class, 'create'])->name('grade.teacher.create');
     Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store'])->name('grade.teacher.store');
 
-    //Notas docente
+    //Notas estudiante
     Route::get('/notas/estudiante', [StudentCompetenciaController::class, 'index'])->name('grade.student.index');
+
+    //Notas admin - secretaria
+    Route::get('/notas/admin', [AdminCompetenciaController::class, 'index'])->name('grade.admin.index');
+    Route::get('/notas/admin/estudiante/{student_id}', [AdminCompetenciaController::class, 'show'])->name('grade.admin.show');
+    Route::get('/notas/admin/estudiante/{student_id}/next', [AdminCompetenciaController::class, 'showNext'])->name('grade.admin.showNext');
+    Route::get('/notas/admin/estudiante/{student_id}/previous', [AdminCompetenciaController::class, 'showPrevious'])->name('grade.admin.showPrevious');
 
     Route::get('reportes', [ReportController::class, 'index'])->name('reports.index');
 });

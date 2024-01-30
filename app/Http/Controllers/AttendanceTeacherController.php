@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AcademicPeriod;
 use App\Models\Attendance;
 use App\Models\AttendanceDetail;
+use App\Models\ClassRoom;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\Teacher;
@@ -24,16 +25,45 @@ class AttendanceTeacherController extends Controller
         //$this->middleware('check.permissions:Docente,pages.silabus')->only(['index']);
     }
 
-    public function index($period_name)
+    public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $attendances = Attendance::where('IsDeleted', false)
-            ->where('TenantId', $period->id)
+        $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
+        $today = now()->format('Y-m-d');
+        $attendances = AttendanceDetail::join('classroom_attendances as ca', 'classroom_student_attendance.attendance_id', 'ca.id')
+            ->join('students as s', 's.id', 'classroom_student_attendance.student_id')
+            ->where('ca.TenantId', $period->id);
+
+        if ($request->classroom_id != null) {
+            $attendances->where('ca.classroom_id', $request->classroom_id);
+        }
+
+        if ($request->date != null) {
+            $attendances->where(DB::raw("DATE_FORMAT(classroom_student_attendance.CreationTime, '%Y-%m-%d')"), $request->date);
+            $today = $request->date;
+        } else {
+            $attendances->where(DB::raw("DATE_FORMAT(classroom_student_attendance.CreationTime, '%Y-%m-%d')"), $today);
+        }
+
+        $attendances = $attendances->select('classroom_student_attendance.*', 'ca.classroom_id', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
             ->get();
 
-        $generateQr = QrCode::generate('Make me into a QrCode!');
+        if ($request->classroom_id != null) {
+            $classroomSelected = ClassRoom::where('TenantId', $period->id)
+                ->where('IsDeleted', false)
+                ->where('id', $request->classroom_id)
+                ->first();
 
-        return view('academic.attendance.teacher.index', compact('attendances', 'period'));
+            return view('academic.attendance.teacher.index', compact('attendances', 'period', 'classrooms', 'classroomSelected', 'today'));
+        } else {
+            $classroomSelected = ClassRoom::where('TenantId', $period->id)
+                ->where('IsDeleted', false)
+                ->where('id', 1)
+                ->first();
+
+            return view('academic.attendance.teacher.index', compact('attendances', 'period', 'classrooms', 'classroomSelected', 'today'));
+        }
     }
 
     public function createTeacherAttendance($period_name)
@@ -124,6 +154,18 @@ class AttendanceTeacherController extends Controller
         $attendance->TenantId = $period_id;
         $attendance->save();
 
+        $classroom_students = StudentClassroom::where('classroom_id', $attendance->classroom_id)->get();
+
+        foreach ($classroom_students as $classroom_student) {
+            $attendance_detail = new AttendanceDetail();
+            $attendance_detail->CreatorUserId = Auth::id();
+            $attendance_detail->TenantId = $period_id;
+            $attendance_detail->status = 'FALTA';
+            $attendance_detail->student_id = $classroom_student->student_id;
+            $attendance_detail->attendance_id = $attendance->id;
+            $attendance_detail->save();
+        }
+
         return redirect()->back();
     }
 
@@ -155,7 +197,22 @@ class AttendanceTeacherController extends Controller
         return redirect()->back();
     }
 
-    public function change($period_id, $fecha, $student_id)
+    public function changePresent($period_id, $fecha, $student_id)
+    {
+        $student = Student::where('id', $student_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $period_id)
+            ->first();
+
+        $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
+
+        $attendanceDetail = AttendanceDetail::where('student_id', $student->id)->where('attendance_id', $attendance->id)->first();
+        $attendanceDetail->status = 'PRESENTE';
+        $attendanceDetail->save();
+
+        return back();
+    }
+    public function changeMissing($period_id, $fecha, $student_id)
     {
         $student = Student::where('id', $student_id)
             ->where('IsDeleted', false)

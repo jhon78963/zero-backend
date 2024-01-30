@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card mb-4" style="padding-right: 1rem">
-        <form action="{{ route('attendance.teacher.index', $period->name) }}" method="GET">
+        <form action="{{ route('attendance.admin.index', $period->name) }}" method="GET">
             <div class="d-flex align-items-center justify-content-between">
                 <h5 class="card-header">Asistencias</h5>
 
@@ -26,9 +26,6 @@
                     </button>
                 </div>
 
-                <a class="btn btn-primary" href="{{ route('attendance.teacher.create', $period->name) }}">
-                    Registrar Asistencia
-                </a>
 
             </div>
         </form>
