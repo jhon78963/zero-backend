@@ -46,6 +46,7 @@ class AdminCompetenciaController extends Controller
 
             return view('academic.note.admin', compact('period', 'classrooms', 'classroomSelected', 'students'));
         }
+
         // $student_email = Auth::user()->email;
         // $student = Student::where('institutional_email', $student_email)
         //     ->where('TenantId', $period->id)
@@ -89,7 +90,7 @@ class AdminCompetenciaController extends Controller
         // }
 
         // return view('academic.note.student', compact('period', 'studentsGrade', 'student', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
-        return view('academic.note.admin', compact('period', 'classrooms'));
+        // return view('academic.note.admin', compact('period', 'classrooms'));
     }
 
     public function show($period_name, $student_id)

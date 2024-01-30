@@ -28,7 +28,8 @@ class AttendanceTeacherController extends Controller
     public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
+        // $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
+
         $today = now()->format('Y-m-d');
         $attendances = AttendanceDetail::join('classroom_attendances as ca', 'classroom_student_attendance.attendance_id', 'ca.id')
             ->join('students as s', 's.id', 'classroom_student_attendance.student_id')
@@ -49,17 +50,33 @@ class AttendanceTeacherController extends Controller
             ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
             ->get();
 
+        $teacher_email = Auth::user()->email;
+        $teacher = Teacher::where('institutional_email', $teacher_email)->first();
+
+        $classrooms = TeacherClassroom::join('class_rooms as cs', 'cs.id', 'teacher_classrooms.classroom_id')
+            ->where('cs.TenantId', $period->id)
+            ->where('teacher_classrooms.teacher_id', $teacher->id)
+            ->where('cs.IsDeleted', false)
+            ->select('cs.*')
+            ->get();
+
         if ($request->classroom_id != null) {
-            $classroomSelected = ClassRoom::where('TenantId', $period->id)
-                ->where('IsDeleted', false)
-                ->where('id', $request->classroom_id)
+            $classroomSelected = TeacherClassroom::join('class_rooms as cs', 'cs.id', 'teacher_classrooms.classroom_id')
+                ->where('cs.TenantId', $period->id)
+                ->where('cs.IsDeleted', false)
+                ->where('teacher_classrooms.teacher_id', $teacher->id)
+                ->where('cs.id', $request->classroom_id)
+                ->select('cs.*')
                 ->first();
 
             return view('academic.attendance.teacher.index', compact('attendances', 'period', 'classrooms', 'classroomSelected', 'today'));
         } else {
-            $classroomSelected = ClassRoom::where('TenantId', $period->id)
-                ->where('IsDeleted', false)
-                ->where('id', 1)
+            $classroomSelected = TeacherClassroom::join('class_rooms as cs', 'cs.id', 'teacher_classrooms.classroom_id')
+                ->where('cs.TenantId', $period->id)
+                ->where('cs.IsDeleted', false)
+                ->where('teacher_classrooms.teacher_id', $teacher->id)
+                ->where('cs.id', 1)
+                ->select('cs.*')
                 ->first();
 
             return view('academic.attendance.teacher.index', compact('attendances', 'period', 'classrooms', 'classroomSelected', 'today'));
@@ -73,7 +90,15 @@ class AttendanceTeacherController extends Controller
         $today = now()->format('d-m-Y');
         $url = route('attendance.student.create', [$period->name, $fecha]);
         $generateQr = QrCode::generate($url);
-        $studentAttendances = AttendanceDetail::where('TenantId', $period->id)->where(DB::raw("DATE(CreationTime)"), $fecha)->get();
+
+        $studentAttendances = AttendanceDetail::join('classroom_attendances as ca', 'classroom_student_attendance.attendance_id', 'ca.id')
+            ->join('students as s', 's.id', 'classroom_student_attendance.student_id')
+            ->where('classroom_student_attendance.TenantId', $period->id)
+            ->where(DB::raw("DATE(classroom_student_attendance.CreationTime)"), $fecha)
+            ->select('classroom_student_attendance.*', 'ca.classroom_id', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+            ->get();
+
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $period->id)->first();
 
         return view('academic.attendance.teacher.create', compact('generateQr', 'fecha', 'today', 'studentAttendances', 'attendance', 'period'));

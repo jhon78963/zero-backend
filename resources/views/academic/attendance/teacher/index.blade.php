@@ -27,7 +27,7 @@
                 </div>
 
                 <a class="btn btn-primary" href="{{ route('attendance.teacher.create', $period->name) }}">
-                    Registrar Asistencia
+                    Asistencia
                 </a>
 
             </div>

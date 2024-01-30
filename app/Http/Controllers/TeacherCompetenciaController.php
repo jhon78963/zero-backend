@@ -16,23 +16,65 @@ use Illuminate\Support\Facades\DB;
 
 class TeacherCompetenciaController extends Controller
 {
-    public function index($period_name)
+    public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
+
         $teacher_email = Auth::user()->email;
+
         $teacher = Teacher::where('institutional_email', $teacher_email)
             ->where('IsDeleted', false)
             ->where('TenantId', $period->id)
             ->first();
 
-        $class_room = TeacherClassroom::where('teacher_id', $teacher->id)
-            ->where('TenantId', $period->id)
-            ->first();
+        $classrooms = TeacherClassroom::join('class_rooms as cs', 'cs.id', 'teacher_classrooms.classroom_id')
+            ->where('cs.TenantId', $period->id)
+            ->where('teacher_classrooms.teacher_id', $teacher->id)
+            ->where('cs.IsDeleted', false)
+            ->select('cs.*')
+            ->get();
 
-        $room = ClassRoom::where('id', $class_room->classroom_id)->first();
-        $classroom_students = StudentClassroom::where('classroom_id', $class_room->classroom_id)->get();
+        if ($request->classroom_id != null) {
+            $classroomSelected = ClassRoom::where('TenantId', $period->id)
+                ->where('IsDeleted', false)
+                ->where('id', $request->classroom_id)
+                ->first();
 
-        return view('academic.note.index', compact('period', 'classroom_students', 'room'));
+            $classroom_students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+                ->where('student_classroom.TenantId', $period->id)
+                ->where('student_classroom.classroom_id', $request->classroom_id)
+                ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+                ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+                ->get();
+
+            return view('academic.note.index', compact('period', 'classrooms', 'classroomSelected', 'classroom_students'));
+        } else {
+            $classroomSelected = ClassRoom::where('TenantId', $period->id)
+                ->where('IsDeleted', false)
+                ->where('id', 1)
+                ->first();
+
+            $classroom_students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+                ->where('student_classroom.TenantId', $period->id)
+                ->where('student_classroom.classroom_id', 1)
+                ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+                ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+                ->get();
+
+            return view('academic.note.index', compact('period', 'classrooms', 'classroomSelected', 'classroom_students'));
+        }
+
+
+
+        // $room = ClassRoom::where('id', $class_room->classroom_id)->first();
+
+        // $classroom_students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+        //     ->where('student_classroom.classroom_id', $class_room->classroom_id)
+        //     ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+        //     ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+        //     ->get();
+
+        // return view('academic.note.index', compact('period', 'classroom_students'));
     }
 
     public function create($period_name, $classroom_id, $student_id)
