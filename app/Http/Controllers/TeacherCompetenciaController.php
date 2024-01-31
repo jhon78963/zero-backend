@@ -130,7 +130,6 @@ class TeacherCompetenciaController extends Controller
         }
 
         $promediosPorCurso = [];
-
         foreach ($competenciasPorCurso as $cursoId => $competencias) {
             $promediosPorCurso[$cursoId] = [
                 'promedio_grade_b_1' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_1', $competencias)),
@@ -141,6 +140,12 @@ class TeacherCompetenciaController extends Controller
                 'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
                 'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
                 'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
             ];
         }
 
@@ -206,6 +211,12 @@ class TeacherCompetenciaController extends Controller
                 'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
                 'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
                 'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
             ];
         }
 
@@ -357,6 +368,62 @@ class TeacherCompetenciaController extends Controller
                 $studentCopente[$i]->save();
             }
         }
+
+        $competenciasPorCurso = [];
+        foreach ($studentCopente as $item) {
+            $competenciasPorCurso[$item->competencia->course_id][] = [
+                'id' => $item->competencia->id,
+                'description' => $item->competencia->description,
+                'grade_b_1' => $item->grade_b_1,
+                'grade_b_2' => $item->grade_b_2,
+                'grade_b_3' => $item->grade_b_3,
+                'grade_b_4' => $item->grade_b_4
+            ];
+        }
+
+
+
+        $promediosPorCurso = [];
+
+        foreach ($competenciasPorCurso as $cursoId => $competencias) {
+            $promediosPorCurso[$cursoId] = [
+                'promedio_final_course_en_letra' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'promedio_final_course' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
+            ];
+        }
+
+        return dd($promediosPorCurso);
+
+        $cursosAprobados = 0;
+        $cursosJaladosCount = 0;
+        $cursosJalados = [];
+
+        foreach ($promediosPorCurso as $cursoId => $promedios) {
+            $promedioFinal = $promedios['promedio_final_course_en_letra'];
+
+            // Verificar si el curso tiene una calificación de "A" o "AD"
+            if ($promedioFinal === 'A' || $promedioFinal === 'AD') {
+                $cursosAprobados++;
+            }
+
+            if ($promedioFinal === 'C') {
+                $cursosJaladosCount++;
+                $cursosJalados[$cursoId] = $cursoId;
+            }
+        }
+
+        // Verificar si se aprobaron al menos 4 cursos
+        if ($cursosAprobados >= 4) {
+            $estadoFinal = 'Pasa de año';
+        } else {
+            $estadoFinal = 'Repite el año';
+        }
+
+        //return dd($cursosJalados);
 
         return back();
     }

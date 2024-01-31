@@ -71,7 +71,7 @@
                                                 B
                                             </option>
                                             <option value="C"
-                                                {{ $competencia['grade_b_1'] == 'D' ? 'selected' : '' }}>
+                                                {{ $competencia['grade_b_1'] == 'C' ? 'selected' : '' }}>
                                                 C</option>
                                         </select>
                                     </td>

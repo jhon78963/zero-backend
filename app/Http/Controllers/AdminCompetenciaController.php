@@ -161,6 +161,12 @@ class AdminCompetenciaController extends Controller
                 'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
                 'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
                 'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
             ];
         }
 
@@ -230,6 +236,12 @@ class AdminCompetenciaController extends Controller
                 'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
                 'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
                 'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
             ];
         }
 
@@ -300,6 +312,12 @@ class AdminCompetenciaController extends Controller
                 'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
                 'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
                 'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
             ];
         }
 

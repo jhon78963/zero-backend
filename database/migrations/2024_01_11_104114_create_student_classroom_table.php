@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('TenantId')->nullable();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('classroom_id');
+            $table->enum('grade_final', ['PROMOVIDO', 'REPITENTE', 'PERMANENCIA', 'EN CURSO'])->default('EN CURSO');
+            $table->string('grade_extension');
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreign('classroom_id')->references('id')->on('class_rooms');
         });
