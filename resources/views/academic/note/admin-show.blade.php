@@ -108,14 +108,10 @@
                                     <select name="nota_recuperación[]" class="form-control text-center" style="width: 80px"
                                         disabled>
                                         <option value="">Nota</option>
-                                        <option value="AD" {{ $competencia['grade_b_4'] == 'AD' ? 'selected' : '' }}>AD
-                                        </option>
-                                        <option value="A" {{ $competencia['grade_b_4'] == 'A' ? 'selected' : '' }}>A
-                                        </option>
-                                        <option value="B" {{ $competencia['grade_b_4'] == 'B' ? 'selected' : '' }}>B
-                                        </option>
-                                        <option value="C" {{ $competencia['grade_b_4'] == 'C' ? 'selected' : '' }}>C
-                                        </option>
+                                        <option value="AD">AD</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
                                     </select>
                                 </td>
                             </tr>

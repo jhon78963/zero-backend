@@ -57,7 +57,7 @@
                                                 $calendar_notas->activity == 'Subida de notas II Bimestre' ||
                                                 $calendar_notas->activity == 'Subida de notas III Bimestre' ||
                                                 $calendar_notas->activity == 'Subida de notas IV Bimestre')
-                                            <a href="{{ route('grade.teacher.create', [$period->name, $room->id, $classroom_student->student->id]) }}"
+                                            <a href="{{ route('grade.teacher.create', [$period->name, $classroom_student->classroom_id, $classroom_student->student->id]) }}"
                                                 class="btn btn-primary btn-rounded">Subir notas</a>
                                         @else
                                             <p class="m-0">Está fuera del periodo de registro de notas</p>

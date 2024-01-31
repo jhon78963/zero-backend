@@ -109,8 +109,6 @@ class AdminCompetenciaController extends Controller
             ->select('students.*', 'sc.classroom_id')
             ->first();
 
-        //return dd($student);
-
         $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
@@ -120,8 +118,6 @@ class AdminCompetenciaController extends Controller
             ->select('students.*')
             ->first();
 
-
-
         $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
@@ -130,8 +126,6 @@ class AdminCompetenciaController extends Controller
             ->orderBy('students.id')
             ->select('students.*')
             ->first();
-
-        // return dd($student);
 
         $class_room = StudentClassroom::where('student_id', $student->id)
             ->where('TenantId', $period->id)
@@ -192,8 +186,6 @@ class AdminCompetenciaController extends Controller
             ->orderBy('students.id')
             ->select('students.*')
             ->first();
-
-
 
         $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
             ->where('students.TenantId', $period->id)

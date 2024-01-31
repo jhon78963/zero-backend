@@ -85,7 +85,32 @@ class TeacherCompetenciaController extends Controller
     public function create($period_name, $classroom_id, $student_id)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $student = Student::find($student_id);
+
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
+
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
         $studentsGrade = StudentCompetencia::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->get();
         $courses = Course::where('TenantId', $period->id)->get();
         $class_room = StudentClassroom::where('student_id', $student->id)
@@ -119,7 +144,143 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+    }
+
+    public function createNext($period_name, $classroom_id, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
+
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        $studentsGrade = StudentCompetencia::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->get();
+        $courses = Course::where('TenantId', $period->id)->get();
+        $class_room = StudentClassroom::where('student_id', $student->id)
+            ->where('TenantId', $period->id)
+            ->first();
+
+        $competenciasPorCurso = [];
+        foreach ($studentsGrade as $item) {
+            $competenciasPorCurso[$item->competencia->course_id][] = [
+                'id' => $item->competencia->id,
+                'description' => $item->competencia->description,
+                'grade_b_1' => $item->grade_b_1,
+                'grade_b_2' => $item->grade_b_2,
+                'grade_b_3' => $item->grade_b_3,
+                'grade_b_4' => $item->grade_b_4
+            ];
+        }
+
+        $promediosPorCurso = [];
+
+        foreach ($competenciasPorCurso as $cursoId => $competencias) {
+            $promediosPorCurso[$cursoId] = [
+                'promedio_grade_b_1' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_1', $competencias)),
+                'prom_grade_b_1' => $this->calcularPromedio('grade_b_1', $competencias),
+                'promedio_grade_b_2' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_2', $competencias)),
+                'prom_grade_b_2' => $this->calcularPromedio('grade_b_2', $competencias),
+                'promedio_grade_b_3' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_3', $competencias)),
+                'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
+                'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
+                'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+            ];
+        }
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+    }
+
+    public function createPrevious($period_name, $classroom_id, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
+
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        $studentsGrade = StudentCompetencia::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->get();
+        $courses = Course::where('TenantId', $period->id)->get();
+        $class_room = StudentClassroom::where('student_id', $student->id)
+            ->where('TenantId', $period->id)
+            ->first();
+
+        $competenciasPorCurso = [];
+        foreach ($studentsGrade as $item) {
+            $competenciasPorCurso[$item->competencia->course_id][] = [
+                'id' => $item->competencia->id,
+                'description' => $item->competencia->description,
+                'grade_b_1' => $item->grade_b_1,
+                'grade_b_2' => $item->grade_b_2,
+                'grade_b_3' => $item->grade_b_3,
+                'grade_b_4' => $item->grade_b_4
+            ];
+        }
+
+        $promediosPorCurso = [];
+
+        foreach ($competenciasPorCurso as $cursoId => $competencias) {
+            $promediosPorCurso[$cursoId] = [
+                'promedio_grade_b_1' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_1', $competencias)),
+                'prom_grade_b_1' => $this->calcularPromedio('grade_b_1', $competencias),
+                'promedio_grade_b_2' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_2', $competencias)),
+                'prom_grade_b_2' => $this->calcularPromedio('grade_b_2', $competencias),
+                'promedio_grade_b_3' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_3', $competencias)),
+                'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
+                'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
+                'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
+            ];
+        }
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
     }
 
     private function calcularPromedio($gradeKey, $competencias)

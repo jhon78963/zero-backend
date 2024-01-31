@@ -9,10 +9,22 @@
         @csrf
         <div class="card mb-4" style="padding-right: 1rem">
             <div class="d-flex align-items-center justify-content-between ">
-                <h5 class="card-header">Registro de notas del alumno {{ $student->first_name }} {{ $student->surname }}</h5>
-                <button type="submit" class="btn btn-primary">
-                    Guardar
-                </button>
+                @if (isset($previousEstudiante))
+                    <a href="{{ route('grade.teacher.createPrevious', [$period->name, $class_room->classroom_id, $previousEstudiante->id]) }}"
+                        class="btn btn-primary ms-3">Anterior</a>
+                @endif
+                <h5 class="card-header">Registro de notas del alumno {{ $student->first_name }} {{ $student->other_names }}
+                    {{ $student->surname }} {{ $student->mother_surname }}</h5>
+
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary me-2">
+                        Guardar
+                    </button>
+                    @if (isset($nextEstudiante))
+                        <a href="{{ route('grade.teacher.createNext', [$period->name, $class_room->classroom_id, $nextEstudiante->id]) }}"
+                            class="btn btn-primary">Siguiente</a>
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -44,18 +56,22 @@
                                     <td>{{ $competencia['description'] }}</td>
                                     <td>
                                         <select name="nota_1[]" class="form-control text-center" style="width: 80px;"
-                                        {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
-                                            <option value="AD"{{ $competencia['grade_b_1'] == 'AD' ? 'selected' : '' }}>
+                                            <option
+                                                value="AD"{{ $competencia['grade_b_1'] == 'AD' ? 'selected' : '' }}>
                                                 AD
                                             </option>
-                                            <option value="A" {{ $competencia['grade_b_1'] == 'A' ? 'selected' : '' }}>
+                                            <option value="A"
+                                                {{ $competencia['grade_b_1'] == 'A' ? 'selected' : '' }}>
                                                 A
                                             </option>
-                                            <option value="B" {{ $competencia['grade_b_1'] == 'B' ? 'selected' : '' }}>
+                                            <option value="B"
+                                                {{ $competencia['grade_b_1'] == 'B' ? 'selected' : '' }}>
                                                 B
                                             </option>
-                                            <option value="C" {{ $competencia['grade_b_1'] == 'D' ? 'selected' : '' }}>
+                                            <option value="C"
+                                                {{ $competencia['grade_b_1'] == 'D' ? 'selected' : '' }}>
                                                 C</option>
                                         </select>
                                     </td>
@@ -102,20 +118,20 @@
                                         </select>
                                     </td>
                                     <td rowspan="{{ count($competenciasPorCurso[$course->id]) + 1 }}" class="text-center">
-
+                                        @if (isset($promediosPorCurso[$course->id]['prom_grade_course_final']))
+                                            @if ($promediosPorCurso[$course->id]['prom_grade_course_final'] != 0)
+                                                {{ $promediosPorCurso[$course->id]['promedio_grade_course_final'] }}
+                                            @endif
+                                        @endif
                                     </td>
                                     <td rowspan="{{ count($competenciasPorCurso[$course->id]) + 1 }}" class="text-center">
                                         <select name="nota_recuperación[]" class="form-control text-center"
                                             style="width: 80px" disabled>
                                             <option value="">Nota</option>
-                                            <option value="AD"
-                                                {{ $competencia['grade_b_4'] == 'AD' ? 'selected' : '' }}>AD</option>
-                                            <option value="A"
-                                                {{ $competencia['grade_b_4'] == 'A' ? 'selected' : '' }}>A</option>
-                                            <option value="B"
-                                                {{ $competencia['grade_b_4'] == 'B' ? 'selected' : '' }}>B</option>
-                                            <option value="C"
-                                                {{ $competencia['grade_b_4'] == 'C' ? 'selected' : '' }}>C</option>
+                                            <option value="AD">AD</option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -124,7 +140,7 @@
                                     <td>{{ $competencia['description'] }}</td>
                                     <td>
                                         <select name="nota_1[]" class="form-control text-center" style="width: 80px"
-                                        {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas I Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_1'] == 'AD' ? 'selected' : '' }}>AD</option>
