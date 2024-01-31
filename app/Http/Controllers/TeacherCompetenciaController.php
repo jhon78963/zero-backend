@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\DB;
 
 class TeacherCompetenciaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();

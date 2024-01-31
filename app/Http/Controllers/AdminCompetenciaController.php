@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 
 class AdminCompetenciaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
@@ -96,12 +101,37 @@ class AdminCompetenciaController extends Controller
     public function show($period_name, $student_id)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $student = Student::where('id', $student_id)
-            ->where('TenantId', $period->id)
+
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
             ->first();
 
-        $nextEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '>', $student_id)->orderBy('id')->first();
-        $previousEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '<', $student_id)->orderBy('id')->first();
+        //return dd($student);
+
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+        // return dd($student);
 
         $class_room = StudentClassroom::where('student_id', $student->id)
             ->where('TenantId', $period->id)
@@ -147,11 +177,31 @@ class AdminCompetenciaController extends Controller
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
 
-        $nextEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '>', $student_id)->orderBy('id')->first();
-        $previousEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '<', $student_id)->orderBy('id')->first();
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
 
-        $student = Student::where('id', $student_id)
-            ->where('TenantId', $period->id)
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
             ->first();
 
         $class_room = StudentClassroom::where('student_id', $student->id)
@@ -197,11 +247,31 @@ class AdminCompetenciaController extends Controller
     public function showPrevious($period_name, $student_id)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $nextEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '>', $student_id)->orderBy('id')->first();
-        $previousEstudiante = Student::where('TenantId', $period->id)->where('status', true)->where('id', '<', $student_id)->orderBy('id')->first();
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
 
-        $student = Student::where('id', $student_id)
-            ->where('TenantId', $period->id)
+        $nextEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '>', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
+            ->first();
+
+
+
+        $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('sc.classroom_id', $student->classroom_id)
+            ->where('students.id', '<', $student->id)
+            ->orderBy('students.id')
+            ->select('students.*')
             ->first();
 
         $class_room = StudentClassroom::where('student_id', $student->id)

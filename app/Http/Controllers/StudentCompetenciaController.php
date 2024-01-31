@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentCompetenciaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index($period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
