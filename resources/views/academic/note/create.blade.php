@@ -119,7 +119,12 @@
                                     </td>
                                     <td rowspan="{{ count($competenciasPorCurso[$course->id]) + 1 }}" class="text-center">
                                         @if (isset($promediosPorCurso[$course->id]['prom_grade_course_final']))
-                                            @if ($promediosPorCurso[$course->id]['prom_grade_course_final'] != 0)
+                                            @if (
+                                                $promediosPorCurso[$course->id]['prom_grade_course_final'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_1'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_2'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_3'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_4'] != 0)
                                                 {{ $promediosPorCurso[$course->id]['promedio_grade_course_final'] }}
                                             @endif
                                         @endif
