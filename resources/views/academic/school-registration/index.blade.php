@@ -124,8 +124,8 @@
                                     <tr>
                                         <td>Grado</td>
                                         <td>
-                                            <select name="aula_id" id="aula_id" class="form-control text-center">
-                                                ${generateClassroomStudent(registration.student.id, registration.classroom.id)}
+                                            <select name="aula_id" id="aula_id_${registrationId}" class="form-control text-center">
+                                                ${generateClassroomStudent(registration.student.id, registration.classroom.id, registrationId)}
                                             </select>
                                         </td>
                                     </tr>
@@ -241,10 +241,10 @@
             return options;
         }
 
-        function generateClassroomStudent(studentId, classroomId) {
+        function generateClassroomStudent(studentId, classroomId, registrationId) {
             $.get(`/${periodId}/matriculas/aulas/${studentId}`, function(data) {
                 $.each(data.classrooms, function(index, classroom) {
-                    let selectCreateElement = $('#aula_id');
+                    let selectCreateElement = $(`#aula_id_${registrationId}`);
                     let option = $('<option>', {
                         value: classroom.id,
                         text: classroom.description
