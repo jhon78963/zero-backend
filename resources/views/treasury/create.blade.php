@@ -50,14 +50,23 @@
 
             <div class="row">
                 <div class="d-flex justify-content-between mb-2">
-                    <button type="button" class="btn btn-primary" onclick="addRow()">
-                        + Agregar Concepto
-                    </button>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-primary me-2" onclick="addRow()">
+                            + Agregar Concepto
+                        </button>
+
+                        <button type="button" class="btn btn-default p-0" onclick="newPayment()">
+                            [+ nuevo]
+                        </button>
+                    </div>
 
                     <select name="student_id" id="student_id" class="form-control text-center" style="width: 500px;">
                         <option value="">Seleccione estudiante</option>
                         @foreach ($students as $student)
-                            <option value="{{ $student->id }}">{{ $student->first_name }} {{ $student->surname }}</option>
+                            <option value="{{ $student->id }}">
+                                {{ $student->surname }} {{ $student->mother_surname }}
+                                {{ $student->first_name }} {{ $student->other_names }}
+                            </option>
                         @endforeach
                     </select>
 
@@ -111,6 +120,7 @@
             </div>
         </form>
     </div>
+    @include('treasury.treasury-create-modal')
 @endsection
 
 @section('css')
@@ -127,6 +137,11 @@
         });
     </script>
     <script>
+        function newPayment() {
+            console.log("holass");
+            $('#createTreasuryModal').modal('toggle');
+        }
+
         function addRow() {
             const payments = @json($payments);
             fila = `

@@ -27,6 +27,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TreasuryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkloadController;
+use App\Models\Treasury;
 
 /*
 |--------------------------------------------------------------------------
@@ -173,6 +174,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
     Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
     Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
+    Route::post('/payments/store', [TreasuryController::class, 'savePayment'])->name('payments.store');
 
     // Horario
     Route::get('/horario/docente', [WorkloadController::class, 'scheduleTeacher'])->name('workload.schedule.teacher');

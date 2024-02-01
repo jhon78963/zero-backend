@@ -53,6 +53,7 @@ class TreasuryController extends Controller
             ->join('students as s', 's.id', 'sr.student_id')
             ->where('sr.TenantId', $period->id)
             ->select('s.*')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('first_name')->orderBy('other_names')
             ->get();
 
         return view('treasury.create', compact('invoice', 'students', 'period', 'payments'));
@@ -123,5 +124,15 @@ class TreasuryController extends Controller
         $treasury->save();
 
         return redirect()->route('treasuries.index', $period->name);
+    }
+
+    public function savePayment(Request $request)
+    {
+        $payment = new Payment();
+        $payment->description = $request->description;
+        $payment->cost = $request->cost;
+        $payment->save();
+
+        return back();
     }
 }
