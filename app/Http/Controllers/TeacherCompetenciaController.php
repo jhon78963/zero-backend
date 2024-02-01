@@ -428,6 +428,11 @@ class TeacherCompetenciaController extends Controller
 
             $school_registration->status = 'PROMOVIDO';
             $school_registration->save();
+
+            if (count($cursosJalados) > 0) {
+                $school_registration->status = 'RECUPERACION';
+                $school_registration->save();
+            }
         } else {
             $student_classroom->grade_final = 'PERMANENTE';
             $student_classroom->save();
@@ -441,9 +446,6 @@ class TeacherCompetenciaController extends Controller
             foreach ($cursosJalados as $cursoJalado) {
                 $student_classroom->grade_final = 'RECUPERACION';
                 $student_classroom->save();
-
-                $school_registration->status = 'RECUPERACION';
-                $school_registration->save();
 
                 $failedCourse = new FailedCourse();
                 $failedCourse->TenantId = $period_id;
