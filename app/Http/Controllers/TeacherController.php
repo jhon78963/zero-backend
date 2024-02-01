@@ -166,7 +166,21 @@ class TeacherController extends Controller
 
     public function update(UpdateTeacherRequest $request, $period_id, $id)
     {
-        $teacher = Teacher::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
+        $teacher = Teacher::leftJoin('teacher_classrooms as tc', function ($join) use ($period_id) {
+            $join->on('teachers.id', '=', 'tc.teacher_id')
+                ->where('tc.TenantId', '=', $period_id);
+        })
+            ->leftJoin('class_rooms as c', 'c.id', '=', 'tc.classroom_id')
+            ->leftJoin('teacher_courses as tco', function ($join) use ($period_id) {
+                $join->on('teachers.id', '=', 'tco.teacher_id')
+                    ->where('tco.TenantId', '=', $period_id);
+            })
+            ->leftJoin('courses as co', 'co.id', '=', 'tco.course_id')
+            ->where('teachers.id', $id)
+            ->where('teachers.IsDeleted', false)
+            ->where('teachers.TenantId', $period_id)
+            ->select('teachers.*', 'c.description as classroom', 'co.description as course')
+            ->first();
 
         if (empty($teacher)) {
             return response()->json([

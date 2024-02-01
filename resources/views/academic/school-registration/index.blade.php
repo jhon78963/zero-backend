@@ -40,7 +40,6 @@
             </table>
         </div>
     </div>
-
     <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
 @endsection
 
@@ -99,55 +98,64 @@
                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body  flex-grow-0">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>${registrationId}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Estuiante</td>
-                                    <td>${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
-                                </tr>
-                                <tr>
-                                    <td>Género</td>
-                                    <td>M</td>
-                                </tr>
-                                <tr>
-                                    <td>Nivel</td>
-                                    <td>Primaria</td>
-                                </tr>
-                                <tr>
-                                    <td>Grado</td>
-                                    <td>${registration.classroom.description}</td>
-                                </tr>
-                                <tr>
-                                    <td>Contacto</td>
-                                    <td>${registration.student.phone}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <form method="POST" action="/${periodId}/matriculas/promoted/${registrationId}">
+                            @csrf
+                            <input type="hidden" name="alum_id" value="${registration.student.id}">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>${registrationId}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Estuiante</td>
+                                        <td>${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Género</td>
+                                        <td>M</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nivel</td>
+                                        <td>Primaria</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Grado</td>
+                                        <td>
+                                            <select name="aula_id" id="aula_id" class="form-control text-center">
+                                                ${generateClassroomStudent(registration.student.id, registration.classroom.id)}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contacto</td>
+                                        <td>${registration.student.phone}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                        <div class="row mt-3">
-                            <div class="col-6 text-end">Cuota de inscripción</div>
-                            <div class="col-6 text-end">S/ 1600</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-end">Costo de matrícula</div>
-                            <div class="col-6 text-end">S/ 750</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-end">Mensualidad</div>
-                            <div class="col-6 text-end">S/ 750</div>
-                        </div>
+                            <div class="row mt-3">
+                                <div class="col-6 text-end">Cuota de inscripción</div>
+                                <div class="col-6 text-end">S/ 1600</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-end">Costo de matrícula</div>
+                                <div class="col-6 text-end">S/ 750</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-end">Mensualidad</div>
+                                <div class="col-6 text-end">S/ 750</div>
+                            </div>
 
-                        <div class="row">
-                            <div class="col-6 text-end">Total Mensualidad (10 meses)</div>
-                            <div class="col-6 text-end">S/ 75000</div>
-                        </div>
+                            <div class="row">
+                                <div class="col-6 text-end">Total Mensualidad (10 meses)</div>
+                                <div class="col-6 text-end">S/ 75000</div>
+                            </div>
 
+                            ${generateSchoolRegistrationButton(registration.student.id, status)}
+                        </form>
                     </div>
                 </div>
             `;
@@ -231,6 +239,34 @@
                 `;
             });
             return options;
+        }
+
+        function generateClassroomStudent(studentId, classroomId) {
+            $.get(`/${periodId}/matriculas/aulas/${studentId}`, function(data) {
+                $.each(data.classrooms, function(index, classroom) {
+                    let selectCreateElement = $('#aula_id');
+                    let option = $('<option>', {
+                        value: classroom.id,
+                        text: classroom.description
+                    });
+
+                    if (classroom.id == classroomId) {
+                        option.prop('selected', true);
+                    }
+                    selectCreateElement.append(option);
+                });
+            });
+        }
+
+        function generateSchoolRegistrationButton(studentId, status) {
+            if (status == 'CONTINUA') {
+                return `
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="submit" class="btn btn-primary">Matricular</button>
+                </div>
+                `;
+            }
+            return '';
         }
 
         function openDenyRegistrationModal(registrationId) {

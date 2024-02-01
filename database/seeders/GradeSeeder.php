@@ -22,7 +22,7 @@ class GradeSeeder extends Seeder
         $grade->save();
 
         $grade = new Grade();
-        $grade->description = '3ero grado';
+        $grade->description = '3er grado';
         $grade->TenantId = 1;
         $grade->save();
 

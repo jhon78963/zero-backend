@@ -42,23 +42,40 @@ class SchoolRegistrationController extends Controller
 
     public function create($period_name)
     {
-
         $period = AcademicPeriod::where('name', $period_name)->first();
         $grades = Grade::where('IsDeleted', false)->where('TenantId', $period->id)->get();
         $students = Student::where('IsDeleted', false)->where('TenantId', $period->id)->where('status', '0')->get();
+
         return view('academic.school-registration.create', compact('grades', 'students', 'period'));
     }
 
     public function getAll($period_id)
     {
         $schoolRegistration = SchoolRegistration::with('student', 'classroom')->where('IsDeleted', false)->where('TenantId', $period_id)->get();
-
         $count = count($schoolRegistration);
 
         return response()->json([
             'status' => 'success',
             'maxCount' => $count,
             'schoolRegistration' => $schoolRegistration
+        ]);
+    }
+
+    public function getStudentClassrooms($period_id, $student_id)
+    {
+        $schoolRegistration = SchoolRegistration::with('student', 'classroom')
+            ->where('IsDeleted', false)
+            ->where('TenantId', $period_id)
+            ->where('student_id', $student_id)
+            ->first();
+
+        $classrooms = ClassRoom::where('grade_id', $schoolRegistration->classroom->grade_id)
+            ->where('IsDeleted', false)
+            ->where('TenantId', $period_id)
+            ->get();
+
+        return response()->json([
+            'classrooms' => $classrooms
         ]);
     }
 
@@ -162,6 +179,53 @@ class SchoolRegistrationController extends Controller
         }
     }
 
+    public function promoted(Request $request, $period_id, $matricula_id)
+    {
+        $period = AcademicPeriod::where('id', $period_id)->first();
+
+        $matricula = SchoolRegistration::find($matricula_id);
+        $matricula->classroom_id = $request->aula_id;
+        $matricula->status = 'ACTIVO';
+        $matricula->TenantId = $period_id;
+
+        if ($request->alum_id != null) {
+            $matricula->student_id = $request->alum_id;
+            $matricula->save();
+
+            $alumno = Student::Find($request->alum_id);
+            $alumno->status = '1';
+            $alumno->save();
+
+            $aula = ClassRoom::Find($request->aula_id);
+            $aula->students_number += 1;
+            $aula->save();
+
+            $alumno_seccion = new StudentClassroom();
+            $alumno_seccion->student_id = $request->alum_id;
+            $alumno_seccion->classroom_id = $request->aula_id;
+            $alumno_seccion->TenantId = $period_id;
+            $alumno_seccion->CreatorUserId = Auth::id();
+            $alumno_seccion->save();
+
+            $course_competencias = DB::table('course_competencias as cc')
+                ->where('cc.TenantId', $period_id)
+                ->select('cc.id as course_competencia_id')
+                ->get();
+
+            foreach ($course_competencias as $course_competencia) {
+                $nota = new StudentCompetencia();
+                $nota->student_id = $request->alum_id;
+                $nota->classroom_id = $request->aula_id;
+                $nota->course_competencia_id = $course_competencia->course_competencia_id;
+                $nota->CreatorUserId = Auth::id();
+                $nota->TenantId = $period_id;
+                $nota->save();
+            }
+
+            return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');
+        }
+    }
+
     public function generateUser($student, $period)
     {
         $user = new User([
@@ -217,7 +281,7 @@ class SchoolRegistrationController extends Controller
         $matricula->save();
 
         $alumno = Student::Find($matricula->student_id);
-        $alumno->status = '0';
+        $alumno->status = 'ANULADO';
         $alumno->save();
 
         $user = User::where('email', $alumno->institutional_email)->where('TenantId', $period_id)->where('IsDeleted', false)->first();

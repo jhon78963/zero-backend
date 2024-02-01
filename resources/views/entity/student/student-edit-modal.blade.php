@@ -19,7 +19,7 @@
                         </div>
                         <div class="col-8 mb-2">
                             <label for="gender" class="form-label">Genero: </label>
-                            <select name="e_gender" id="gender" class="form-control">
+                            <select name="gender" id="e_gender" class="form-control">
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
                             </select>

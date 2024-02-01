@@ -162,7 +162,9 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/matriculas', [SchoolRegistrationController::class, 'index'])->name('school-registration.index');
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
     Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
+    Route::get('/matriculas/aulas/{student_id}', [SchoolRegistrationController::class, 'getStudentClassrooms'])->name('school-registration.classrooms');
     Route::post('/matriculas/store', [SchoolRegistrationController::class, 'store'])->name('school-registration.store');
+    Route::post('/matriculas/promoted/{matricula_id}', [SchoolRegistrationController::class, 'promoted'])->name('school-registration.promoted');
     Route::post('/matriculas/{id}/cambiar-aula', [SchoolRegistrationController::class, 'change'])->name('school-registration.change');
     Route::delete('/matriculas/{id}/anular', [SchoolRegistrationController::class, 'deny'])->name('school-registration.deny');
 

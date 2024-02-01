@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AcademicPeriod;
 use App\Models\ClassRoom;
 use App\Models\Course;
+use App\Models\FailedCourse;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
@@ -396,7 +397,7 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return dd($promediosPorCurso);
+        //return dd($promediosPorCurso);
 
         $cursosAprobados = 0;
         $cursosJaladosCount = 0;
@@ -412,18 +413,35 @@ class TeacherCompetenciaController extends Controller
 
             if ($promedioFinal === 'C') {
                 $cursosJaladosCount++;
-                $cursosJalados[$cursoId] = $cursoId;
+                $cursosJalados[] = $cursoId;
             }
         }
 
         // Verificar si se aprobaron al menos 4 cursos
-        if ($cursosAprobados >= 4) {
-            $estadoFinal = 'Pasa de año';
+        $count_courses = Course::where('IsDeleted', false)->where('TenantId', $period_id)->count();
+        $student_classroom = StudentClassroom::where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->first();
+        if ($cursosAprobados >= ($count_courses / 2)) {
+            $student_classroom->grade_final = 'PROMOVIDO';
+            $student_classroom->save();
         } else {
-            $estadoFinal = 'Repite el año';
+            $student_classroom->grade_final = 'PERMANENTE';
+            $student_classroom->save();
         }
 
-        //return dd($cursosJalados);
+        DB::table('student_failed_course')->where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->delete();
+        if (count($cursosJalados) > 0) {
+            foreach ($cursosJalados as $cursoJalado) {
+                $student_classroom->grade_final = 'RECUPERACION';
+                $student_classroom->save();
+
+                $failedCourse = new FailedCourse();
+                $failedCourse->TenantId = $period_id;
+                $failedCourse->course_id = $cursoJalado;
+                $failedCourse->student_id = $student_id;
+                $failedCourse->classroom_id = $classroom_id;
+                $failedCourse->save();
+            }
+        }
 
         return back();
     }

@@ -200,7 +200,7 @@
                         <td>${data.teacher.first_name} ${data.teacher.other_names != null ? data.teacher.other_names : ''}</td>
                         <td>${data.teacher.surname} ${data.teacher.mother_surname != null ? data.teacher.mother_surname : ''}</td>
                         <td>${data.teacher.institutional_email}</td>
-                        <td></td>
+                        <td> ${teacher.type != 'AREA' ? teacher.classroom || '' : teacher.course || ''}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${data.teacher.id})">

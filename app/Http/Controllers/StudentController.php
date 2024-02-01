@@ -139,12 +139,13 @@ class StudentController extends Controller
 
     public function getAll($period_id)
     {
-        $students = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
-            ->join('class_rooms as c', 'c.id', 'sc.classroom_id')
+        $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
             ->where('students.IsDeleted', false)
             ->where('students.TenantId', $period_id)
             ->select('students.*', 'c.description as classroom')
             ->get();
+
         $count = count($students);
 
         return response()->json([
@@ -156,7 +157,13 @@ class StudentController extends Controller
 
     public function update(UpdateStudentRequest $request, $period_id, $id)
     {
-        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', $period_id)->first();
+        $student = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->where('students.id', $id)
+            ->where('students.IsDeleted', false)
+            ->where('students.TenantId', $period_id)
+            ->select('students.*', 'c.description as classroom')
+            ->first();
 
         if (empty($student)) {
             return response()->json([

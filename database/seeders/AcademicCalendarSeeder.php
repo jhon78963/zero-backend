@@ -119,6 +119,5 @@ class AcademicCalendarSeeder extends Seeder
         $academic_calendar->activity = 'Clausura del año escolar';
         $academic_calendar->status = 0;
         $academic_calendar->save();
-
     }
 }
