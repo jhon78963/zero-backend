@@ -6,6 +6,7 @@ use App\Models\AcademicPeriod;
 use App\Models\ClassRoom;
 use App\Models\Course;
 use App\Models\FailedCourse;
+use App\Models\SchoolRegistration;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
@@ -420,12 +421,19 @@ class TeacherCompetenciaController extends Controller
         // Verificar si se aprobaron al menos 4 cursos
         $count_courses = Course::where('IsDeleted', false)->where('TenantId', $period_id)->count();
         $student_classroom = StudentClassroom::where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->first();
+        $school_registration = SchoolRegistration::where('IsDeleted', false)->where('TenantId', $period_id)->where('student_id', $student_id)->first();
         if ($cursosAprobados >= ($count_courses / 2)) {
             $student_classroom->grade_final = 'PROMOVIDO';
             $student_classroom->save();
+
+            $school_registration->status = 'PROMOVIDO';
+            $school_registration->save();
         } else {
             $student_classroom->grade_final = 'PERMANENTE';
             $student_classroom->save();
+
+            $school_registration->status = 'PERMANENTE';
+            $school_registration->save();
         }
 
         DB::table('student_failed_course')->where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->delete();
