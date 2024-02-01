@@ -178,7 +178,7 @@ class TeacherCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '<', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.id', 'DESC')
             ->select('students.*')
             ->first();
 
@@ -249,7 +249,7 @@ class TeacherCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '<', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.id', 'DESC')
             ->select('students.*')
             ->first();
 

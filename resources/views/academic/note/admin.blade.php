@@ -13,8 +13,7 @@
                 <div class="d-flex align-items-center">
                     <select name="classroom_id" id="classroom_id" class="form-control text-center me-1">
                         @foreach ($classrooms as $classroom)
-                            <option value="{{ $classroom->id }}"
-                                {{ $classroom->id == $classroomSelected->id ? 'selected' : '' }}>
+                            <option value="{{ $classroom->id }}">
                                 {{ $classroom->description }}</option>
                         @endforeach
                     </select>
