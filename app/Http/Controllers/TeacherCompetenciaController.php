@@ -389,6 +389,10 @@ class TeacherCompetenciaController extends Controller
 
         foreach ($competenciasPorCurso as $cursoId => $competencias) {
             $promediosPorCurso[$cursoId] = [
+                'prom_grade_b_1' => $this->calcularPromedio('grade_b_1', $competencias),
+                'prom_grade_b_2' => $this->calcularPromedio('grade_b_2', $competencias),
+                'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
+                'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
                 'promedio_final_course_en_letra' => $this->convertirPromedioALetras(
                     ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
                     ) / 4
@@ -403,9 +407,17 @@ class TeacherCompetenciaController extends Controller
         $cursosAprobados = 0;
         $cursosJaladosCount = 0;
         $cursosJalados = [];
+        $prom_nota_1 = 0;
+        $prom_nota_2 = 0;
+        $prom_nota_3 = 0;
+        $prom_nota_4 = 0;
 
         foreach ($promediosPorCurso as $cursoId => $promedios) {
             $promedioFinal = $promedios['promedio_final_course_en_letra'];
+            $prom_nota_1 = $promedios['prom_grade_b_1'];
+            $prom_nota_2 = $promedios['prom_grade_b_2'];
+            $prom_nota_3 = $promedios['prom_grade_b_3'];
+            $prom_nota_4 = $promedios['prom_grade_b_4'];
 
             // Verificar si el curso tiene una calificación de "A" o "AD"
             if ($promedioFinal === 'A' || $promedioFinal === 'AD') {
@@ -422,23 +434,25 @@ class TeacherCompetenciaController extends Controller
         $count_courses = Course::where('IsDeleted', false)->where('TenantId', $period_id)->count();
         $student_classroom = StudentClassroom::where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->first();
         $school_registration = SchoolRegistration::where('IsDeleted', false)->where('TenantId', $period_id)->where('student_id', $student_id)->first();
-        if ($cursosAprobados >= ($count_courses / 2)) {
-            $student_classroom->grade_final = 'PROMOVIDO';
-            $student_classroom->save();
+        if ($prom_nota_1 != 0 && $prom_nota_2 != 0 && $prom_nota_3 != 0 && $prom_nota_4 != 0) {
+            if ($cursosAprobados >= ($count_courses / 2)) {
+                $student_classroom->grade_final = 'PROMOVIDO';
+                $student_classroom->save();
 
-            $school_registration->status = 'PROMOVIDO';
-            $school_registration->save();
+                $school_registration->status = 'PROMOVIDO';
+                $school_registration->save();
 
-            if (count($cursosJalados) > 0) {
-                $school_registration->status = 'RECUPERACION';
+                if (count($cursosJalados) > 0) {
+                    $school_registration->status = 'RECUPERACION';
+                    $school_registration->save();
+                }
+            } else {
+                $student_classroom->grade_final = 'PERMANENTE';
+                $student_classroom->save();
+
+                $school_registration->status = 'PERMANENTE';
                 $school_registration->save();
             }
-        } else {
-            $student_classroom->grade_final = 'PERMANENTE';
-            $student_classroom->save();
-
-            $school_registration->status = 'PERMANENTE';
-            $school_registration->save();
         }
 
         DB::table('student_failed_course')->where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->delete();
