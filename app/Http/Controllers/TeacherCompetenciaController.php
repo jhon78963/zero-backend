@@ -442,6 +442,9 @@ class TeacherCompetenciaController extends Controller
                 $student_classroom->grade_final = 'RECUPERACION';
                 $student_classroom->save();
 
+                $school_registration->status = 'RECUPERACION';
+                $school_registration->save();
+
                 $failedCourse = new FailedCourse();
                 $failedCourse->TenantId = $period_id;
                 $failedCourse->course_id = $cursoJalado;
