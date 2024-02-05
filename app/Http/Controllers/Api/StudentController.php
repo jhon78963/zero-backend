@@ -15,17 +15,10 @@ use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
-    private $academic_period;
-
-    public function __construct()
-    {
-        $this->academic_period = View::shared('academic_period');
-    }
-
     public function create(CreateStudentRequest $request)
     {
-        $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->exists();
-        $codeExists = Student::where('code', $request->input('code'))->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->exists();
+        $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', 1)->exists();
+        $codeExists = Student::where('code', $request->input('code'))->where('IsDeleted', false)->where('TenantId', 1)->exists();
 
         if ($emailExists || $codeExists) {
             return response()->json([
@@ -45,7 +38,7 @@ class StudentController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => 1,
         ]);
 
         $student->save();
@@ -69,7 +62,7 @@ class StudentController extends Controller
             'phoneNumber' => $student->phone,
             'profilePicture' => '/assets/img/avatars/1.png',
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => 1,
         ]);
 
         $user->save();
@@ -78,13 +71,13 @@ class StudentController extends Controller
             'roleId' => 4,
             'userId' => $user->id,
             'CreatorUserId' => Auth::id(),
-            'TenantId' => $this->academic_period->id,
+            'TenantId' => 1,
         ]);
     }
 
     public function delete($id)
     {
-        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', 1)->first();
 
         if (empty($student)) {
             return response()->json([
@@ -106,7 +99,7 @@ class StudentController extends Controller
 
     public function get($id)
     {
-        $studentExist = DB::table('students')->where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $studentExist = DB::table('students')->where('id', $id)->where('IsDeleted', false)->where('TenantId', 1)->first();
 
         if (empty($studentExist)) {
             return response()->json([
@@ -125,7 +118,7 @@ class StudentController extends Controller
 
     public function getAll()
     {
-        $students = Student::where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->get();
+        $students = Student::where('IsDeleted', false)->where('TenantId', 1)->get();
 
         return response()->json([
             'status' => 'success',
@@ -135,7 +128,7 @@ class StudentController extends Controller
 
     public function update(UpdateStudentRequest $request, $id)
     {
-        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', $this->academic_period->id)->first();
+        $student = Student::where('id', $id)->where('IsDeleted', false)->where('TenantId', 1)->first();
 
         if (empty($student)) {
             return response()->json([
