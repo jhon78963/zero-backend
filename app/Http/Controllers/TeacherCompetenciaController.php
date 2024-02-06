@@ -103,7 +103,19 @@ class TeacherCompetenciaController extends Controller
                 $query->where('students.surname', '>', $student->surname)
                     ->orWhere(function ($query) use ($student) {
                         $query->where('students.surname', '=', $student->surname)
-                            ->where('students.first_name', '>', $student->first_name);
+                            ->where(function ($query) use ($student) {
+                                $query->where('students.mother_surname', '>', $student->mother_surname)
+                                    ->orWhere(function ($query) use ($student) {
+                                        $query->where('students.mother_surname', '=', $student->mother_surname)
+                                            ->where(function ($query) use ($student) {
+                                                $query->where('students.first_name', '>', $student->first_name)
+                                                    ->orWhere(function ($query) use ($student) {
+                                                        $query->where('students.first_name', '=', $student->first_name)
+                                                            ->where('students.other_names', '>', $student->other_names);
+                                                    });
+                                            });
+                                    });
+                            });
                     });
             })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
@@ -185,7 +197,19 @@ class TeacherCompetenciaController extends Controller
                 $query->where('students.surname', '>', $student->surname)
                     ->orWhere(function ($query) use ($student) {
                         $query->where('students.surname', '=', $student->surname)
-                            ->where('students.first_name', '>', $student->first_name);
+                            ->where(function ($query) use ($student) {
+                                $query->where('students.mother_surname', '>', $student->mother_surname)
+                                    ->orWhere(function ($query) use ($student) {
+                                        $query->where('students.mother_surname', '=', $student->mother_surname)
+                                            ->where(function ($query) use ($student) {
+                                                $query->where('students.first_name', '>', $student->first_name)
+                                                    ->orWhere(function ($query) use ($student) {
+                                                        $query->where('students.first_name', '=', $student->first_name)
+                                                            ->where('students.other_names', '>', $student->other_names);
+                                                    });
+                                            });
+                                    });
+                            });
                     });
             })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
@@ -268,7 +292,19 @@ class TeacherCompetenciaController extends Controller
                 $query->where('students.surname', '>', $student->surname)
                     ->orWhere(function ($query) use ($student) {
                         $query->where('students.surname', '=', $student->surname)
-                            ->where('students.first_name', '>', $student->first_name);
+                            ->where(function ($query) use ($student) {
+                                $query->where('students.mother_surname', '>', $student->mother_surname)
+                                    ->orWhere(function ($query) use ($student) {
+                                        $query->where('students.mother_surname', '=', $student->mother_surname)
+                                            ->where(function ($query) use ($student) {
+                                                $query->where('students.first_name', '>', $student->first_name)
+                                                    ->orWhere(function ($query) use ($student) {
+                                                        $query->where('students.first_name', '=', $student->first_name)
+                                                            ->where('students.other_names', '>', $student->other_names);
+                                                    });
+                                            });
+                                    });
+                            });
                     });
             })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
