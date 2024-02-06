@@ -226,8 +226,6 @@ class AdminCompetenciaController extends Controller
             ->select('students.*')
             ->first();
 
-        return dd($nextEstudiante);
-
         $class_room = StudentClassroom::where('student_id', $student->id)
             ->where('TenantId', $period->id)
             ->first();
