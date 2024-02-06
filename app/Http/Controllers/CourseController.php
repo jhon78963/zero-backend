@@ -42,7 +42,6 @@ class CourseController extends Controller
         }
 
         CourseGrade::where('course_id', $request->course_id)
-            ->where('IsDeleted', false)
             ->where('TenantId', $period_id)
             ->delete();
 

@@ -13,6 +13,10 @@
                     <a href="{{ route('grade.teacher.createPrevious', [$period->name, $class_room->classroom_id, $previousEstudiante->id]) }}"
                         class="btn btn-primary ms-3">Anterior</a>
                 @endif
+                @if (isset($nextEstudiante))
+                    <a href="{{ route('grade.teacher.createNext', [$period->name, $class_room->classroom_id, $nextEstudiante->id]) }}"
+                        class="btn btn-primary ms-3">Siguiente</a>
+                @endif
                 <h5 class="card-header">Registro de notas del alumno {{ $student->first_name }} {{ $student->other_names }}
                     {{ $student->surname }} {{ $student->mother_surname }}</h5>
 
@@ -20,10 +24,7 @@
                     <button type="submit" class="btn btn-primary me-2">
                         Guardar
                     </button>
-                    @if (isset($nextEstudiante))
-                        <a href="{{ route('grade.teacher.createNext', [$period->name, $class_room->classroom_id, $nextEstudiante->id]) }}"
-                            class="btn btn-primary">Siguiente</a>
-                    @endif
+
                 </div>
             </div>
         </div>

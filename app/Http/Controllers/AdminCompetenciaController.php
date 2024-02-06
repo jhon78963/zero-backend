@@ -114,7 +114,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '>', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -123,7 +123,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '<', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -189,7 +189,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '>', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -198,7 +198,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '<', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -263,7 +263,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '>', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -274,7 +274,7 @@ class AdminCompetenciaController extends Controller
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
             ->where('students.id', '<', $student->id)
-            ->orderBy('students.id')
+            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
