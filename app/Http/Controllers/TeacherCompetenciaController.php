@@ -99,7 +99,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -108,7 +114,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -169,7 +181,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -178,7 +196,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -240,7 +264,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -249,7 +279,13 @@ class TeacherCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
