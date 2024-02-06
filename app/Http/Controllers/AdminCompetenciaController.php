@@ -113,7 +113,13 @@ class AdminCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -122,7 +128,13 @@ class AdminCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names', 'DESC')
             ->select('students.*')
             ->first();
@@ -188,7 +200,13 @@ class AdminCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
@@ -197,10 +215,18 @@ class AdminCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names', 'DESC')
             ->select('students.*')
             ->first();
+
+        return dd($nextEstudiante);
 
         $class_room = StudentClassroom::where('student_id', $student->id)
             ->where('TenantId', $period->id)
@@ -262,18 +288,28 @@ class AdminCompetenciaController extends Controller
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '>', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '>', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '>', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
-
-
 
         $previousEstudiante = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
             ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('sc.classroom_id', $student->classroom_id)
-            ->where('students.id', '<', $student->id)
+            ->where(function ($query) use ($student) {
+                $query->where('students.surname', '<', $student->surname)
+                    ->orWhere(function ($query) use ($student) {
+                        $query->where('students.surname', '=', $student->surname)
+                            ->where('students.first_name', '<', $student->first_name);
+                    });
+            })
             ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names', 'DESC')
             ->select('students.*')
             ->first();
