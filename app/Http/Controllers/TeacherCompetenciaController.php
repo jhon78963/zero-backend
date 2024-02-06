@@ -121,7 +121,7 @@ class TeacherCompetenciaController extends Controller
                             ->where('students.first_name', '<', $student->first_name);
                     });
             })
-            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
+            ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names', 'DESC')
             ->select('students.*')
             ->first();
 
@@ -203,7 +203,7 @@ class TeacherCompetenciaController extends Controller
                             ->where('students.first_name', '<', $student->first_name);
                     });
             })
-            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
+            ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names')
             ->select('students.*')
             ->first();
 
@@ -286,7 +286,7 @@ class TeacherCompetenciaController extends Controller
                             ->where('students.first_name', '<', $student->first_name);
                     });
             })
-            ->orderBy('students.surname')->orderBy('students.mother_surname')->orderBy('students.first_name')->orderBy('students.other_names')
+            ->orderBy('students.surname', 'DESC')->orderBy('students.mother_surname', 'DESC')->orderBy('students.first_name', 'DESC')->orderBy('students.other_names', 'DESC')
             ->select('students.*')
             ->first();
 
