@@ -52,7 +52,7 @@
                                 <h6 class="text-center">activo</h6>
                                 <h3 class="card-title text-nowrap mb-2 text-center" style="color:#696cff">
                                     {{ $period->name }}</h3>
-                                <a href="{{ route('periods.home', $period->name) }}"
+                                <a href="{{ route('periods.home', $period->name) }}" target="_blank"
                                     class="btn rounded-pill btn-primary">Ir</a>
                             </div>
                         </div>

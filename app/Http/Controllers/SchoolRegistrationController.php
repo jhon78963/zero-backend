@@ -14,6 +14,7 @@ use App\Models\SchoolRegistration;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
+use App\Models\StudentPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,18 @@ class SchoolRegistrationController extends Controller
                 $nota->save();
             }
 
+            $payments = Payment::all();
+
+            foreach ($payments as $payment) {
+                $student_payment = new StudentPayment();
+                $student_payment->CreatorUserId = Auth::id();
+                $student_payment->TenantId = $period_id;
+                $student_payment->classroom_id = $request->aula_id;
+                $student_payment->student_id = $request->alum_id;
+                $student_payment->payment_id = $payment->id;
+                $student_payment->save();
+            }
+
             return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');
         } else {
             $student = new Student([
@@ -173,6 +186,18 @@ class SchoolRegistrationController extends Controller
                 $nota->CreatorUserId = Auth::id();
                 $nota->TenantId = $period_id;
                 $nota->save();
+            }
+
+            $payments = Payment::all();
+
+            foreach ($payments as $payment) {
+                $student_payment = new StudentPayment();
+                $student_payment->CreatorUserId = Auth::id();
+                $student_payment->TenantId = $period_id;
+                $student_payment->classroom_id = $request->aula_id;
+                $student_payment->student_id = $student->id;
+                $student_payment->payment_id = $payment->id;
+                $student_payment->save();
             }
 
             return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');

@@ -175,6 +175,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
     Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
     Route::post('/payments/store', [TreasuryController::class, 'savePayment'])->name('payments.store');
+    Route::put('/payments/update/{payment_id}', [TreasuryController::class, 'updatePayment'])->name('payments.update');
+    Route::delete('/payments/delete/{payment_id}', [TreasuryController::class, 'deletePayment'])->name('payments.delete');
 
     // Horario
     Route::get('/horario/docente', [WorkloadController::class, 'scheduleTeacher'])->name('workload.schedule.teacher');

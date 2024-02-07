@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\TreasuryController;
 use App\Models\ClassRoom;
 use App\Models\Permission;
 use App\Models\Role;
@@ -77,6 +78,8 @@ Route::get('class-room/{grade_id}/{section_id}/{period_id}', function ($grade_id
 
 Route::get('/consulta-dni/{cust_dni}', [App\Http\Controllers\ConsultaController::class, 'consultaDNI']);
 Route::get('/consulta-ruc/{cust_ruc}', [App\Http\Controllers\ConsultaController::class, 'consultaRUC']);
+
+Route::get('/{period_id}/payments/{student_id}', [TreasuryController::class, 'getPaymentByStudent']);
 
 //students
 

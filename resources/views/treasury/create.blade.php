@@ -5,11 +5,29 @@
 @endsection
 
 @section('content')
+    <div class="card mb-4" style="padding-right: 1rem">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="card-header">Registrar pago</h5>
+        </div>
+    </div>
+
     <div class="card mb-4 p-4">
         <form action="{{ route('treasuries.store', $period->id) }}" method="POST">
             @csrf
             <div class="d-flex justify-content-between align-content-items mb-2">
-                <h5 class="card-header">Registrar pago</h5>
+                <div class="d-flex">
+                    <div class="form-group me-2 mb-3">
+                        <label for="numero_documento_cliente">DNI</label>
+                        <div class="d-flex">
+                            <input name="numero_documento_cliente" id="numero_documento_cliente" class="form-control me-2">
+                            <button class="btn btn-primary btn-sm" type="button" onclick="searchDni()">
+                                <i class='bx bx-search-alt-2'></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-flex">
                     <div class="me-2">
                         <label for="serie">Serie</label>
@@ -20,18 +38,6 @@
                         <label for="numero">Número</label>
                         <input type="text" class="form-control" id="numero" name="numero" readonly
                             value="{{ $invoice->initial_number }}">
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex">
-                <div class="form-group me-2 mb-3">
-                    <label for="numero_documento_cliente">DNI</label>
-                    <div class="d-flex">
-                        <input name="numero_documento_cliente" id="numero_documento_cliente" class="form-control me-2">
-                        <button class="btn btn-primary btn-sm" type="button" onclick="searchDni()">
-                            <i class='bx bx-search-alt-2'></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -89,26 +95,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td width="60%">
-                                    <select name="description[]" class="form-control" id="payment-principal">
-                                        <option value="">Selecione conceptop de pago</option>
-                                        @foreach ($payments as $payment)
-                                            <option value="{{ $payment->id }}_{{ $payment->cost }}">
-                                                {{ $payment->description }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td width="10%">
-                                    <input type="text" name="price[]" class="form-control text-center"
-                                        id="cost-principal" readonly>
-                                </td>
-                                <td width="10%">
-                                    <input type="text" name="total[]" class="form-control text-center"
-                                        id="total-principal" readonly>
-                                </td>
-                                <td width="10%"></td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -116,10 +103,11 @@
 
             <div class="d-flex justify-content-end mt-3">
                 <a href="{{ route('treasuries.index', $period->name) }}" class="btn btn-secondary me-2">Regresar</a>
-                <button type="submit" class="btn btn-success">Registrar</button>
+                <button type="submit" class="btn btn-primary">Registrar</button>
             </div>
         </form>
     </div>
+    <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
     @include('treasury.treasury-create-modal')
 @endsection
 
@@ -130,26 +118,29 @@
 
 @section('js')
     <script>
+        const periodId = $('#period_id').val();
+        let studentId;
         $("#payment-principal").on("change", function() {
             const [id, cost] = $(this).val().split('_');
             $('#cost-principal').val(cost);
             $('#total-principal').val(cost);
         });
+
+        $("#student_id").on("change", function() {
+            $("#table-payment tbody").empty();
+            studentId = $('#student_id').val();
+        });
     </script>
     <script>
         function newPayment() {
-            console.log("holass");
             $('#createTreasuryModal').modal('toggle');
         }
 
         function addRow() {
-            const payments = @json($payments);
             fila = `
                 <tr>
                     <td width="60%">
-                        <select name="description[]" class="form-control" onchange="generateCost(this)">
-                            ${generateConcepts(payments)}
-                        </select>
+                        ${generateConcepts(periodId, studentId)}
                     </td>
                     <td width="10%"><input type="text" name="price[]" class="form-control text-center" readonly></td>
                     <td width="5%"><input type="text" name="total[]" class="form-control text-center" readonly></td>
@@ -158,8 +149,12 @@
                     </td>
                 </tr>
             `;
-
-            $("#table-payment tbody").append(fila);
+            if (studentId == undefined) {
+                alert('¡Debes seleccionar un alumno!');
+                return
+            } else {
+                $("#table-payment tbody").append(fila);
+            }
         }
 
         function deleteRow(button) {
@@ -178,16 +173,25 @@
             }
         }
 
-        function generateConcepts(payments) {
-            let options = `
-                <option value="">Selecione conceptop de pago</option>
-            `;
-            $.each(payments, function(index, payment) {
-                options += `
-                    <option value="${payment.id}_${payment.cost}">${payment.description}</option>
-                `;
+        function generateConcepts(periodId, studentId) {
+            let select =
+                `<select name="description[]" class="form-control" onchange="generateCost(this)" id="payment-select">`;
+
+            $.ajax({
+                url: `/api/${periodId}/payments/${studentId}`,
+                type: 'GET',
+                async: false,
+                success: function(payments) {
+                    select += '<option value="">Selecione conceptop de pago</option>';
+                    $.each(payments, function(index, payment) {
+                        select +=
+                            `<option value="${payment.id}_${payment.cost}_${payment.payment_id}">${payment.description}</option>`;
+                    });
+                }
             });
-            return options;
+
+            select += `</select>`;
+            return select;
         }
 
         function generateCost(payment) {
@@ -197,4 +201,13 @@
             const totalInput = row.find('input[name="total[]"]').val(cost);
         }
     </script>
+
+    {{-- let selectCreateElement = $(`#payment-select`);
+                $.each(payments, function(index, payment) {
+                    let options = $('<option>', {
+                        value: `${payment.id}_${payment.cost}`,
+                        text: payment.description
+                    });
+                    selectCreateElement.append(options);
+                }); --}}
 @endsection

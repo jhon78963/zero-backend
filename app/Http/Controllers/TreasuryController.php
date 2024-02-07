@@ -6,6 +6,7 @@ use App\Models\AcademicPeriod;
 use App\Models\InvoiceNumber;
 use App\Models\Payment;
 use App\Models\SchoolRegistration;
+use App\Models\StudentPayment;
 use App\Models\Treasury;
 use App\Models\TreasuryDetail;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class TreasuryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['getPaymentByStudent']]);
         $this->middleware('check.permissions:Admin,pages.calendar')->only(['index']);
         $this->middleware('check.permissions:Admin,pages.calendar.modify')->only(['store']);
     }
@@ -41,7 +42,9 @@ class TreasuryController extends Controller
             )
             ->get();
 
-        return view('treasury.index', compact('treasuries', 'period'));
+        $payments = Payment::paginate(8);
+
+        return view('treasury.index', compact('treasuries', 'payments', 'period'));
     }
 
     public function create($period_name)
@@ -57,6 +60,18 @@ class TreasuryController extends Controller
             ->get();
 
         return view('treasury.create', compact('invoice', 'students', 'period', 'payments'));
+    }
+
+    public function getPaymentByStudent($period_id, $student_id)
+    {
+        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+            ->where('student_payments.TenantId', $period_id)
+            ->where('student_payments.student_id', $student_id)
+            ->where('student_payments.isPaid', false)
+            ->select('student_payments.*', 'p.description', 'p.cost', 'p.id as payment_id')
+            ->get();
+
+        return $payments;
     }
 
     public function store(Request $request, $period_id)
@@ -87,11 +102,10 @@ class TreasuryController extends Controller
         $treasury->save();
 
         for ($i = 0; $i < count($request->description); $i++) {
-            $string = "1_1600";
-            list($concept, $cost) = explode('_', $request->description[$i]);
+            list($id, $cost, $payment_id) = explode('_', $request->description[$i]);
             $treasury_detail = new TreasuryDetail();
             $treasury_detail->cantidad = 1;
-            $treasury_detail->concepto = $concept;
+            $treasury_detail->concepto = $payment_id;
             $treasury_detail->monto = $request->price[$i];
             $treasury_detail->monto_total = $request->total[$i];
             $treasury_detail->treasury_id = $treasury->id;
@@ -102,6 +116,10 @@ class TreasuryController extends Controller
             if ($treasury_detail) {
                 DB::table('treasuries')->where('id', $treasury->id)->increment('total', $request->total[$i]);
                 DB::table('treasuries')->where('id', $treasury->id)->increment('total_igv', $request->total[$i] * 0.18);
+
+                $student_payment = StudentPayment::find($id);
+                $student_payment->isPaid = true;
+                $student_payment->save();
             }
         }
 
@@ -132,6 +150,23 @@ class TreasuryController extends Controller
         $payment->description = $request->description;
         $payment->cost = $request->cost;
         $payment->save();
+
+        return back();
+    }
+
+    public function updatePayment(Request $request, $period_id, $payment_id)
+    {
+        $payment = Payment::findOrFail($payment_id);
+        $payment->description = $request->description;
+        $payment->cost = $request->cost;
+        $payment->save();
+
+        return back();
+    }
+
+    public function deletePayment(Request $request, $period_id, $payment_id)
+    {
+        Payment::findOrFail($payment_id)->delete();
 
         return back();
     }

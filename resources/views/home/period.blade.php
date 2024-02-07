@@ -64,9 +64,10 @@
                                 </p>
                                 <p class="card-text">
                                     <small class="text-muted">
-                                        <a class="text-muted"
-                                            href="{{ route('periods.home', $academic_period->name) }}">Ingrese
-                                            aquí</a>
+                                        <a class="text-muted" href="{{ route('periods.home', $academic_period->name) }}"
+                                            target="_blank">
+                                            Ingrese aquí
+                                        </a>
                                     </small>
                                 </p>
                             </div>

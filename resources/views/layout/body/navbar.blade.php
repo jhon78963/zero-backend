@@ -1,3 +1,10 @@
+@php
+    $roleName = auth()
+        ->user()
+        ->userRoles()
+        ->first()->role->name;
+@endphp
+
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -5,6 +12,12 @@
             <i class="bx bx-menu bx-sm"></i>
         </a>
     </div>
+
+    @if ($roleName == 'Admin')
+        <div class="navbar-nav-left d-flex align-items-center">
+            <a class="btn btn-primary" href="{{ route('auth.home.principal') }}">Otro periodo</a>
+        </div>
+    @endif
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <!-- Search -->
@@ -18,8 +31,6 @@
         <!-- /Search -->
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-
-
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
