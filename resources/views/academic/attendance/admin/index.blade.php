@@ -12,7 +12,7 @@
 
                 <select name="classroom_id" id="classroom_id" class="form-control text-center" style="width: 15%;">
                     @foreach ($classrooms as $classroom)
-                        <option value="{{ $classroom->id }}">
+                        <option value="{{ $classroom->id }}" {{ $classroom->id == $classroomSelected->id ? 'selected' : '' }}>
                             {{ $classroom->description }}</option>
                     @endforeach
                 </select>
