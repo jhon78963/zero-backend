@@ -141,7 +141,7 @@
                                             {{ $treasury->student_surname }}
                                             {{ $treasury->student_mother_surname }}
                                         </td>
-                                        <td class="text-center">{{ $treasury->concepto }}</td>
+                                        <td class="text-center">{{ $treasury->description }}</td>
                                         <td class="text-center">{{ $treasury->monto_total }}</td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger"

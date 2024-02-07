@@ -29,10 +29,12 @@ class TreasuryController extends Controller
         $treasuries = DB::table('treasury_detail as td')
             ->join('treasuries as t', 't.id', 'td.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
+            ->join('payments as p', 'p.id', 'td.concepto')
             ->where('t.TenantId', $period->id)
             ->where('t.IsDeleted', false)
             ->select(
                 't.*',
+                'p.*',
                 'td.concepto',
                 'td.monto_total',
                 's.first_name as student_first_name',
