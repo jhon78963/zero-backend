@@ -174,7 +174,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/tesoreria/reporte', [TreasuryController::class, 'generateMorososPDF'])->name('treasuries.pdf');
     Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
     Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
-    Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
+    Route::delete('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
     Route::post('/payments/store', [TreasuryController::class, 'savePayment'])->name('payments.store');
     Route::put('/payments/update/{payment_id}', [TreasuryController::class, 'updatePayment'])->name('payments.update');
     Route::delete('/payments/delete/{payment_id}', [TreasuryController::class, 'deletePayment'])->name('payments.delete');

@@ -145,7 +145,7 @@
                                         <td class="text-center">{{ $treasury->monto_total }}</td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="openCancelTreasuryModal({{ $treasury->id }})">
+                                                onclick="openCancelTreasuryModal({{ $treasury->treasury_id }})">
                                                 Anular
                                             </button>
                                         </td>

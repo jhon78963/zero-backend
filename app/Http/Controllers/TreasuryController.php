@@ -36,6 +36,7 @@ class TreasuryController extends Controller
             ->select(
                 't.*',
                 'p.*',
+                't.id as treasury_id',
                 'td.concepto',
                 'td.monto_total',
                 's.first_name as student_first_name',
@@ -172,6 +173,14 @@ class TreasuryController extends Controller
         $treasury->DeleterUserId = Auth::id();
         $treasury->DeletionTime = now()->format('Y-m-d H:i:s');
         $treasury->save();
+
+        $treasury_detail = TreasuryDetail::where('treasury_id', $treasury->id)->where('TenantId', $period->id)->get();
+        foreach ($treasury_detail as $detail) {
+            $student_payment = StudentPayment::where('student_id', $treasury->student_id)->where('payment_id', $detail->concepto)->first();
+            $student_payment->isPaid = false;
+            $student_payment->save();
+        }
+
 
         return redirect()->route('treasuries.index', $period->name);
     }

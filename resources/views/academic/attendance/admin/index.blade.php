@@ -23,7 +23,7 @@
                     <button class="btn btn-primary me-2" type="submit">
                         <i class='bx bx-search-alt-2'></i>
                     </button>
-                    <a href="#" class="btn btn-primary">PDF</a>
+                    <a href="#" class="btn btn-primary">FALTAS</a>
                 </div>
 
 

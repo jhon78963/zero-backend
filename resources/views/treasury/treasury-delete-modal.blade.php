@@ -1,8 +1,9 @@
-<div class="modal fade" id="cancelTreasuryModal-{{ $treasury->id }}" data-backdrop="static" data-keyboard="false"
+<div class="modal fade" id="cancelTreasuryModal-{{ $treasury->treasury_id }}" data-backdrop="static" data-keyboard="false"
     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="cancelTreasuryForm" action="{{ route('treasuries.cancel', [$period->id, $treasury->id]) }}">
+        <form id="cancelTreasuryForm" action="{{ route('treasuries.cancel', [$period->id, $treasury->treasury_id]) }}" method="POST">
             @csrf
+            @method('DELETE')
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel1">Anular Pago</h5>
