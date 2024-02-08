@@ -9,6 +9,7 @@ use App\Models\SchoolRegistration;
 use App\Models\StudentPayment;
 use App\Models\Treasury;
 use App\Models\TreasuryDetail;
+use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,36 @@ class TreasuryController extends Controller
 
         $payments = Payment::paginate(8);
 
-        return view('treasury.index', compact('treasuries', 'payments', 'period'));
+        $current_month = now()->format('Y-m-d');
+        $morosos = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->select('s.*', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->distinct()
+            ->get();
+
+        return view('treasury.index', compact('treasuries', 'payments', 'period', 'morosos'));
+    }
+
+    public function generateMorososPDF($period_name)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $current_month = now()->format('Y-m-d');
+        $morosos = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->select('s.*', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->distinct()
+            ->get();
+
+        $pdf = DomPDF::loadView('treasury.pdf', compact('period', 'morosos'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-morosos.pdf');
     }
 
     public function create($period_name)

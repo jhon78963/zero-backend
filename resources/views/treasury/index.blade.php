@@ -162,6 +162,47 @@
                     </table>
                 </div>
             </div>
+            <div class="card mb-4">
+                <div class="d-flex align-items-center justify-content-between ">
+                    <h5 class="card-header">Morosos</h5>
+                    <div style="padding-right: 1rem">
+                        <a href="{{ route('treasuries.pdf', $period->name) }}" class="btn btn-outline-primary me-1">PDF</a>
+                    </div>
+                </div>
+                <div class="table-responsive text-nowrap">
+                    <table class="table" id="tabla-grades">
+                        <thead>
+                            <tr>
+                                <th width="10%" class="text-center">Aula</th>
+                                <th width="10%" class="text-center">Moroso</th>
+                                <th width="10%" class="text-center">Concepto</th>
+                                <th width="10%" class="text-center">Fecha de pago</th>
+                                <th width="10%" class="text-center">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @if ($morosos->count() > 0)
+                                @foreach ($morosos as $moroso)
+                                    <tr>
+                                        <td class="text-center">{{ $moroso->classroom }}</td>
+                                        <td class="text-center">
+                                            {{ $moroso->first_name }}
+                                            {{ $moroso->other_names }}
+                                            {{ $moroso->surname }}
+                                            {{ $moroso->mother_surname }}
+                                        </td>
+                                        <td class="text-center">{{ $moroso->description }}</td>
+                                        <td class="text-center">{{ $moroso->due_date }}</td>
+                                        <td class="text-center">{{ $moroso->cost }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <td colspan="3" class="text-center">NO DATA</td>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -20,9 +20,10 @@
                 <div class="d-flex align-items-center">
                     <input type="date" value="{{ $today }}" class="form-control me-1" name="date">
 
-                    <button class="btn btn-primary" type="submit">
+                    <button class="btn btn-primary me-2" type="submit">
                         <i class='bx bx-search-alt-2'></i>
                     </button>
+                    <a href="#" class="btn btn-primary">PDF</a>
                 </div>
 
 

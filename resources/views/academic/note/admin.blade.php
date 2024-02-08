@@ -56,10 +56,17 @@
                                 {{ $student->grade_extension != null ? $student->grade_final : 'en curso' }}
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('grade.admin.show', [$period->name, $student->student_id]) }}"
-                                    class="btn btn-primary btn-sm">
-                                    <i class='bx bx-show'></i>
-                                </a>
+                                <div class="d-flex">
+                                    <a href="{{ route('grade.admin.show', [$period->name, $student->student_id]) }}"
+                                        class="btn btn-primary btn-sm me-2">
+                                        <i class='bx bx-show'></i>
+                                    </a>
+
+                                    <a href="{{ route('grade.admin.pdf', [$period->name, $student->student_id]) }}"
+                                        class="btn btn-primary btn-sm">
+                                        <i class='bx bxs-file-pdf'></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

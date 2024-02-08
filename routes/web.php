@@ -171,6 +171,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
 
     // Tesorería
     Route::get('/tesoreria', [TreasuryController::class, 'index'])->name('treasuries.index');
+    Route::get('/tesoreria/reporte', [TreasuryController::class, 'generateMorososPDF'])->name('treasuries.pdf');
     Route::get('/tesoreria/registrar-pago', [TreasuryController::class, 'create'])->name('treasuries.create');
     Route::post('/tesoreria/store', [TreasuryController::class, 'store'])->name('treasuries.store');
     Route::get('/tesoreria/cancel/{id}', [TreasuryController::class, 'cancel'])->name('treasuries.cancel');
@@ -214,6 +215,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/notas/admin/estudiante/{student_id}', [AdminCompetenciaController::class, 'show'])->name('grade.admin.show');
     Route::get('/notas/admin/estudiante/{student_id}/next', [AdminCompetenciaController::class, 'showNext'])->name('grade.admin.showNext');
     Route::get('/notas/admin/estudiante/{student_id}/previous', [AdminCompetenciaController::class, 'showPrevious'])->name('grade.admin.showPrevious');
+    Route::get('/notas/report/estudiante/{student_id}', [AdminCompetenciaController::class, 'generatePDF'])->name('grade.admin.pdf');
 
     Route::get('reportes', [ReportController::class, 'index'])->name('reports.index');
 });
