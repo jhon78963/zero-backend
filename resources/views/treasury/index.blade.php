@@ -197,7 +197,7 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <td colspan="3" class="text-center">NO DATA</td>
+                                <td colspan="5" class="text-center">NO DATA</td>
                             @endif
                         </tbody>
                     </table>
