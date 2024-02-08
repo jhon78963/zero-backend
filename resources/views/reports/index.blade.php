@@ -81,7 +81,7 @@
         var values = data.map(item => item.count);
 
         var chart = new Chart(ctx, {
-            type: 'pie',
+            type: 'doughnut',
             data: {
                 labels: labels,
                 datasets: [{
