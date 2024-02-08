@@ -168,6 +168,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::post('/matriculas/promoted/{matricula_id}', [SchoolRegistrationController::class, 'promoted'])->name('school-registration.promoted');
     Route::post('/matriculas/{id}/cambiar-aula', [SchoolRegistrationController::class, 'change'])->name('school-registration.change');
     Route::delete('/matriculas/{id}/anular', [SchoolRegistrationController::class, 'deny'])->name('school-registration.deny');
+    Route::get('/ficha-matricula/{id}', [SchoolRegistrationController::class, 'generatePDF'])->name('school-registration.pdf');
 
     // Tesorería
     Route::get('/tesoreria', [TreasuryController::class, 'index'])->name('treasuries.index');
@@ -198,6 +199,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
 
     // Asistencia admin - secretaria
     Route::get('/asistencia/admin', [AttendanceAdminController::class, 'index'])->name('attendance.admin.index');
+    Route::get('/asistencia/admin/{classroom_id}', [AttendanceAdminController::class, 'ahowMissing'])->name('attendance.admin.missing');
+    Route::get('/reporte-asistencia/admin/{classroom_id}/estudiante/{student_id}', [AttendanceAdminController::class, 'generatePDF'])->name('attendance.admin.pdf');
 
     //Notas docente
     Route::get('/notas/docente', [TeacherCompetenciaController::class, 'index'])->name('grade.teacher.index');

@@ -272,5 +272,10 @@
         function openDenyRegistrationModal(registrationId) {
             $(`#denyRegistrationModal_${registrationId}`).modal('toggle');
         }
+
+        function openDownloadRegistrationModal(registrationId) {
+            let pdfUrl = `/${periodId}/ficha-matricula/${registrationId}`;
+            window.open(pdfUrl, '_blank');
+        }
     </script>
 @endsection

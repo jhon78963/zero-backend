@@ -166,7 +166,7 @@
                 <div class="d-flex align-items-center justify-content-between ">
                     <h5 class="card-header">Morosos</h5>
                     <div style="padding-right: 1rem">
-                        <a href="{{ route('treasuries.pdf', $period->name) }}" class="btn btn-outline-primary me-1">PDF</a>
+                        <a href="{{ route('treasuries.pdf', $period->name) }}" target="_blank" class="btn btn-outline-primary me-1">PDF</a>
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">

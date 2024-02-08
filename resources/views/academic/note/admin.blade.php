@@ -63,7 +63,7 @@
                                     </a>
 
                                     <a href="{{ route('grade.admin.pdf', [$period->name, $student->student_id]) }}"
-                                        class="btn btn-primary btn-sm">
+                                        target="_blank" class="btn btn-primary btn-sm">
                                         <i class='bx bxs-file-pdf'></i>
                                     </a>
                                 </div>

@@ -6,24 +6,23 @@
 
 @section('content')
     <div class="card mb-4" style="padding-right: 1rem">
-        <form action="{{ route('attendance.admin.index', $period->name) }}" method="GET">
+        <form action="{{ route('attendance.admin.missing', [$period->name, $classroomSelected->id]) }}" method="GET">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="card-header">Asistencias</h5>
+                <h5 class="card-header">Reporte de Faltas</h5>
 
                 <select name="classroom_id" id="classroom_id" class="form-control text-center" style="width: 15%;">
                     @foreach ($classrooms as $classroom)
-                        <option value="{{ $classroom->id }}" {{ $classroom->id == $classroomSelected->id ? 'selected' : '' }}>
+                        <option value="{{ $classroom->id }}"
+                            {{ $classroom->id == $classroomSelected->id ? 'selected' : '' }}>
                             {{ $classroom->description }}</option>
                     @endforeach
                 </select>
 
                 <div class="d-flex align-items-center">
-                    <input type="date" value="{{ $today }}" class="form-control me-1" name="date">
 
                     <button class="btn btn-primary me-2" type="submit">
                         <i class='bx bx-search-alt-2'></i>
                     </button>
-                    <a href="{{ route('attendance.admin.missing', [$period->name, $classroomSelected->id]) }}" class="btn btn-primary">FALTAS</a>
                 </div>
 
 
@@ -38,27 +37,31 @@
                     <tr>
                         <th width="15%">Fecha</th>
                         <th>Alumno</th>
-                        <th class="text-center">Estado</th>
+                        <th class="text-center">ACCION</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @if ($attendances->count() > 0)
-                        @foreach ($attendances as $attendace)
+                    @if ($students->count() > 0)
+                        @foreach ($students as $student)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($attendace->CreationTime)->format('d/m/Y') }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    {{ $attendace->surname }}
-                                    {{ $attendace->mother_surname }}
-                                    {{ $attendace->first_name }}
-                                    {{ $attendace->other_names }}
+                                    {{ $student->surname }}
+                                    {{ $student->mother_surname }}
+                                    {{ $student->first_name }}
+                                    {{ $student->other_names }}
                                 </td>
-                                <td class="text-center">{{ $attendace->status }}</td>
-                                <td class="text-center"></td>
+                                <td class="text-center">
+                                    <a href="{{ route('attendance.admin.pdf', [$period->name, $classroomSelected->id, $student->student_id]) }}"
+                                        class="btn btn-primary btn-sm" target="_blank">
+                                        <i class="bx bxs-file-pdf"></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="4" class="text-center">NO DATA</td>
+                            <td colspan="3" class="text-center">NO DATA</td>
                         </tr>
                     @endif
                 </tbody>

@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
 use App\Models\StudentPayment;
+use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -330,5 +331,18 @@ class SchoolRegistrationController extends Controller
             ->delete();
 
         return back();
+    }
+
+    public function generatePDF($period_id, $matricula_id)
+    {
+        $period = AcademicPeriod::where('id', $period_id)->first();
+        $matricula = SchoolRegistration::findOrFail($matricula_id);
+        $student = Student::find($matricula->student_id);
+        $clasroom = ClassRoom::find($matricula->classroom_id);
+        $grade = Grade::find($clasroom->grade_id);
+        $section = Grade::find($clasroom->section_id);
+
+        $pdf = DomPDF::loadView('academic.school-registration.pdf', compact('period', 'matricula', 'student', 'grade', 'section'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('ficha-matricula.pdf');
     }
 }

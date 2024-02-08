@@ -181,7 +181,6 @@ class TreasuryController extends Controller
             $student_payment->save();
         }
 
-
         return redirect()->route('treasuries.index', $period->name);
     }
 

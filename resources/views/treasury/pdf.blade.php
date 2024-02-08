@@ -16,13 +16,13 @@
             </strong>
         </h3>
         <div style="justify-content: center !important;">
-            <table border="1" align="center">
+            <table border="1" align="center" style="width: 100%;">
                 <thead>
                     <tr>
                         <th width="10%">Aula</th>
                         <th width="10%">Moroso</th>
                         <th width="10%">Concepto</th>
-                        <th width="10%">Fecha de pago</th>
+                        <th width="10%">Fecha de venc.</th>
                         <th width="10%">Monto</th>
                     </tr>
                 </thead>
@@ -30,7 +30,7 @@
                     @if ($morosos->count() > 0)
                         @foreach ($morosos as $moroso)
                             <tr>
-                                <td class="text-center">{{ $moroso->classroom }}</td>
+                                <td style="justify-content: center !important;">{{ $moroso->classroom }}</td>
                                 <td class="text-center">
                                     {{ $moroso->first_name }}
                                     {{ $moroso->other_names }}
@@ -38,8 +38,8 @@
                                     {{ $moroso->mother_surname }}
                                 </td>
                                 <td class="text-center">{{ $moroso->description }}</td>
-                                <td class="text-center">{{ $moroso->due_date }}</td>
-                                <td class="text-center">{{ $moroso->cost }}</td>
+                                <td style="justify-content: center !important;">{{ $moroso->due_date }}</td>
+                                <td style="justify-content: center !important;">{{ $moroso->cost }}</td>
                             </tr>
                         @endforeach
                     @else
