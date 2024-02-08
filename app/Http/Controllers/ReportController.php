@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicPeriod;
 use App\Models\Api\User;
+use App\Models\ClassRoom;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\UserRole;
@@ -40,6 +41,12 @@ class ReportController extends Controller
             ->selectRaw('g.description, count(*) as count')
             ->get();
 
-        return view('reports.index', compact('period', 'students', 'roles', 'studentByGrade'));
+        $limitClassrooms = ClassRoom::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->groupBy('description', 'limit', 'students_number')
+            ->selectRaw('description, SUM(`limit` - `students_number`) as vacante')
+            ->get();
+
+        return view('reports.index', compact('period', 'students', 'roles', 'studentByGrade', 'limitClassrooms'));
     }
 }
