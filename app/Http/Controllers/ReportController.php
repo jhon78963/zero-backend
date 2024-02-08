@@ -23,6 +23,7 @@ class ReportController extends Controller
         $students = Student::groupBy('gender')
             ->where('TenantId', $period->id)
             ->where('IsDeleted', false)
+            ->where('status', '1')
             ->selectRaw('gender, count(*) as count')
             ->get();
 
