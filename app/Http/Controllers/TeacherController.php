@@ -184,6 +184,7 @@ class TeacherController extends Controller
                     ->orWhere('teachers.first_name', 'LIKE', $value . '%')
                     ->orWhere('teachers.other_names', 'LIKE', $value . '%')
                     ->orWhere('teachers.institutional_email', 'LIKE', $value . '%')
+                    ->orWhere('teachers.code', 'LIKE', $value . '%')
                     ->orWhere('c.description', 'LIKE', $value . '%')
                     ->orWhere('co.description', 'LIKE', $value . '%');
             })
