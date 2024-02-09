@@ -11,6 +11,7 @@ use App\Models\CourseGrade;
 use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\SchoolRegistration;
+use App\Models\Section;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
@@ -340,7 +341,7 @@ class SchoolRegistrationController extends Controller
         $student = Student::find($matricula->student_id);
         $clasroom = ClassRoom::find($matricula->classroom_id);
         $grade = Grade::find($clasroom->grade_id);
-        $section = Grade::find($clasroom->section_id);
+        $section = Section::find($clasroom->section_id);
 
         $pdf = DomPDF::loadView('academic.school-registration.pdf', compact('period', 'matricula', 'student', 'grade', 'section'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('ficha-matricula.pdf');
