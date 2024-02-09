@@ -30,7 +30,7 @@
                     @if ($morosos->count() > 0)
                         @foreach ($morosos as $moroso)
                             <tr>
-                                <td style="justify-content: center !important;">{{ $moroso->classroom }}</td>
+                                <td style="text-align: center !important;">{{ $moroso->classroom }}</td>
                                 <td class="text-center">
                                     {{ $moroso->first_name }}
                                     {{ $moroso->other_names }}
@@ -38,12 +38,12 @@
                                     {{ $moroso->mother_surname }}
                                 </td>
                                 <td class="text-center">{{ $moroso->description }}</td>
-                                <td style="justify-content: center !important;">{{ $moroso->due_date }}</td>
-                                <td style="justify-content: center !important;">{{ $moroso->cost }}</td>
+                                <td style="text-align: center !important;">{{ $moroso->due_date }}</td>
+                                <td style="text-align: center !important;">{{ $moroso->cost }}</td>
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="5" style="justify-content: center !important;">NO DATA</td>
+                        <td colspan="5" style="text-align: center !important;">NO DATA</td>
                     @endif
                 </tbody>
             </table>
