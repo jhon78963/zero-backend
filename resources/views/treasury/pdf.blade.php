@@ -43,7 +43,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="3">NO DATA</td>
+                        <td colspan="5" style="justify-content: center !important;">NO DATA</td>
                     @endif
                 </tbody>
             </table>
