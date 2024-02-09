@@ -164,6 +164,41 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function search($period_id, $value)
+    {
+        $teachers = Teacher::leftJoin('teacher_classrooms as tc', function ($join) use ($period_id) {
+            $join->on('teachers.id', '=', 'tc.teacher_id')
+                ->where('tc.TenantId', '=', $period_id);
+        })
+            ->leftJoin('class_rooms as c', 'c.id', '=', 'tc.classroom_id')
+            ->leftJoin('teacher_courses as tco', function ($join) use ($period_id) {
+                $join->on('teachers.id', '=', 'tco.teacher_id')
+                    ->where('tco.TenantId', '=', $period_id);
+            })
+            ->leftJoin('courses as co', 'co.id', '=', 'tco.course_id')
+            ->where('teachers.IsDeleted', false)
+            ->where('teachers.TenantId', $period_id)
+            ->where(function ($query) use ($value) {
+                $query->where('teachers.surname', 'LIKE', $value . '%')
+                    ->orWhere('teachers.mother_surname', 'LIKE', $value . '%')
+                    ->orWhere('teachers.first_name', 'LIKE', $value . '%')
+                    ->orWhere('teachers.other_names', 'LIKE', $value . '%')
+                    ->orWhere('teachers.institutional_email', 'LIKE', $value . '%')
+                    ->orWhere('c.description', 'LIKE', $value . '%')
+                    ->orWhere('co.description', 'LIKE', $value . '%');
+            })
+            ->select('teachers.*', 'c.description as classroom', 'co.description as course')
+            ->get();
+
+        $count = count($teachers);
+
+        return response()->json([
+            'status' => 'success',
+            'maxCount' => $count,
+            'teachers' => $teachers
+        ]);
+    }
+
     public function update(UpdateTeacherRequest $request, $period_id, $id)
     {
         $teacher = Teacher::leftJoin('teacher_classrooms as tc', function ($join) use ($period_id) {

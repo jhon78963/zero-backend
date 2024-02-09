@@ -101,6 +101,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     // Estudiantes
     Route::get('/estudiantes', [StudentController::class, 'index'])->name('students.index');
     Route::get('/estudiantes/getAll', [StudentController::class, 'getAll'])->name('students.getall');
+    Route::get('/estudiantes/search/{id}', [StudentController::class, 'search'])->name('students.search');
     Route::get('/estudiantes/get/{id}', [StudentController::class, 'get'])->name('students.get');
     Route::get('/estudiantes/delete/{id}', [StudentController::class, 'delete'])->name('students.delete');
     Route::post('/estudiantes/store', [StudentController::class, 'create'])->name('students.create');
@@ -109,6 +110,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     // Profesores
     Route::get('/profesores', [TeacherController::class, 'index'])->name('teachers.index');
     Route::get('/profesores/getAll', [TeacherController::class, 'getAll'])->name('teachers.getall');
+    Route::get('/profesores/search/{id}', [TeacherController::class, 'search'])->name('teachers.search');
     Route::get('/profesores/get/{id}', [TeacherController::class, 'get'])->name('teachers.get');
     Route::get('/profesores/delete/{id}', [TeacherController::class, 'delete'])->name('teachers.delete');
     Route::post('/profesores/store', [TeacherController::class, 'create'])->name('teachers.create');

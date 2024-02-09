@@ -6,9 +6,20 @@
 
 @section('content')
     <div class="card">
-        <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Gestión de usuarios</h5>
-            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" data-bs-toggle="modal"
+
+            <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                    <input type="text" name="search" class="form-control border-search shadow-none" placeholder="Buscar..."
+                        style="width: 500px;">
+                    <button class="p-0 btn btn-default">
+                        <i class="bx bx-search fs-4 lh-0"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-4" data-bs-toggle="modal"
                 data-bs-target="#modalCreateUser">
                 <span class="tf-icons bx bx-list-plus"></span>
             </button>
@@ -35,6 +46,17 @@
     @include('access.user.user-create-modal')
     @include('access.user.user-delete-modal')
     @include('access.user.user-edit-modal')
+@endsection
+
+@section('css')
+    <style>
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
+        }
+    </style>
 @endsection
 
 @section('js')

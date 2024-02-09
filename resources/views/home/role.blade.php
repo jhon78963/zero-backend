@@ -6,9 +6,21 @@
 
 @section('content')
     <div class="card mb-2">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
             <h5 class="card-header">Gestión de roles</h5>
-            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" onclick="onCreateRole()">
+
+            <form action="{{ route('roles.home.index') }}">
+                <div class="navbar-nav align-items-center">
+                    <div class="nav-item d-flex align-items-center">
+                        <input type="text" name="search" class="form-control border-search shadow-none" placeholder="Buscar..." style="width: 500px;">
+                        <button class="p-0 btn btn-default">
+                            <i class="bx bx-search fs-4 lh-0"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-4" onclick="onCreateRole()">
                 <span class="tf-icons bx bx-list-plus"></span>
             </button>
         </div>
@@ -47,6 +59,13 @@
         .badge {
             text-transform: none !important;
             font-size: 0.85rem;
+        }
+
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
         }
     </style>
 @endsection

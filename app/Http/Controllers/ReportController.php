@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\AcademicPeriod;
 use App\Models\Api\User;
 use App\Models\ClassRoom;
+use App\Models\CourseGrade;
 use App\Models\Student;
 use App\Models\StudentClassroom;
+use App\Models\StudentCompetencia;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
 
@@ -47,6 +49,12 @@ class ReportController extends Controller
             ->groupBy('description', 'limit', 'students_number')
             ->selectRaw('description, SUM(`limit` - `students_number`) as vacante')
             ->get();
+
+        // $coursesFinalStatus = CourseGrade::join('courses as c', 'c.id', 'course_grades.course_id')
+        //     ->join('grades as g', 'g.id', 'course_grades.grade_id')
+        //     ->where('course_grades.TenantId', $period->id)
+        //     ->select('c.description as course', 'g.description as grade')
+        //     ->get();
 
         return view('reports.index', compact('period', 'students', 'roles', 'studentByGrade', 'limitClassrooms'));
     }

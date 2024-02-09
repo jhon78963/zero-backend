@@ -11,31 +11,42 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-6">
-            <div class="card">
-                <canvas id="genderChart" width="200" height="100"></canvas>
+    <div class="row mt-3">
+        <div class="col-md-6 col-12">
+            <div class="card mb-3" style="width: 680px; height: 340px;">
+                <canvas id="genderChart" width="200" height="340"></canvas>
             </div>
         </div>
-        <div class="col-6">
-            <div class="card">
-                <canvas id="roleChart" width="200" height="100"></canvas>
+        <div class="col-md-6 col-12">
+            <div class="card mb-3" style="width: 680px; height: 340px;">
+                <canvas id="roleChart" width="200" height="340"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="row mt-3">
-        <div class="col-6">
-            <div class="card">
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="card mb-3 justify-content-center">
                 <canvas id="studentByGradeChart" width="200" height="100"></canvas>
             </div>
         </div>
-        <div class="col-6">
-            <div class="card">
+        <div class="col-md-6 col-12">
+            <div class="card mb-3">
                 <canvas id="limitClassroomChart" width="200" height="100"></canvas>
             </div>
         </div>
     </div>
+@endsection
+
+@section('css')
+    <style>
+        .card {
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            /* Optionally, set a specific height or use 100% if you want it to fill the parent container */
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -65,11 +76,7 @@
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                responsive: true,
             }
         });
     </script>
@@ -98,11 +105,7 @@
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                responsive: true,
             }
         });
     </script>

@@ -13,39 +13,39 @@
                     <input type="hidden" id="e_id">
                     <div class="row g-2">
                         <div class="col mb-3">
-                            <label for="name" class="form-label">Rol</label>
+                            <label for="e_role" class="form-label">Rol</label>
                             <input type="text" id="e_role" class="form-control" placeholder="Rol" readonly />
                         </div>
                         <div class="col mb-3">
-                            <label for="name" class="form-label">Username</label>
+                            <label for="e_username" class="form-label">Username</label>
                             <input type="text" id="e_username" class="form-control" placeholder="Username"
                                 readonly />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="name" class="form-label">Nombres</label>
+                            <label for="e_name" class="form-label">Nombres</label>
                             <input type="text" id="e_name" name="name" class="form-control"
                                 placeholder="Nombre" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="dobBasic" class="form-label">Apellidos</label>
+                            <label for="e_surname" class="form-label">Apellidos</label>
                             <input type="text" id="e_surname" name="surname" class="form-control"
                                 placeholder="Apellidos" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="e_email" class="form-label">Email</label>
                             <input type="text" id="e_email" class="form-control" placeholder="xxxx@xxx.xx"
                                 readonly />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-0">
-                            <label for="phoneNumber" class="form-label">Celular</label>
+                            <label for="e_phoneNumber" class="form-label">Celular</label>
                             <input type="text" id="e_phoneNumber" name="phoneNumber" class="form-control"
                                 placeholder="Número de celular" />
                         </div>

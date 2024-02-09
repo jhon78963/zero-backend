@@ -155,6 +155,32 @@ class StudentController extends Controller
         ]);
     }
 
+    public function search($period_id, $value)
+    {
+        $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->where('students.IsDeleted', false)
+            ->where('students.TenantId', $period_id)
+            ->where(function ($query) use ($value) {
+                $query->where('students.surname', 'LIKE', $value . '%')
+                    ->orWhere('students.mother_surname', 'LIKE', $value . '%')
+                    ->orWhere('students.first_name', 'LIKE', $value . '%')
+                    ->orWhere('students.other_names', 'LIKE', $value . '%')
+                    ->orWhere('students.institutional_email', 'LIKE', $value . '%')
+                    ->orWhere('c.description', 'LIKE', $value . '%');
+            })
+            ->select('students.*', 'c.description as classroom')
+            ->get();
+
+        $count = count($students);
+
+        return response()->json([
+            'status' => 'success',
+            'maxCount' => $count,
+            'students' => $students
+        ]);
+    }
+
     public function update(UpdateStudentRequest $request, $period_id, $id)
     {
         $student = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')

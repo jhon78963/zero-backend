@@ -288,7 +288,8 @@
                 },
             };
 
-            let ajaxUrl = (!roleId) ? `/${periodId}/academico/roles/store` : `/${periodId}/academico/roles/update/${roleId}`;
+            let ajaxUrl = (!roleId) ? `/${periodId}/academico/roles/store` :
+                `/${periodId}/academico/roles/update/${roleId}`;
 
             $.ajax({
                 url: ajaxUrl,

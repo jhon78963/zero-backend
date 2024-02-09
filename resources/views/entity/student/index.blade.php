@@ -6,9 +6,18 @@
 
 @section('content')
     <div class="card">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
             <h5 class="card-header">Gestión de Estudiantes</h5>
-            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
+
+            <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                    <input type="text" name="search" id="search" class="form-control border-search shadow-none"
+                        placeholder="Buscar..." style="width: 500px;">
+                </div>
+            </div>
+
+            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-4"
                 onclick="openCreateStudentModal()">
                 <span class="tf-icons bx bx-list-plus"></span>
             </button>
@@ -37,6 +46,17 @@
     @include('entity.student.student-create-modal')
     @include('entity.student.student-edit-modal')
     @include('entity.student.student-delete-modal')
+@endsection
+
+@section('css')
+    <style>
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -88,6 +108,104 @@
                 }
             });
         }
+    </script>
+
+    {{-- SEARCH --}}
+    <script>
+        $('#search').keyup(function() {
+            let value = $('#search').val();
+            if (value != '') {
+                $.ajax({
+                    url: `/${periodId}/estudiantes/search/${value}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="6">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.students, function(index, student) {
+                                filas += `
+                            <tr id="row-${student.id}">
+                                <td>${student.code}</td>
+                                <td>${student.first_name} ${student.other_names  != null ? student.other_names : ''}</td>
+                                <td>${student.surname} ${student.mother_surname  != null ? student.mother_surname : ''}</td>
+                                <td>${student.institutional_email}</td>
+                                <td>${student.classroom || ''}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
+                                            <span class="tf-icons bx bx-edit-alt"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="openDeleteStudentModal(${student.id})">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-students tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="4" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-students tbody").html(filas);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: `/${periodId}/estudiantes/getAll`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="6">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.students, function(index, student) {
+                                filas += `
+                            <tr id="row-${student.id}">
+                                <td>${student.code}</td>
+                                <td>${student.first_name} ${student.other_names  != null ? student.other_names : ''}</td>
+                                <td>${student.surname} ${student.mother_surname  != null ? student.mother_surname : ''}</td>
+                                <td>${student.institutional_email}</td>
+                                <td>${student.classroom || ''}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
+                                            <span class="tf-icons bx bx-edit-alt"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="openDeleteStudentModal(${student.id})">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-students tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="4" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-students tbody").html(filas);
+                    }
+                });
+            }
+        });
     </script>
 
     {{-- CREATE --}}

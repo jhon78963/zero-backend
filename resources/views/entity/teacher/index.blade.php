@@ -6,8 +6,17 @@
 
 @section('content')
     <div class="card">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
             <h5 class="card-header">Gestión de profesores</h5>
+
+            <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                    <input type="text" name="search" id="search" class="form-control border-search shadow-none"
+                        placeholder="Buscar..." style="width: 500px;">
+                </div>
+            </div>
+
             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1"
                 onclick="openCreateTeacherModal()">
                 <span class="tf-icons bx bx-list-plus"></span>
@@ -37,6 +46,17 @@
     @include('entity.teacher.teacher-create-modal')
     @include('entity.teacher.teacher-edit-modal')
     @include('entity.teacher.teacher-delete-modal')
+@endsection
+
+@section('css')
+    <style>
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -88,6 +108,104 @@
                 }
             });
         }
+    </script>
+
+    {{-- SEARCH --}}
+    <script>
+        $('#search').keyup(function() {
+            let value = $('#search').val();
+            if (value != '') {
+                $.ajax({
+                    url: `/${periodId}/profesores/search/${value}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="6">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.teachers, function(index, teacher) {
+                                filas += `
+                            <tr id="row-${teacher.id}">
+                                <td>${teacher.code}</td>
+                                <td>${teacher.first_name} ${teacher.other_names != null ? teacher.other_names : ''}</td>
+                                <td>${teacher.surname} ${teacher.mother_surname != null ? teacher.mother_surname : ''}</td>
+                                <td>${teacher.institutional_email}</td>
+                                <td> ${teacher.type != 'AREA' ? teacher.classroom || '' : teacher.course || ''}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${teacher.id})">
+                                            <span class="tf-icons bx bx-edit-alt"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="openDeleteTeacherModal(${teacher.id})">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-teachers tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="4" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-teachers tbody").html(filas);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: `/${periodId}/profesores/getAll`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="6">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.teachers, function(index, teacher) {
+                                filas += `
+                            <tr id="row-${teacher.id}">
+                                <td>${teacher.code}</td>
+                                <td>${teacher.first_name} ${teacher.other_names != null ? teacher.other_names : ''}</td>
+                                <td>${teacher.surname} ${teacher.mother_surname != null ? teacher.mother_surname : ''}</td>
+                                <td>${teacher.institutional_email}</td>
+                                <td> ${teacher.type != 'AREA' ? teacher.classroom || '' : teacher.course || ''}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary btn-sm me-2" onclick="openEditTeacherModal(${teacher.id})">
+                                            <span class="tf-icons bx bx-edit-alt"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="openDeleteTeacherModal(${teacher.id})">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-teachers tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="4" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-teachers tbody").html(filas);
+                    }
+                });
+            }
+        });
     </script>
 
     {{-- CREATE --}}

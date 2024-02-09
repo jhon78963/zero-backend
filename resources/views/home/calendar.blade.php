@@ -8,7 +8,20 @@
     <div class="card mb-4" style="padding-right: 1rem">
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Calendario</h5>
-            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-1" data-bs-toggle="modal"
+
+            <form action="{{ route('calendars.home.index') }}">
+                <div class="navbar-nav align-items-center">
+                    <div class="nav-item d-flex align-items-center">
+                        <input type="text" name="search" class="form-control border-search shadow-none" placeholder="Buscar..."
+                            style="width: 500px;">
+                        <button class="p-0 btn btn-default">
+                            <i class="bx bx-search fs-4 lh-0"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <button type="button" class="btn rounded-pill btn-icon btn-outline-primary me-4" data-bs-toggle="modal"
                 data-bs-target="#modalCreateCalendar">
                 <span class="tf-icons bx bx-list-plus"></span>
             </button>
@@ -231,6 +244,17 @@
             </table>
         </div>
     </div>
+@endsection
+
+@section('css')
+    <style>
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
+        }
+    </style>
 @endsection
 
 @section('js')
