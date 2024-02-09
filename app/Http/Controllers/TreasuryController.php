@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicPeriod;
+use App\Models\EnLetras;
 use App\Models\InvoiceNumber;
 use App\Models\Payment;
 use App\Models\SchoolRegistration;
+use App\Models\Student;
 use App\Models\StudentPayment;
 use App\Models\Treasury;
 use App\Models\TreasuryDetail;
 use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +81,28 @@ class TreasuryController extends Controller
 
         $pdf = DomPDF::loadView('treasury.pdf', compact('period', 'morosos'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('reporte-morosos.pdf');
+    }
+
+    public function generateVoucherPDF($period_name, $treasury_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+
+        $nro_venta = str_pad($treasury_id, 8, "0", STR_PAD_LEFT);
+        $venta = Treasury::find($treasury_id);
+
+        $fecha = new DateTime($venta->fecha_emision);
+        $fecha = $fecha->format('d/m/Y');
+
+        $codebar = $treasury_id;
+
+        $productos = TreasuryDetail::join('payments as p', 'p.id', 'treasury_detail.concepto')
+            ->where('treasury_id', $treasury_id)
+            ->get();
+
+        $enLetras = new EnLetras();
+
+        $pdf = DomPDF::loadView('treasury.voucher-pdf', compact('period', 'nro_venta', 'venta', 'fecha', 'enLetras', 'productos', 'codebar'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('nota-venta.pdf');
     }
 
     public function create($period_name)

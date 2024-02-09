@@ -68,7 +68,7 @@
                     <td style="padding-left: 1rem;">Lugar</td>
                     <td style="padding-left: 1rem;">Santa Inés</td>
                     <td style="padding-left: 1rem;">Dirección</td>
-                    <td style="padding-left: 1rem;">CALLE LAS TURQUEZAS S/N</td>
+                    <td style="padding-left: 1rem;">Mz. X 1 Lt. 15 Urb. Santa Inés - Trujillo</td>
                 </tr>
             </tbody>
         </table>

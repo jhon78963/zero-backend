@@ -144,6 +144,10 @@
                                         <td class="text-center">{{ $treasury->description }}</td>
                                         <td class="text-center">{{ $treasury->monto_total }}</td>
                                         <td>
+                                            <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}" target="_blank" class="btn btn-sm btn-primary">
+                                                <i class="bx bxs-file-pdf"></i>
+                                            </a>
+
                                             <button type="button" class="btn btn-sm btn-danger"
                                                 onclick="openCancelTreasuryModal({{ $treasury->treasury_id }})">
                                                 Anular
@@ -166,7 +170,8 @@
                 <div class="d-flex align-items-center justify-content-between ">
                     <h5 class="card-header">Morosos</h5>
                     <div style="padding-right: 1rem">
-                        <a href="{{ route('treasuries.pdf', $period->name) }}" target="_blank" class="btn btn-outline-primary me-1">PDF</a>
+                        <a href="{{ route('treasuries.pdf', $period->name) }}" target="_blank"
+                            class="btn btn-outline-primary me-1">PDF</a>
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">
