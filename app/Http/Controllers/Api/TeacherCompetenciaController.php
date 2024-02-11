@@ -25,20 +25,7 @@ class TeacherCompetenciaController extends Controller
     public function index(Request $request)
     {
         $period = AcademicPeriod::where('name', $this->period_name)->first();
-
-        $teacher_email = Auth::user()->email;
-
-        $teacher = Teacher::where('institutional_email', $teacher_email)
-            ->where('IsDeleted', false)
-            ->where('TenantId', $period->id)
-            ->first();
-
-        $classrooms = TeacherClassroom::join('class_rooms as cs', 'cs.id', 'teacher_classrooms.classroom_id')
-            ->where('cs.TenantId', $period->id)
-            ->where('teacher_classrooms.teacher_id', $teacher->id)
-            ->where('cs.IsDeleted', false)
-            ->select('cs.*')
-            ->get();
+        $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
 
         if ($request->classroom_id != null) {
             $classroomSelected = ClassRoom::where('TenantId', $period->id)
@@ -46,28 +33,38 @@ class TeacherCompetenciaController extends Controller
                 ->where('id', $request->classroom_id)
                 ->first();
 
-            $classroom_students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+            $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
                 ->where('student_classroom.TenantId', $period->id)
                 ->where('student_classroom.classroom_id', $request->classroom_id)
                 ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
                 ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
                 ->get();
 
-            return view('academic.note.index', compact('period', 'classrooms', 'classroomSelected', 'classroom_students'));
+            return response()->json([
+                'period' => $period,
+                'classrooms' => $classrooms,
+                'classroomSelected' => $classroomSelected,
+                'students' => $students
+            ]);
         } else {
             $classroomSelected = ClassRoom::where('TenantId', $period->id)
                 ->where('IsDeleted', false)
                 ->where('id', 1)
                 ->first();
 
-            $classroom_students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+            $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
                 ->where('student_classroom.TenantId', $period->id)
                 ->where('student_classroom.classroom_id', 1)
                 ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
                 ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
                 ->get();
 
-            return view('academic.note.index', compact('period', 'classrooms', 'classroomSelected', 'classroom_students'));
+            return response()->json([
+                'period' => $period,
+                'classrooms' => $classrooms,
+                'classroomSelected' => $classroomSelected,
+                'students' => $students
+            ]);
         }
     }
 
@@ -162,7 +159,17 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        return response()->json([
+            'period' => $period,
+            'studentsGrade' => $studentsGrade,
+            'student' => $student,
+            'nextEstudiante' => $nextEstudiante,
+            'previousEstudiante' => $previousEstudiante,
+            'courses' => $courses,
+            'competenciasPorCurso' => $competenciasPorCurso,
+            'class_room' => $class_room,
+            'promediosPorCurso' => $promediosPorCurso
+        ]);
     }
 
     public function createNext($classroom_id, $student_id)
@@ -257,7 +264,17 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        return response()->json([
+            'period' => $period,
+            'studentsGrade' => $studentsGrade,
+            'student' => $student,
+            'nextEstudiante' => $nextEstudiante,
+            'previousEstudiante' => $previousEstudiante,
+            'courses' => $courses,
+            'competenciasPorCurso' => $competenciasPorCurso,
+            'class_room' => $class_room,
+            'promediosPorCurso' => $promediosPorCurso
+        ]);
     }
 
     public function createPrevious($classroom_id, $student_id)
@@ -352,7 +369,17 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        return response()->json([
+            'period' => $period,
+            'studentsGrade' => $studentsGrade,
+            'student' => $student,
+            'nextEstudiante' => $nextEstudiante,
+            'previousEstudiante' => $previousEstudiante,
+            'courses' => $courses,
+            'competenciasPorCurso' => $competenciasPorCurso,
+            'class_room' => $class_room,
+            'promediosPorCurso' => $promediosPorCurso
+        ]);
     }
 
     private function calcularPromedio($gradeKey, $competencias)
