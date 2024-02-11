@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
+    public $period_id = 1;
     public function create(CreateStudentRequest $request)
     {
         $emailExists = Student::where('institutional_email', $request->input('institutional_email'))->where('IsDeleted', false)->where('TenantId', 1)->exists();
@@ -121,6 +122,7 @@ class StudentController extends Controller
         $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
             ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
             ->where('students.IsDeleted', false)
+            ->where('students.TenantId', $this->period_id)
             ->select('students.*', 'c.description as classroom')
             ->get();
 
@@ -135,6 +137,7 @@ class StudentController extends Controller
         $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
             ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
             ->where('students.IsDeleted', false)
+            ->where('students.TenantId', $this->period_id)
             ->where(function ($query) use ($value) {
                 $query->where('students.surname', 'LIKE', $value . '%')
                     ->orWhere('students.mother_surname', 'LIKE', $value . '%')

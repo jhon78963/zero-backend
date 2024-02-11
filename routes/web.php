@@ -210,7 +210,6 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}', [TeacherCompetenciaController::class, 'create'])->name('grade.teacher.create');
     Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/next', [TeacherCompetenciaController::class, 'createNext'])->name('grade.teacher.createNext');
     Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/previous', [TeacherCompetenciaController::class, 'createPrevious'])->name('grade.teacher.createPrevious');
-
     Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store'])->name('grade.teacher.store');
 
     //Notas estudiante

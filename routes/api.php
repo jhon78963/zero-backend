@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\TeacherCompetenciaController;
 use App\Http\Controllers\TreasuryController;
 use App\Models\ClassRoom;
 use App\Models\Permission;
@@ -82,10 +83,16 @@ Route::get('/consulta-ruc/{cust_ruc}', [App\Http\Controllers\ConsultaController:
 Route::get('/{period_id}/payments/{student_id}', [TreasuryController::class, 'getPaymentByStudent']);
 
 //students
-
 Route::post('students', [StudentController::class, 'create']);
 Route::delete('students/{id}', [StudentController::class, 'delete']);
 Route::get('students/search/{id}', [StudentController::class, 'search']);
 Route::get('students/{id}', [StudentController::class, 'get']);
 Route::get('students', [StudentController::class, 'getAll']);
 Route::put('students/{id}', [StudentController::class, 'update']);
+
+//Notas docente
+Route::get('/notas/docente', [TeacherCompetenciaController::class, 'index'])->name('grade.teacher.index');
+Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}', [TeacherCompetenciaController::class, 'create'])->name('grade.teacher.create');
+Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/next', [TeacherCompetenciaController::class, 'createNext'])->name('grade.teacher.createNext');
+Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/previous', [TeacherCompetenciaController::class, 'createPrevious'])->name('grade.teacher.createPrevious');
+Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store'])->name('grade.teacher.store');
