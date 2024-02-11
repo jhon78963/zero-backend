@@ -118,7 +118,33 @@ class StudentController extends Controller
 
     public function getAll()
     {
-        $students = Student::where('IsDeleted', false)->where('TenantId', 1)->get();
+        $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->where('students.IsDeleted', false)
+            ->select('students.*', 'c.description as classroom')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'students' => $students
+        ]);
+    }
+
+    public function search($value)
+    {
+        $students = Student::leftJoin('student_classroom as sc', 'sc.student_id', 'students.id')
+            ->leftJoin('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->where('students.IsDeleted', false)
+            ->where(function ($query) use ($value) {
+                $query->where('students.surname', 'LIKE', $value . '%')
+                    ->orWhere('students.mother_surname', 'LIKE', $value . '%')
+                    ->orWhere('students.first_name', 'LIKE', $value . '%')
+                    ->orWhere('students.other_names', 'LIKE', $value . '%')
+                    ->orWhere('students.institutional_email', 'LIKE', $value . '%')
+                    ->orWhere('c.description', 'LIKE', $value . '%');
+            })
+            ->select('students.*', 'c.description as classroom')
+            ->get();
 
         return response()->json([
             'status' => 'success',
