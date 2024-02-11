@@ -85,6 +85,7 @@ Route::get('/{period_id}/payments/{student_id}', [TreasuryController::class, 'ge
 
 Route::post('students', [StudentController::class, 'create']);
 Route::delete('students/{id}', [StudentController::class, 'delete']);
+Route::get('students/search/{id}', [StudentController::class, 'search']);
 Route::get('students/{id}', [StudentController::class, 'get']);
 Route::get('students', [StudentController::class, 'getAll']);
 Route::put('students/{id}', [StudentController::class, 'update']);
