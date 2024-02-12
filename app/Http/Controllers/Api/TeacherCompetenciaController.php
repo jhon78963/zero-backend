@@ -103,8 +103,8 @@ class TeacherCompetenciaController extends Controller
         $studentsGrade = StudentCompetencia::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->get();
         $courses = Course::where('TenantId', $period->id)->get();
         $class_room = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
-            ->where('student_id', $student->id)
-            ->where('TenantId', $period->id)
+            ->where('student_classroom.student_id', $student->id)
+            ->where('student_classroom.TenantId', $period->id)
             ->select('student_classroom.*', 'cr.id as clasrroom_id')
             ->first();
 
