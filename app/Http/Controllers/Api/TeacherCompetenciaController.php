@@ -361,9 +361,9 @@ class TeacherCompetenciaController extends Controller
         ]);
     }
 
-    public function generatePDF($period_name, $student_id)
+    public function generatePDF($student_id)
     {
-        $period = AcademicPeriod::where('name', $period_name)->first();
+        $period = AcademicPeriod::where('name', $this->period_name)->first();
 
         $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
             ->where('students.TenantId', $period->id)
