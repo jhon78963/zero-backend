@@ -100,4 +100,8 @@ Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompet
 Route::get('/asistencia/faltas/{classroom_id}', [AttendanceAdminController::class, 'showMissing']);
 Route::get('/asistencia/{classroom_id}/{date_id}', [AttendanceAdminController::class, 'index']);
 Route::get('/reporte-asistencia/admin/{classroom_id}/estudiante/{student_id}', [AttendanceAdminController::class, 'generatePDF']);
-Route::get('/asistencia/docente/registrar', [AttendanceAdminController::class, 'createTeacherAttendance'])->name('attendance.teacher.create');
+Route::get('/asistencia/docente/registrar', [AttendanceAdminController::class, 'createTeacherAttendance']);
+Route::post('/asistencia/aperturar', [AttendanceAdminController::class, 'openAttendance']);
+Route::post('/asistencia/cerrar/{fecha_id}', [AttendanceAdminController::class, 'closeAttendance']);
+Route::post('/marcar-asistencia/{fecha}/presente/{student_id}', [AttendanceAdminController::class, 'changePresent']);
+Route::post('/marcar-asistencia/{fecha}/falta/{student_id}', [AttendanceAdminController::class, 'changeMissing']);
