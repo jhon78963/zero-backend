@@ -164,10 +164,9 @@ class AttendanceAdminController extends Controller
         return redirect()->back();
     }
 
-    public function openAttendance()
+    public function openAttendance($teacher_id)
     {
-        $teacher_email = "plcr@gmail.com";
-        $teacher = Teacher::where('institutional_email', $teacher_email)
+        $teacher = Teacher::where('id', $teacher_id)
             ->where('IsDeleted', false)
             ->where('TenantId', $this->period_id)
             ->first();
