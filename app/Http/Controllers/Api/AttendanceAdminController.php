@@ -50,9 +50,11 @@ class AttendanceAdminController extends Controller
             ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
             ->get();
 
-        $classroomSelected = ClassRoom::where('TenantId', $period->id)
-            ->where('IsDeleted', false)
-            ->where('id', $classroom_id)
+        $classroomSelected = ClassRoom::join('teacher_classrooms as tc', 'tc.classroom_id', 'class_rooms.id')
+            ->where('class_rooms.TenantId', $period->id)
+            ->where('class_rooms.IsDeleted', false)
+            ->where('class_rooms.id', $classroom_id)
+            ->select('class_rooms.*', 'tc.teacher_id')
             ->first();
 
         return response()->json([
