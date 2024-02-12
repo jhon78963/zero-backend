@@ -15,25 +15,25 @@ use Illuminate\Http\Request;
 
 class AdminCompetenciaController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-    public function index($classroom_id, $period_name)
+    public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
         $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
 
-        if ($classroom_id != null) {
+        if ($request->classroom_id != null) {
             $classroomSelected = ClassRoom::where('TenantId', $period->id)
                 ->where('IsDeleted', false)
-                ->where('id', $classroom_id)
+                ->where('id', $request->classroom_id)
                 ->first();
 
             $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
                 ->where('student_classroom.TenantId', $period->id)
-                ->where('student_classroom.classroom_id', $classroom_id)
+                ->where('student_classroom.classroom_id', $request->classroom_id)
                 ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
                 ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
                 ->get();
