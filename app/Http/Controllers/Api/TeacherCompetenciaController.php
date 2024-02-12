@@ -15,7 +15,6 @@ use App\Models\Teacher;
 use App\Models\TeacherClassroom;
 use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TeacherCompetenciaController extends Controller
@@ -367,7 +366,7 @@ class TeacherCompetenciaController extends Controller
         $period = AcademicPeriod::where('name', $period_name)->first();
 
         $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
-        ->where('students.TenantId', $period->id)
+            ->where('students.TenantId', $period->id)
             ->where('students.status', true)
             ->where('students.id', $student_id)
             ->select('students.*', 'sc.classroom_id')
@@ -383,7 +382,7 @@ class TeacherCompetenciaController extends Controller
             ->first();
 
         $teacher = TeacherClassroom::join('teachers as t', 't.id', 'teacher_classrooms.teacher_id')
-        ->where('t.TenantId', $period->id)
+            ->where('t.TenantId', $period->id)
             ->where('t.IsDeleted', false)
             ->select('t.*')
             ->first();
@@ -426,7 +425,6 @@ class TeacherCompetenciaController extends Controller
 
         $pdf = DomPDF::loadView('academic.note.admin-pdf', compact('period', 'studentsGrade', 'student', 'teacher', 'courses', 'competenciasPorCurso', 'class_room', 'classroomSelected', 'promediosPorCurso'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('reporte-notas.pdf');
-        //return view('academic.note.admin-pdf', compact('period', 'studentsGrade', 'student', 'teacher', 'courses', 'competenciasPorCurso', 'class_room', 'classroomSelected', 'promediosPorCurso'));
     }
 
     private function calcularPromedio($gradeKey, $competencias)

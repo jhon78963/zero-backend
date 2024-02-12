@@ -15,10 +15,10 @@ use Illuminate\Http\Request;
 
 class AdminCompetenciaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     public function index($classroom_id, $period_name)
     {
