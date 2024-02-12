@@ -22,50 +22,29 @@ class TeacherCompetenciaController extends Controller
     public $period_name = 'pa-2024';
     public $period_id = 1;
 
-    public function index(Request $request)
+    public function index($classroom_id)
     {
         $period = AcademicPeriod::where('name', $this->period_name)->first();
         $classrooms = ClassRoom::where('TenantId', $period->id)->where('IsDeleted', false)->get();
 
-        if ($request->classroom_id != null) {
-            $classroomSelected = ClassRoom::where('TenantId', $period->id)
-                ->where('IsDeleted', false)
-                ->where('id', $request->classroom_id)
-                ->first();
+        $classroomSelected = ClassRoom::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->where('id', $classroom_id)
+            ->first();
 
-            $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
-                ->where('student_classroom.TenantId', $period->id)
-                ->where('student_classroom.classroom_id', $request->classroom_id)
-                ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
-                ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
-                ->get();
+        $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+            ->where('student_classroom.TenantId', $period->id)
+            ->where('student_classroom.classroom_id', $classroom_id)
+            ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+            ->get();
 
-            return response()->json([
-                'period' => $period,
-                'classrooms' => $classrooms,
-                'classroomSelected' => $classroomSelected,
-                'students' => $students
-            ]);
-        } else {
-            $classroomSelected = ClassRoom::where('TenantId', $period->id)
-                ->where('IsDeleted', false)
-                ->where('id', 1)
-                ->first();
-
-            $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
-                ->where('student_classroom.TenantId', $period->id)
-                ->where('student_classroom.classroom_id', 1)
-                ->select('student_classroom.*', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
-                ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
-                ->get();
-
-            return response()->json([
-                'period' => $period,
-                'classrooms' => $classrooms,
-                'classroomSelected' => $classroomSelected,
-                'students' => $students
-            ]);
-        }
+        return response()->json([
+            'period' => $period,
+            'classrooms' => $classrooms,
+            'classroomSelected' => $classroomSelected,
+            'students' => $students
+        ]);
     }
 
     public function create($classroom_id, $student_id)

@@ -91,7 +91,7 @@ Route::get('students', [StudentController::class, 'getAll']);
 Route::put('students/{id}', [StudentController::class, 'update']);
 
 //Notas docente
-Route::get('/notas/docente', [TeacherCompetenciaController::class, 'index']);
+Route::get('/notas/docente/{classroom_id}', [TeacherCompetenciaController::class, 'index']);
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}', [TeacherCompetenciaController::class, 'create']);
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/next', [TeacherCompetenciaController::class, 'createNext']);
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/previous', [TeacherCompetenciaController::class, 'createPrevious']);
