@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicPeriod;
+use App\Models\Attendance;
 use App\Models\AttendanceDetail;
 use App\Models\ClassRoom;
 use App\Models\Student;
@@ -11,6 +12,7 @@ use App\Models\StudentClassroom;
 use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AttendanceAdminController extends Controller
 {
@@ -94,5 +96,33 @@ class AttendanceAdminController extends Controller
 
         $pdf = DomPDF::loadView('academic.attendance.admin.pdf', compact('period', 'missing', 'student', 'classroom'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('reporte-faltas.pdf');
+    }
+
+    public function createTeacherAttendance()
+    {
+        $period = AcademicPeriod::where('name', $this->period_name)->first();
+        $fecha = now()->format('Y-m-d');
+        $today = now()->format('d-m-Y');
+        $url = route('attendance.student.create', [$period->name, $fecha]);
+        $generateQr = QrCode::generate($url);
+
+        $studentAttendances = AttendanceDetail::join('classroom_attendances as ca', 'classroom_student_attendance.attendance_id', 'ca.id')
+            ->join('students as s', 's.id', 'classroom_student_attendance.student_id')
+            ->where('classroom_student_attendance.TenantId', $period->id)
+            ->where(DB::raw("DATE(classroom_student_attendance.CreationTime)"), $fecha)
+            ->select('classroom_student_attendance.*', 'ca.classroom_id', 's.first_name', 's.other_names', 's.surname', 's.mother_surname')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')
+            ->get();
+
+        $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $period->id)->first();
+
+        return response()->json([
+            'generateQr' => $generateQr,
+            'fecha' => $fecha,
+            'today' => $today,
+            'studentAttendances' => $studentAttendances,
+            'attendance' => $attendance,
+            'period' => $period,
+        ]);
     }
 }
