@@ -1,18 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AttendanceAdminController;
 use App\Http\Controllers\Api\AuthController;
-// use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherCompetenciaController;
 use App\Http\Controllers\TreasuryController;
-use App\Models\ClassRoom;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,3 +95,8 @@ Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/next
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/previous', [TeacherCompetenciaController::class, 'createPrevious']);
 Route::get('/notas/report/estudiante/{student_id}', [TeacherCompetenciaController::class, 'generatePDF']);
 Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store']);
+
+// Asistencia admin - secretaria
+Route::get('/asistencia/faltas/{classroom_id}', [AttendanceAdminController::class, 'showMissing']);
+Route::get('/asistencia/{classroom_id}/{date_id}', [AttendanceAdminController::class, 'index']);
+Route::get('/reporte-asistencia/admin/{classroom_id}/estudiante/{student_id}', [AttendanceAdminController::class, 'generatePDF']);
