@@ -212,7 +212,9 @@ class AttendanceAdminController extends Controller
         $attendanceDetail->status = 'PRESENTE';
         $attendanceDetail->save();
 
-        return back();
+        return response()->json([
+            'message' => 'ok'
+        ]);
     }
     public function changeMissing($fecha, $student_id)
     {
@@ -227,6 +229,8 @@ class AttendanceAdminController extends Controller
         $attendanceDetail->status = 'FALTA';
         $attendanceDetail->save();
 
-        return back();
+        return response()->json([
+            'message' => 'ok'
+        ]);
     }
 }
