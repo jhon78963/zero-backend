@@ -13,6 +13,7 @@ use App\Models\StudentClassroom;
 use App\Models\StudentCompetencia;
 use App\Models\Teacher;
 use App\Models\TeacherClassroom;
+use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -359,6 +360,73 @@ class TeacherCompetenciaController extends Controller
             'class_room' => $class_room,
             'promediosPorCurso' => $promediosPorCurso
         ]);
+    }
+
+    public function generatePDF($period_name, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+
+        $student = Student::join('student_classroom as sc', 'sc.student_id', 'students.id')
+        ->where('students.TenantId', $period->id)
+            ->where('students.status', true)
+            ->where('students.id', $student_id)
+            ->select('students.*', 'sc.classroom_id')
+            ->first();
+
+        $class_room = StudentClassroom::where('student_id', $student->id)
+            ->where('TenantId', $period->id)
+            ->first();
+
+        $classroomSelected = ClassRoom::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->where('id', $class_room->classroom_id)
+            ->first();
+
+        $teacher = TeacherClassroom::join('teachers as t', 't.id', 'teacher_classrooms.teacher_id')
+        ->where('t.TenantId', $period->id)
+            ->where('t.IsDeleted', false)
+            ->select('t.*')
+            ->first();
+
+        $studentsGrade = StudentCompetencia::where('TenantId', $period->id)->where('classroom_id', $class_room->classroom_id)->where('student_id', $student->id)->get();
+        $courses = Course::where('TenantId', $period->id)->get();
+
+        $competenciasPorCurso = [];
+        foreach ($studentsGrade as $item) {
+            $competenciasPorCurso[$item->competencia->course_id][] = [
+                'id' => $item->competencia->id,
+                'description' => $item->competencia->description,
+                'grade_b_1' => $item->grade_b_1,
+                'grade_b_2' => $item->grade_b_2,
+                'grade_b_3' => $item->grade_b_3,
+                'grade_b_4' => $item->grade_b_4
+            ];
+        }
+
+        $promediosPorCurso = [];
+
+        foreach ($competenciasPorCurso as $cursoId => $competencias) {
+            $promediosPorCurso[$cursoId] = [
+                'promedio_grade_b_1' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_1', $competencias)),
+                'prom_grade_b_1' => $this->calcularPromedio('grade_b_1', $competencias),
+                'promedio_grade_b_2' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_2', $competencias)),
+                'prom_grade_b_2' => $this->calcularPromedio('grade_b_2', $competencias),
+                'promedio_grade_b_3' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_3', $competencias)),
+                'prom_grade_b_3' => $this->calcularPromedio('grade_b_3', $competencias),
+                'promedio_grade_b_4' => $this->convertirPromedioALetras($this->calcularPromedio('grade_b_4', $competencias)),
+                'prom_grade_b_4' => $this->calcularPromedio('grade_b_4', $competencias),
+                'promedio_grade_course_final' => $this->convertirPromedioALetras(
+                    ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                    ) / 4
+                ),
+                'prom_grade_course_final' => ($this->calcularPromedio('grade_b_1', $competencias) + $this->calcularPromedio('grade_b_2', $competencias) + $this->calcularPromedio('grade_b_3', $competencias) + $this->calcularPromedio('grade_b_4', $competencias)
+                ) / 4,
+            ];
+        }
+
+        $pdf = DomPDF::loadView('academic.note.admin-pdf', compact('period', 'studentsGrade', 'student', 'teacher', 'courses', 'competenciasPorCurso', 'class_room', 'classroomSelected', 'promediosPorCurso'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-notas.pdf');
+        //return view('academic.note.admin-pdf', compact('period', 'studentsGrade', 'student', 'teacher', 'courses', 'competenciasPorCurso', 'class_room', 'classroomSelected', 'promediosPorCurso'));
     }
 
     private function calcularPromedio($gradeKey, $competencias)

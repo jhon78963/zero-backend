@@ -95,4 +95,5 @@ Route::get('/notas/docente/{classroom_id}', [TeacherCompetenciaController::class
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}', [TeacherCompetenciaController::class, 'create']);
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/next', [TeacherCompetenciaController::class, 'createNext']);
 Route::get('/notas/docente/{classroom_id}/estudiante/registrar/{student_id}/previous', [TeacherCompetenciaController::class, 'createPrevious']);
+Route::get('/notas/report/estudiante/{student_id}', [TeacherCompetenciaController::class, 'generatePDF']);
 Route::post('/notas/docente/{classroom_id}/guardar/{student_id}', [TeacherCompetenciaController::class, 'store']);
