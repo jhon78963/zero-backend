@@ -208,7 +208,7 @@ class AttendanceAdminController extends Controller
 
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $this->period_id)->first();
 
-        $attendanceDetail = AttendanceDetail::where('student_id', $student->id)->where('attendance_id', $attendance->id)->first();
+        $attendanceDetail = AttendanceDetail::where('student_id', $student_id)->where('attendance_id', $attendance->id)->first();
         $attendanceDetail->status = 'PRESENTE';
         $attendanceDetail->save();
 
@@ -223,7 +223,7 @@ class AttendanceAdminController extends Controller
 
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $this->period_id)->first();
 
-        $attendanceDetail = AttendanceDetail::where('student_id', $student->id)->where('attendance_id', $attendance->id)->first();
+        $attendanceDetail = AttendanceDetail::where('student_id', $student_id)->where('attendance_id', $attendance->id)->first();
         $attendanceDetail->status = 'FALTA';
         $attendanceDetail->save();
 
