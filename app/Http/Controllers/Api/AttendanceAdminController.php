@@ -201,11 +201,6 @@ class AttendanceAdminController extends Controller
 
     public function changePresent($fecha, $student_id)
     {
-        $student = Student::where('id', $student_id)
-            ->where('IsDeleted', false)
-            ->where('TenantId', $this->period_id)
-            ->first();
-
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $this->period_id)->first();
 
         $attendanceDetail = AttendanceDetail::where('student_id', $student_id)->where('attendance_id', $attendance->id)->first();
@@ -218,11 +213,6 @@ class AttendanceAdminController extends Controller
     }
     public function changeMissing($fecha, $student_id)
     {
-        $student = Student::where('id', $student_id)
-            ->where('IsDeleted', false)
-            ->where('TenantId', $this->period_id)
-            ->first();
-
         $attendance = Attendance::where('date', $fecha)->where('IsDeleted', false)->where('TenantId', $this->period_id)->first();
 
         $attendanceDetail = AttendanceDetail::where('student_id', $student_id)->where('attendance_id', $attendance->id)->first();
