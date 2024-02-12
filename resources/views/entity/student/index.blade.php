@@ -318,7 +318,7 @@
                         <td>${data.student.first_name} ${data.student.other_names != null ? data.student.other_names : ''}</td>
                         <td>${data.student.surname} ${data.student.mother_surname != null ? data.student.mother_surname : ''}</td>
                         <td>${data.student.institutional_email}</td>
-                        <td>${student.classroom || ''}</td>
+                        <td>${data.student.classroom || ''}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${data.student.id})">
