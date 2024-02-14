@@ -174,34 +174,64 @@
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">
-                    <table class="table" id="tabla-grades">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th width="10%" class="text-center">Aula</th>
-                                <th width="10%" class="text-center">Moroso</th>
-                                <th width="10%" class="text-center">Concepto</th>
-                                <th width="10%" class="text-center">Fecha de pago</th>
-                                <th width="10%" class="text-center">Monto</th>
+                                <th width="10%" class="text-center">AULA</th>
+                                <th width="10%" class="text-center">ESTUDIANTE</th>
+                                <th width="10%" class="text-center">CONCEPTO</th>
+                                <th width="10%" class="text-center">FE. DE VENC.</th>
+                                <th width="10%" class="text-center">MONTO</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @if ($morosos->count() > 0)
+                                @php $printedStudents = []; @endphp
                                 @foreach ($morosos as $moroso)
-                                    <tr>
-                                        <td class="text-center">{{ $moroso->classroom }}</td>
-                                        <td class="text-center">
-                                            {{ $moroso->first_name }}
-                                            {{ $moroso->other_names }}
-                                            {{ $moroso->surname }}
-                                            {{ $moroso->mother_surname }}
-                                        </td>
-                                        <td class="text-center">{{ $moroso->description }}</td>
-                                        <td class="text-center">{{ $moroso->due_date }}</td>
-                                        <td class="text-center">{{ $moroso->cost }}</td>
-                                    </tr>
+                                    @if (!in_array($moroso->student_id, $printedStudents))
+                                        @php $printedStudents[] = $moroso->student_id; @endphp
+                                        @if ($conteoPorEstudiante[$moroso->student_id] > 1)
+                                            <tr class="text-center">
+                                                <td rowspan="{{ $conteoPorEstudiante[$moroso->student_id] }}">
+                                                    {{ $moroso->classroom }}
+                                                </td>
+                                                <td rowspan="{{ $conteoPorEstudiante[$moroso->student_id] }}">
+                                                    {{ $moroso->surname }}
+                                                    {{ $moroso->mother_surname }}
+                                                    {{ $moroso->first_name }}
+                                                    {{ $moroso->other_names }}
+                                                </td>
+                                                <td>{{ $moroso->description }}</td>
+                                                <td>{{ $moroso->due_date }}</td>
+                                                <td>{{ $moroso->cost }}</td>
+                                            </tr>
+                                            @for ($i = 1; $i < $conteoPorEstudiante[$moroso->student_id]; $i++)
+                                                <tr class="text-center">
+                                                    <td>{{ $morosos[$loop->index + $i]->description }}</td>
+                                                    <td>{{ $morosos[$loop->index + $i]->due_date }}</td>
+                                                    <td>{{ $morosos[$loop->index + $i]->cost }}</td>
+                                                </tr>
+                                            @endfor
+                                        @else
+                                            <tr class="text-center">
+                                                <td>{{ $moroso->classroom }}</td>
+                                                <td>
+                                                    {{ $moroso->surname }}
+                                                    {{ $moroso->mother_surname }}
+                                                    {{ $moroso->first_name }}
+                                                    {{ $moroso->other_names }}
+                                                </td>
+                                                <td>{{ $moroso->description }}</td>
+                                                <td>{{ $moroso->due_date }}</td>
+                                                <td>{{ $moroso->cost }}</td>
+                                            </tr>
+                                        @endif
+                                    @endif
                                 @endforeach
                             @else
-                                <td colspan="5" class="text-center">NO DATA</td>
+                                <tr>
+                                    <td colspan="5" class="text-center">NO DATA</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>

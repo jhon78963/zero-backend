@@ -52,17 +52,34 @@ class TreasuryController extends Controller
         $payments = Payment::where('IsDeleted', false)->paginate(8);
 
         $current_month = now()->format('Y-m-d');
+
         $morosos = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
             ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
             ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
             ->where('student_payments.TenantId', $period->id)
             ->where('student_payments.isPaid', false)
             ->where('p.due_date', '<', $current_month)
-            ->select('s.*', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->select('s.*', 's.id as student_id', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->orderBy('c.description')->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')->orderBy('p.due_date')
             ->distinct()
             ->get();
 
-        return view('treasury.index', compact('treasuries', 'payments', 'period', 'morosos'));
+        $conteoPorEstudiante = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->select('s.id as student_id', 'p.description')
+            ->distinct()
+            ->get()
+            ->groupBy('student_id')
+            ->map(function ($group) {
+                return count($group);
+            });
+
+
+        return view('treasury.index', compact('treasuries', 'payments', 'period', 'morosos', 'conteoPorEstudiante'));
     }
 
     public function create($period_name)
@@ -90,11 +107,26 @@ class TreasuryController extends Controller
             ->where('student_payments.TenantId', $period->id)
             ->where('student_payments.isPaid', false)
             ->where('p.due_date', '<', $current_month)
-            ->select('s.*', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->select('s.*', 's.id as student_id', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->orderBy('c.description')->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')->orderBy('p.due_date')
             ->distinct()
             ->get();
 
-        $pdf = DomPDF::loadView('treasury.pdf', compact('period', 'morosos'))->setPaper('a4')->setWarnings(false);
+        $conteoPorEstudiante = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->select('s.id as student_id', 'p.description')
+            ->distinct()
+            ->get()
+            ->groupBy('student_id')
+            ->map(function ($group) {
+                return count($group);
+            });
+
+        $pdf = DomPDF::loadView('treasury.pdf', compact('period', 'morosos', 'conteoPorEstudiante'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('reporte-morosos.pdf');
     }
 
@@ -132,7 +164,7 @@ class TreasuryController extends Controller
 
         $payments_varios = Payment::where('type', 'VARIOS')
             ->where('IsDeleted', false)
-            ->select('description','cost', 'id as payment_id')
+            ->select('description', 'cost', 'id as payment_id')
             ->get();
 
         $payments = $payments_matricula->concat($payments_varios);
