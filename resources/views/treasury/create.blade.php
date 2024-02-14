@@ -142,7 +142,7 @@
                     <td width="60%">
                         ${generateConcepts(periodId, studentId)}
                     </td>
-                    <td width="10%"><input type="text" name="price[]" class="form-control text-center" readonly></td>
+                    <td width="10%"><input type="text" name="price[]" class="form-control text-center"></td>
                     <td width="5%"><input type="text" name="total[]" class="form-control text-center" readonly></td>
                     <td>
                         <button type="button" class="btn btn-danger" onclick="deleteRow(this)"><i class='bx bx-trash-alt'></i></button>
@@ -185,7 +185,7 @@
                     select += '<option value="">Selecione conceptop de pago</option>';
                     $.each(payments, function(index, payment) {
                         select +=
-                            `<option value="${payment.id}_${payment.cost}_${payment.payment_id}">${payment.description}</option>`;
+                            `<option value="${payment.id || 0}_${payment.cost}_${payment.payment_id}">${payment.description}</option>`;
                     });
                 }
             });
@@ -202,12 +202,35 @@
         }
     </script>
 
-    {{-- let selectCreateElement = $(`#payment-select`);
-                $.each(payments, function(index, payment) {
-                    let options = $('<option>', {
-                        value: `${payment.id}_${payment.cost}`,
-                        text: payment.description
-                    });
-                    selectCreateElement.append(options);
-                }); --}}
+    <script>
+        const costCreate = document.getElementById('cost-create');
+
+        function validarInput(evento, inputElement) {
+            const teclaPresionada = evento.key;
+            const teclaPresionadaEsUnNumero = Number.isInteger(parseInt(teclaPresionada));
+
+            const sePresionoUnaTeclaNoAdmitida =
+                teclaPresionada !== 'ArrowDown' &&
+                teclaPresionada !== 'ArrowUp' &&
+                teclaPresionada !== 'ArrowLeft' &&
+                teclaPresionada !== 'ArrowRight' &&
+                teclaPresionada !== 'Backspace' &&
+                teclaPresionada !== 'Delete' &&
+                teclaPresionada !== 'Enter' &&
+                teclaPresionada !== '.' &&
+                !teclaPresionadaEsUnNumero;
+
+            const comienzaPorCero =
+                inputElement.value.length === 0 &&
+                teclaPresionada === '0';
+
+            if (sePresionoUnaTeclaNoAdmitida || comienzaPorCero) {
+                evento.preventDefault();
+            }
+        }
+
+        costCreate.addEventListener('keydown', function(evento) {
+            validarInput(evento, costCreate);
+        });
+    </script>
 @endsection

@@ -37,7 +37,7 @@ class SchoolRegistrationController extends Controller
     {
         $today = now()->format('Y-m-d');
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $payments = Payment::all();
+        $payments = Payment::where('type', 'MATRICULA')->where('IsDeleted', false)->get();
         $classrooms = ClassRoom::where('IsDeleted', false)->where('TenantId', $period->id)->get();
 
         return view('academic.school-registration.index', compact('period', 'payments', 'classrooms'));
@@ -127,7 +127,7 @@ class SchoolRegistrationController extends Controller
                 $nota->save();
             }
 
-            $payments = Payment::all();
+            $payments = Payment::where('type', 'MATRICULA')->where('IsDeleted', false)->get();
 
             foreach ($payments as $payment) {
                 $student_payment = new StudentPayment();
@@ -190,7 +190,7 @@ class SchoolRegistrationController extends Controller
                 $nota->save();
             }
 
-            $payments = Payment::all();
+            $payments = Payment::where('type', 'MATRICULA')->where('IsDeleted', false)->get();
 
             foreach ($payments as $payment) {
                 $student_payment = new StudentPayment();
@@ -247,6 +247,18 @@ class SchoolRegistrationController extends Controller
                 $nota->CreatorUserId = Auth::id();
                 $nota->TenantId = $period_id;
                 $nota->save();
+            }
+
+            $payments = Payment::where('type', 'MATRICULA')->where('IsDeleted', false)->get();
+
+            foreach ($payments as $payment) {
+                $student_payment = new StudentPayment();
+                $student_payment->CreatorUserId = Auth::id();
+                $student_payment->TenantId = $period_id;
+                $student_payment->classroom_id = $request->aula_id;
+                $student_payment->student_id = $request->alum_id;
+                $student_payment->payment_id = $payment->id;
+                $student_payment->save();
             }
 
             return redirect()->route('school-registration.index', $period->name)->with('datos', 'Matricula Registrada ...!');

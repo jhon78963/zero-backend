@@ -1,5 +1,5 @@
-<div class="modal fade" id="editTreasuryModal_{{ $payment->id }}" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="editTreasuryModal_{{ $payment->id }}" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form action="{{ route('payments.update', [$period->id, $payment->id]) }}" method="POST">
             @csrf
@@ -12,12 +12,20 @@
                 <div class="modal-body">
                     <div class="form-group mb-3">
                         <label for="description">Concepto</label>
-                        <input type="text" name="description" id="description" class="form-control" value="{{ $payment->description }}" required>
+                        <input type="text" name="description" id="description" class="form-control"
+                            value="{{ $payment->description }}" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="cost-edit">Costo</label>
+                        <input type="number" name="cost" id="cost-edit" class="form-control"
+                            value="{{ $payment->cost }}"min="1" pattern="^[0-9]+" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="cost">Costo</label>
-                        <input type="text" name="cost" id="cost" class="form-control " value="{{ $payment->cost }}" required>
+                        <label for="due_date">Fecha de vencimiento</label>
+                        <input type="date" name="due_date" id="due_date" class="form-control"
+                            value="{{ $payment->due_date }}">
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-4 col-12">
+        <div class="col-md-5 col-12">
             <div class="card mb-4">
                 <div class="d-flex align-items-center justify-content-between ">
                     <h5 class="card-header">Mantenimiento de tesoreria</h5>
@@ -25,6 +25,7 @@
                             <tr>
                                 <th class="text-center">Concepto</th>
                                 <th class="text-center">Costo</th>
+                                <th class="text-center">Fe. de Venc.</th>
                                 <th width="10%">Opciones</th>
                             </tr>
                         </thead>
@@ -34,6 +35,7 @@
                                     <tr>
                                         <td class="text-center">{{ $payment->description }}</td>
                                         <td class="text-center">{{ $payment->cost }}</td>
+                                        <td class="text-center">{{ $payment->due_date }}</td>
                                         <td>
                                             <button type="button" class="btn rounded-pill btn-icon btn-outline-primary"
                                                 onclick="openEditPaymentModal({{ $payment->id }})">
@@ -105,7 +107,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8 col-12">
+        <div class="col-md-7 col-12">
             <div class="card mb-4">
                 <div class="d-flex align-items-center justify-content-between ">
                     <h5 class="card-header">Tesoreria</h5>
@@ -119,9 +121,7 @@
                     <table class="table" id="tabla-grades">
                         <thead>
                             <tr>
-                                <th width="10%">#</th>
                                 <th width="10%" class="text-center">Fecha</th>
-                                <th width="10%" class="text-center">Hora</th>
                                 <th class="text-center">Estudiante</th>
                                 <th class="text-center">Concepto</th>
                                 <th class="text-center">Total</th>
@@ -132,9 +132,7 @@
                             @if ($treasuries->count() > 0)
                                 @foreach ($treasuries as $treasury)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
                                         <td class="text-center">{{ $treasury->fecha_emision }}</td>
-                                        <td class="text-center">{{ $treasury->hora_emision }}</td>
                                         <td class="text-center">
                                             {{ $treasury->student_first_name }}
                                             {{ $treasury->student_other_names }}
@@ -144,7 +142,8 @@
                                         <td class="text-center">{{ $treasury->description }}</td>
                                         <td class="text-center">{{ $treasury->monto_total }}</td>
                                         <td>
-                                            <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}" target="_blank" class="btn btn-sm btn-primary">
+                                            <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}"
+                                                target="_blank" class="btn btn-sm btn-primary">
                                                 <i class="bx bxs-file-pdf"></i>
                                             </a>
 
@@ -215,6 +214,17 @@
 @endsection
 
 @section('css')
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -234,5 +244,42 @@
         function openDeletePaymentModal(paymentId) {
             $(`#deleteTreasuryModal_${paymentId}`).modal('toggle');
         }
+    </script>
+
+    <script>
+        const costCreate = document.getElementById('cost-create');
+        const costEdit = document.getElementById('cost-edit');
+
+        function validarInput(evento, inputElement) {
+            const teclaPresionada = evento.key;
+            const teclaPresionadaEsUnNumero = Number.isInteger(parseInt(teclaPresionada));
+
+            const sePresionoUnaTeclaNoAdmitida =
+                teclaPresionada !== 'ArrowDown' &&
+                teclaPresionada !== 'ArrowUp' &&
+                teclaPresionada !== 'ArrowLeft' &&
+                teclaPresionada !== 'ArrowRight' &&
+                teclaPresionada !== 'Backspace' &&
+                teclaPresionada !== 'Delete' &&
+                teclaPresionada !== 'Enter' &&
+                teclaPresionada !== '.' &&
+                !teclaPresionadaEsUnNumero;
+
+            const comienzaPorCero =
+                inputElement.value.length === 0 &&
+                teclaPresionada === '0';
+
+            if (sePresionoUnaTeclaNoAdmitida || comienzaPorCero) {
+                evento.preventDefault();
+            }
+        }
+
+        costCreate.addEventListener('keydown', function(evento) {
+            validarInput(evento, costCreate);
+        });
+
+        costEdit.addEventListener('keydown', function(evento) {
+            validarInput(evento, costEdit);
+        });
     </script>
 @endsection

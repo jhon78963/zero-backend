@@ -14,9 +14,15 @@
                         <input type="text" name="description" id="description" class="form-control" required>
                     </div>
 
+                    <div class="form-group mb-3">
+                        <label for="cost-create">Costo</label>
+                        <input type="number" name="cost" id="cost-create" class="form-control" min="1"
+                            pattern="^[0-9]+" required>
+                    </div>
+
                     <div class="form-group">
-                        <label for="cost">Costo</label>
-                        <input type="text" name="cost" id="cost" class="form-control " required>
+                        <label for="due_date">Fecha de vencimiento</label>
+                        <input type="date" name="due_date" id="due_date" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">

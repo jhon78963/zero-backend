@@ -49,7 +49,7 @@ class TreasuryController extends Controller
             )
             ->get();
 
-        $payments = Payment::paginate(8);
+        $payments = Payment::where('IsDeleted', false)->paginate(8);
 
         $current_month = now()->format('Y-m-d');
         $morosos = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
@@ -63,6 +63,21 @@ class TreasuryController extends Controller
             ->get();
 
         return view('treasury.index', compact('treasuries', 'payments', 'period', 'morosos'));
+    }
+
+    public function create($period_name)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $invoice = InvoiceNumber::where('TenantId', $period->id)->first();
+        $payments = Payment::all();
+        $students = DB::table('school_registration as sr')
+            ->join('students as s', 's.id', 'sr.student_id')
+            ->where('sr.TenantId', $period->id)
+            ->select('s.*')
+            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('first_name')->orderBy('other_names')
+            ->get();
+
+        return view('treasury.create', compact('invoice', 'students', 'period', 'payments'));
     }
 
     public function generateMorososPDF($period_name)
@@ -105,29 +120,22 @@ class TreasuryController extends Controller
         return $pdf->stream('nota-venta.pdf');
     }
 
-    public function create($period_name)
-    {
-        $period = AcademicPeriod::where('name', $period_name)->first();
-        $invoice = InvoiceNumber::where('TenantId', $period->id)->first();
-        $payments = Payment::all();
-        $students = DB::table('school_registration as sr')
-            ->join('students as s', 's.id', 'sr.student_id')
-            ->where('sr.TenantId', $period->id)
-            ->select('s.*')
-            ->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('first_name')->orderBy('other_names')
-            ->get();
-
-        return view('treasury.create', compact('invoice', 'students', 'period', 'payments'));
-    }
-
     public function getPaymentByStudent($period_id, $student_id)
     {
-        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+        $payments_matricula = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
             ->where('student_payments.TenantId', $period_id)
             ->where('student_payments.student_id', $student_id)
             ->where('student_payments.isPaid', false)
             ->select('student_payments.*', 'p.description', 'p.cost', 'p.id as payment_id')
             ->get();
+
+
+        $payments_varios = Payment::where('type', 'VARIOS')
+            ->where('IsDeleted', false)
+            ->select('description','cost', 'id as payment_id')
+            ->get();
+
+        $payments = $payments_matricula->concat($payments_varios);
 
         return $payments;
     }
@@ -212,8 +220,10 @@ class TreasuryController extends Controller
     public function savePayment(Request $request)
     {
         $payment = new Payment();
+        $payment->CreatorUserId = Auth::id();
         $payment->description = $request->description;
         $payment->cost = $request->cost;
+        $payment->due_date = $request->due_date;
         $payment->save();
 
         return back();
@@ -222,8 +232,11 @@ class TreasuryController extends Controller
     public function updatePayment(Request $request, $period_id, $payment_id)
     {
         $payment = Payment::findOrFail($payment_id);
+        $payment->LastModificationTime = now()->format('Y-m-d H:i:s');
+        $payment->LastModifierUserId = Auth::id();
         $payment->description = $request->description;
         $payment->cost = $request->cost;
+        $payment->due_date = $request->due_date;
         $payment->save();
 
         return back();
@@ -231,7 +244,11 @@ class TreasuryController extends Controller
 
     public function deletePayment(Request $request, $period_id, $payment_id)
     {
-        Payment::findOrFail($payment_id)->delete();
+        $payment = Payment::findOrFail($payment_id);
+        $payment->IsDeleted = true;
+        $payment->DeleterUserId = Auth::id();
+        $payment->DeletionTime = now()->format('Y-m-d H:i:s');
+        $payment->save();
 
         return back();
     }
