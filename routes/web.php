@@ -223,6 +223,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/notas/report/estudiante/{student_id}', [AdminCompetenciaController::class, 'generatePDF'])->name('grade.admin.pdf');
 
     Route::get('reportes', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('generate-pdf/aula', [ReportController::class, 'generateClassroomPdf'])->name('reports.classroom-pdf');
+    Route::get('generate-pdf/grado', [ReportController::class, 'generateGradePdf'])->name('reports.grade-pdf');
 });
 
 // Auth

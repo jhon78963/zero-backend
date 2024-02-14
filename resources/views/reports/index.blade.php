@@ -5,27 +5,27 @@
 @endsection
 
 @section('content')
-    <div class="card mb-4" style="padding-right: 1rem">
+    <div class="card card-center mb-4" style="padding-right: 1rem">
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Reportes</h5>
         </div>
     </div>
 
     <div class="row mt-3">
-        <div class="col-md-6 col-12">
-            <div class="card mb-3" style="width: 680px; height: 340px;">
+        <div class="col-md-6 col-12 p-1">
+            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
                 <canvas id="genderChart" width="200" height="340"></canvas>
             </div>
         </div>
         <div class="col-md-6 col-12">
-            <div class="card mb-3" style="width: 680px; height: 340px;">
+            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
                 <canvas id="roleChart" width="200" height="340"></canvas>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 p-1">
             <div class="card mb-3 justify-content-center">
                 <canvas id="studentByGradeChart" width="200" height="100"></canvas>
             </div>
@@ -36,15 +36,73 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="card mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="card-header mt-3">Alumnos matriculados por aula</h5>
+                    <div style="padding-right: 1rem">
+                        <a href="{{ route('reports.classroom-pdf', $period->name) }}" target="_blank"
+                            class="btn btn-primary me-1 m-0">PDF</a>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Aula</th>
+                            <th>Matriculados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($registrationClassrooms as $registration)
+                            <tr class="text-center">
+                                <td>{{ $registration->description }}</td>
+                                <td>{{ $registration->registration }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="card mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="card-header mt-3">Alumnos matriculados por grado</h5>
+                    <div style="padding-right: 1rem">
+                        <a href="{{ route('reports.grade-pdf', $period->name) }}" target="_blank"
+                            class="btn btn-primary me-1 m-0">PDF</a>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Grado</th>
+                            <th>Matriculados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($registrationGrades as $registration)
+                            <tr class="text-center">
+                                <td>{{ $registration->description }}</td>
+                                <td>{{ $registration->registration }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('css')
     <style>
-        .card {
+        .card-center {
             text-align: center;
             align-items: center;
             justify-content: center;
-            /* Optionally, set a specific height or use 100% if you want it to fill the parent container */
         }
     </style>
 @endsection
@@ -121,7 +179,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total de personal por cargo',
+                    label: 'Total de matriculados por aula',
                     data: values,
                     backgroundColor: [
                         'rgba(75, 192, 192, 0.2)',
@@ -134,11 +192,7 @@
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                responsive: true,
             }
         });
     </script>
@@ -167,11 +221,7 @@
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                responsive: true,
             }
         });
     </script>

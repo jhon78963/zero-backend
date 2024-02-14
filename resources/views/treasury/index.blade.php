@@ -109,7 +109,7 @@
         </div>
         <div class="col-md-7 col-12">
             <div class="card mb-4">
-                <div class="d-flex align-items-center justify-content-between ">
+                <div class="d-flex align-items-center justify-content-between">
                     <h5 class="card-header">Tesoreria</h5>
                     <div style="padding-right: 1rem">
                         <a href="{{ route('treasuries.create', $period->name) }}"

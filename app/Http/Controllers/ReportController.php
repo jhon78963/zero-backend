@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicPeriod;
-use App\Models\Api\User;
 use App\Models\ClassRoom;
-use App\Models\CourseGrade;
 use App\Models\Student;
 use App\Models\StudentClassroom;
-use App\Models\StudentCompetencia;
 use App\Models\UserRole;
+use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -50,12 +48,52 @@ class ReportController extends Controller
             ->selectRaw('description, SUM(`limit` - `students_number`) as vacante')
             ->get();
 
+        $registrationClassrooms = ClassRoom::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->groupBy('description', 'students_number')
+            ->selectRaw('description, students_number as registration')
+            ->get();
+
+        $registrationGrades = ClassRoom::join('grades as g', 'g.id', 'class_rooms.grade_id')
+            ->where('class_rooms.TenantId', $period->id)
+            ->where('class_rooms.IsDeleted', false)
+            ->groupBy('g.description')
+            ->selectRaw('g.description, SUM(class_rooms.students_number) as registration')
+            ->get();
+
         // $coursesFinalStatus = CourseGrade::join('courses as c', 'c.id', 'course_grades.course_id')
         //     ->join('grades as g', 'g.id', 'course_grades.grade_id')
         //     ->where('course_grades.TenantId', $period->id)
         //     ->select('c.description as course', 'g.description as grade')
         //     ->get();
 
-        return view('reports.index', compact('period', 'students', 'roles', 'studentByGrade', 'limitClassrooms'));
+        return view('reports.index', compact('period', 'students', 'roles', 'studentByGrade', 'limitClassrooms', 'registrationClassrooms', 'registrationGrades'));
+    }
+
+    public function generateClassroomPDF($period_name)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $registrationClassrooms = ClassRoom::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->groupBy('description', 'students_number')
+            ->selectRaw('description, students_number as registration')
+            ->get();
+
+        $pdf = DomPDF::loadView('reports.classroom-pdf', compact('period', 'registrationClassrooms'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-aulas.pdf');
+    }
+
+    public function generateGradePDF($period_name)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $registrationGrades = ClassRoom::join('grades as g', 'g.id', 'class_rooms.grade_id')
+            ->where('class_rooms.TenantId', $period->id)
+            ->where('class_rooms.IsDeleted', false)
+            ->groupBy('g.description')
+            ->selectRaw('g.description, SUM(class_rooms.students_number) as registration')
+            ->get();
+
+        $pdf = DomPDF::loadView('reports.grade-pdf', compact('period', 'registrationGrades'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-grados.pdf');
     }
 }
