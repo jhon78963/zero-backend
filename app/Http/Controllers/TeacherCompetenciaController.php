@@ -175,7 +175,9 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
     }
 
     public function createNext($period_name, $classroom_id, $student_id)
@@ -270,7 +272,9 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
     }
 
     public function createPrevious($period_name, $classroom_id, $student_id)
@@ -365,7 +369,9 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso'));
+        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
     }
 
     private function calcularPromedio($gradeKey, $competencias)
@@ -525,20 +531,23 @@ class TeacherCompetenciaController extends Controller
             }
         }
 
-        DB::table('student_failed_course')->where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->delete();
-        if (count($cursosJalados) > 0) {
-            foreach ($cursosJalados as $cursoJalado) {
-                $student_classroom->grade_final = 'RECUPERACION';
-                $student_classroom->save();
+        if ($prom_nota_1 > 0 && $prom_nota_2 > 0 && $prom_nota_3 > 0 && $prom_nota_4 > 0) {
+            DB::table('student_failed_course')->where('TenantId', $period_id)->where('classroom_id', $classroom_id)->where('student_id', $student_id)->delete();
+            if (count($cursosJalados) > 0) {
+                foreach ($cursosJalados as $cursoJalado) {
+                    $student_classroom->grade_final = 'RECUPERACION';
+                    $student_classroom->save();
 
-                $failedCourse = new FailedCourse();
-                $failedCourse->TenantId = $period_id;
-                $failedCourse->course_id = $cursoJalado;
-                $failedCourse->student_id = $student_id;
-                $failedCourse->classroom_id = $classroom_id;
-                $failedCourse->save();
+                    $failedCourse = new FailedCourse();
+                    $failedCourse->TenantId = $period_id;
+                    $failedCourse->course_id = $cursoJalado;
+                    $failedCourse->student_id = $student_id;
+                    $failedCourse->classroom_id = $classroom_id;
+                    $failedCourse->save();
+                }
             }
         }
+
 
         if ($request->has('nota_recuperación')) {
 
