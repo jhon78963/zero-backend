@@ -23,9 +23,9 @@
                 </h5>
             </div>
             <div class="d-flex">
-                <a href="{{ route('attendance.admin.pdf', [$period->name, $classroom->id, $student->id]) }}"
-                    class="btn btn-primary me-3" style="padding-top: 25px !important;" target="_blank">
-                    <i class="bx bxs-file-pdf"></i>
+                <a href="{{ route('students.payment.pdf', [$period->name, $student->id]) }}" target="_blank"
+                    class="btn btn-primary me-3" style="padding-top: 25px !important;">
+                    <i class='bx bxs-file-pdf'></i>
                 </a>
 
                 <a href="{{ route('students.show', [$period->name, $student->id]) }}" class="btn btn-primary me-3"
