@@ -133,14 +133,44 @@
                                         @endif
                                     </td>
                                     <td rowspan="{{ count($competenciasPorCurso[$course->id]) + 1 }}" class="text-center">
-                                        <select name="nota_recuperación[]" class="form-control text-center"
-                                            style="width: 80px" disabled>
-                                            <option value="">Nota</option>
-                                            <option value="AD">AD</option>
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                        </select>
+
+
+                                        @if (isset($promediosPorCurso[$course->id]['prom_grade_course_final']) || $calendar_notas->activity == 'Subida de notas de recuperación')
+                                            @if (
+                                                $promediosPorCurso[$course->id]['prom_grade_course_final'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_1'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_2'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_3'] != 0 &&
+                                                    $promediosPorCurso[$course->id]['prom_grade_b_4'] != 0)
+                                                <select name="nota_recuperación[]" class="form-control text-center"
+                                                    style="width: 80px"
+                                                    {{ $promediosPorCurso[$course->id]['promedio_grade_course_final'] != 'C' ? 'disabled' : '' }}>
+                                                    <option value="">Nota</option>
+                                                    <option value="{{ $course->id }}_AD">AD</option>
+                                                    <option value="{{ $course->id }}_A">A</option>
+                                                    <option value="{{ $course->id }}_B">B</option>
+                                                    <option value="{{ $course->id }}_C">C</option>
+                                                </select>
+                                            @else
+                                                <select name="nota_recuperación[]" class="form-control text-center"
+                                                    style="width: 80px" disabled>
+                                                    <option value="">Nota</option>
+                                                    <option value="{{ $course->id }}_AD">AD</option>
+                                                    <option value="{{ $course->id }}_A">A</option>
+                                                    <option value="{{ $course->id }}_B">B</option>
+                                                    <option value="{{ $course->id }}_C">C</option>
+                                                </select>
+                                            @endif
+                                        @else
+                                            <select name="nota_recuperación[]" class="form-control text-center"
+                                                style="width: 80px" disabled>
+                                                <option value="">Nota</option>
+                                                <option value="{{ $course->id }}_AD">AD</option>
+                                                <option value="{{ $course->id }}_A">A</option>
+                                                <option value="{{ $course->id }}_B">B</option>
+                                                <option value="{{ $course->id }}_C">C</option>
+                                            </select>
+                                        @endif
                                     </td>
                                 </tr>
                             @else

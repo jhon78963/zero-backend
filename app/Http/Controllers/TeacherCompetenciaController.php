@@ -455,8 +455,6 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-
-
         $promediosPorCurso = [];
 
         foreach ($competenciasPorCurso as $cursoId => $competencias) {
@@ -541,6 +539,146 @@ class TeacherCompetenciaController extends Controller
                 $failedCourse->save();
             }
         }
+
+        if ($request->has('nota_recuperación')) {
+
+            $failedCoursesCount = 0;
+            for ($i = 0; $i < count($request->nota_recuperación); $i++) {
+                list($course_id, $note) = explode('_', $request->nota_recuperación[$i]);
+
+                $failedCourse = FailedCourse::where('classroom_id', $classroom_id)
+                    ->where('student_id', $student_id)
+                    ->where('course_id', $course_id)
+                    ->first();
+
+                $failedCourse->grade_extension = $note;
+                $failedCourse->save();
+
+                if ($note == 'C') {
+                    $failedCoursesCount++;
+                }
+            }
+
+            if ($failedCoursesCount == 0) {
+                $period = AcademicPeriod::find($period_id);
+                $nextPeriod = AcademicPeriod::where('year', ($period->year + 1))->first();
+                $student = Student::find($student_id);
+
+                $student_classroom_r = StudentClassroom::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->first();
+                $student_classroom_r->grade_extension = 'PROMOVIDO';
+                $student_classroom_r->save();
+
+                $school_registration_r = SchoolRegistration::where('IsDeleted', false)->where('TenantId', $period->id)->where('student_id', $student->id)->first();
+                $school_registration_r->status = 'PROMOVIDO';
+                $school_registration_r->save();
+
+                $promoted_student = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+                    ->join('grades as g', 'g.id', 'cr.grade_id')
+                    ->where('student_classroom.TenantId', $period->id)
+                    ->where('student_classroom.student_id', $student->id)
+                    ->select('student_classroom.*', 'g.id as grade_id')
+                    ->first();
+
+                $promoted_classroom = ClassRoom::join('grades as g', 'g.id', 'class_rooms.grade_id')
+                    ->join('sections as s', 's.id', 'class_rooms.section_id')
+                    ->where('class_rooms.TenantId', $period->id)
+                    ->where('class_rooms.IsDeleted', false)
+                    ->where('g.id', $promoted_student->grade_id + 1)
+                    ->select('class_rooms.*', 's.description as section_name', 'g.description as grade_description')
+                    ->first();
+
+
+                $newStudent = new Student([
+                    'dni' => $student->dni,
+                    'first_name' => $student->first_name,
+                    'other_names' => $student->other_names,
+                    'surname' => $student->surname,
+                    'mother_surname' => $student->mother_surname,
+                    'code' => $student->code,
+                    'institutional_email' => $student->institutional_email,
+                    'phone' => $student->phone,
+                    'address' => $student->address,
+                    'gender' => $student->gender,
+                    'CreatorUserId' => 1,
+                    'TenantId' => $nextPeriod->id,
+                ]);
+
+                $newStudent->save();
+
+                $classroom = ClassRoom::where('description', $promoted_classroom->grade_description . ' ' . $promoted_classroom->section_name)
+                    ->where('TenantId', $nextPeriod->id)
+                    ->where('IsDeleted', false)
+                    ->first();
+
+                SchoolRegistration::create([
+                    'CreatorUserId' => 1,
+                    'TenantId' => $nextPeriod->id,
+                    'student_id' => $newStudent->id,
+                    'classroom_id' => $classroom->id,
+                    'year' => $nextPeriod->year,
+                    'status' => 'CONTINUA'
+                ]);
+            } else {
+                $period = AcademicPeriod::find($period_id);
+                $nextPeriod = AcademicPeriod::where('year', ($period->year + 1))->first();
+                $student = Student::find($student_id);
+
+                $student_classroom_r = StudentClassroom::where('TenantId', $period->id)->where('classroom_id', $classroom_id)->where('student_id', $student->id)->first();
+                $student_classroom_r->grade_extension = 'PERMANENTE';
+                $student_classroom_r->save();
+
+                $school_registration_r = SchoolRegistration::where('IsDeleted', false)->where('TenantId', $period->id)->where('student_id', $student->id)->first();
+                $school_registration_r->status = 'PERMANENTE';
+                $school_registration_r->save();
+
+                $promoted_student = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+                    ->join('grades as g', 'g.id', 'cr.grade_id')
+                    ->where('student_classroom.TenantId', $period->id)
+                    ->where('student_classroom.student_id', $student->id)
+                    ->select('student_classroom.*', 'g.id as grade_id')
+                    ->first();
+
+                $promoted_classroom = ClassRoom::join('grades as g', 'g.id', 'class_rooms.grade_id')
+                    ->join('sections as s', 's.id', 'class_rooms.section_id')
+                    ->where('class_rooms.TenantId', $period->id)
+                    ->where('class_rooms.IsDeleted', false)
+                    ->where('g.id', $promoted_student->grade_id)
+                    ->select('class_rooms.*', 's.description as section_name', 'g.description as grade_description')
+                    ->first();
+
+                $newStudent = new Student([
+                    'dni' => $student->dni,
+                    'first_name' => $student->first_name,
+                    'other_names' => $student->other_names,
+                    'surname' => $student->surname,
+                    'mother_surname' => $student->mother_surname,
+                    'code' => $student->code,
+                    'institutional_email' => $student->institutional_email,
+                    'phone' => $student->phone,
+                    'address' => $student->address,
+                    'gender' => $student->gender,
+                    'CreatorUserId' => 1,
+                    'TenantId' => $nextPeriod->id,
+                ]);
+
+                $newStudent->save();
+
+                $classroom = ClassRoom::where('description', $promoted_classroom->grade_description . ' ' . $promoted_classroom->section_name)
+                    ->where('TenantId', $nextPeriod->id)
+                    ->where('IsDeleted', false)
+                    ->first();
+
+                SchoolRegistration::create([
+                    'CreatorUserId' => 1,
+                    'TenantId' => $nextPeriod->id,
+                    'student_id' => $newStudent->id,
+                    'classroom_id' => $classroom->id,
+                    'year' => $nextPeriod->year,
+                    'status' => 'CONTINUA'
+                ]);
+            }
+        }
+        //
 
         return back();
     }
