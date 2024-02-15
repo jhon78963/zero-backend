@@ -18,12 +18,13 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                            <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                            <a class="dropdown-item"
+                                                href="{{ route('school-registration.index', $period->name) }}">Ver Mas</a>
                                         </div>
                                     </div>
                                 </div>
                                 <span>Matrículas</span>
-                                <h3 class="card-title text-nowrap mb-1">0</h3>
+                                <h3 class="card-title text-nowrap mb-1">{{ $schoolRegistrationCount }}</h3>
                             </div>
                         </div>
                     </div>
@@ -42,12 +43,12 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        <a class="dropdown-item" href="{{ route('treasuries.index', $period->name) }}">Ver Mas</a>
                                     </div>
                                 </div>
                             </div>
                             <span>Tesorería</span>
-                            <h3 class="card-title text-nowrap mb-1">S/ 0</h3>
+                            <h3 class="card-title text-nowrap mb-1">S/ {{ $treasuryMount }}</h3>
                         </div>
                     </div>
                 </div>
@@ -70,12 +71,12 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        <a class="dropdown-item" href="{{ route('teachers.index', $period->name) }}">Ver Mas</a>
                                     </div>
                                 </div>
                             </div>
                             <span>Docentes</span>
-                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                            <h3 class="card-title text-nowrap mb-1">{{ $teacherCount }}</h3>
                         </div>
                     </div>
                 </div>
@@ -93,12 +94,12 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        <a class="dropdown-item" href="{{ route('courses.index', $period->name) }}">Ver Mas</a>
                                     </div>
                                 </div>
                             </div>
                             <span>Cursos</span>
-                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                            <h3 class="card-title text-nowrap mb-1">{{ $courseCount }}</h3>
                         </div>
                     </div>
                 </div>
@@ -120,12 +121,12 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        <a class="dropdown-item" href="{{ route('students.index', $period->name) }}">Ver Mas</a>
                                     </div>
                                 </div>
                             </div>
                             <span>Alumnos</span>
-                            <h3 class="card-title text-nowrap mb-1">0</h3>
+                            <h3 class="card-title text-nowrap mb-1">{{ $studentCount }}</h3>
                         </div>
                     </div>
                 </div>

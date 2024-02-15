@@ -54,7 +54,38 @@ class SchoolRegistrationController extends Controller
 
     public function getAll($period_id)
     {
-        $schoolRegistration = SchoolRegistration::with('student', 'classroom')->where('IsDeleted', false)->where('TenantId', $period_id)->get();
+        $schoolRegistration = SchoolRegistration::join('students as s', 's.id', 'school_registration.student_id')
+            ->join('class_rooms as cr', 'cr.id', 'school_registration.classroom_id')
+            ->where('school_registration.IsDeleted', false)
+            ->where('school_registration.TenantId', $period_id)
+            ->select('school_registration.*', 's.surname', 's.mother_surname', 's.first_name', 's.other_names', 's.phone', 'cr.description')
+            ->get();
+        $count = count($schoolRegistration);
+
+        return response()->json([
+            'status' => 'success',
+            'maxCount' => $count,
+            'schoolRegistration' => $schoolRegistration
+        ]);
+    }
+
+    public function search($period_id, $value)
+    {
+        $schoolRegistration = SchoolRegistration::join('students as s', 's.id', 'school_registration.student_id')
+            ->join('class_rooms as cr', 'cr.id', 'school_registration.classroom_id')
+            ->where('school_registration.IsDeleted', false)
+            ->where('school_registration.TenantId', $period_id)
+            ->select('school_registration.*', 's.surname', 's.mother_surname', 's.first_name', 's.other_names', 's.phone', 'cr.description')
+            ->where(function ($query) use ($value) {
+                $query->where('s.surname', 'LIKE', $value . '%')
+                    ->orWhere('s.mother_surname', 'LIKE', $value . '%')
+                    ->orWhere('s.first_name', 'LIKE', $value . '%')
+                    ->orWhere('s.other_names', 'LIKE', $value . '%')
+                    ->orWhere('s.institutional_email', 'LIKE', $value . '%')
+                    ->orWhere('cr.description', 'LIKE', $value . '%');
+            })
+            ->get();
+
         $count = count($schoolRegistration);
 
         return response()->json([

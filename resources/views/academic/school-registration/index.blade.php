@@ -8,6 +8,15 @@
     <div class="card mb-4">
         <div class="d-flex align-items-center justify-content-between ">
             <h5 class="card-header">Gestión de Matriculas</h5>
+
+            <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                    <input type="text" name="search" id="search" class="form-control border-search shadow-none"
+                        placeholder="Buscar..." style="width: 500px;">
+                </div>
+            </div>
+
             @if ($calendar_matriculas != null)
                 @if ($calendar_matriculas->activity == 'Matrículas')
                     <div style="padding-right: 1rem">
@@ -43,6 +52,17 @@
     <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
 @endsection
 
+@section('css')
+    <style>
+        .border-search {
+            border-top: 1px;
+            border-right: 1px;
+            border-left: 1px;
+            border-radius: 0;
+        }
+    </style>
+@endsection
+
 @section('js')
     <script>
         const periodId = $('#period_id').val();
@@ -64,8 +84,8 @@
                             filas += `
                             <tr id="row-${registration.id}">
                                 <td>${++index}</td>
-                                <td class="text-center">${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
-                                <td class="text-center">${registration.classroom.description}</td>
+                                <td class="text-center">${registration.surname || ''} ${registration.mother_surname || ''} ${registration.first_name || ''} ${registration.other_names || ''}</td>
+                                <td class="text-center">${registration.description}</td>
                                 <td class="text-center">${registration.status}</td>
                                 <td>
                                     ${generateButtons(registration.id, registration.status, registration)}
@@ -100,7 +120,7 @@
                     <div class="offcanvas-body  flex-grow-0">
                         <form method="POST" action="/${periodId}/matriculas/promoted/${registrationId}">
                             @csrf
-                            <input type="hidden" name="alum_id" value="${registration.student.id}">
+                            <input type="hidden" name="alum_id" value="${registration.student_id}">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -111,7 +131,7 @@
                                 <tbody>
                                     <tr>
                                         <td>Estuiante</td>
-                                        <td>${registration.student.first_name || ''} ${registration.student.surname || ''}</td>
+                                        <td>${registration.first_name || ''} ${registration.surname || ''}</td>
                                     </tr>
                                     <tr>
                                         <td>Género</td>
@@ -125,13 +145,13 @@
                                         <td>Grado</td>
                                         <td>
                                             <select name="aula_id" id="aula_id_${registrationId}" class="form-control text-center">
-                                                ${generateClassroomStudent(registration.student.id, registration.classroom.id, registrationId)}
+                                                ${generateClassroomStudent(registration.student_id, registration.classroom_id, registrationId)}
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Contacto</td>
-                                        <td>${registration.student.phone}</td>
+                                        <td>${registration.phone}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -154,7 +174,7 @@
                                 <div class="col-6 text-end">S/ 75000</div>
                             </div>
 
-                            ${generateSchoolRegistrationButton(registration.student.id, status)}
+                            ${generateSchoolRegistrationButton(registration.student_id, status)}
                         </form>
                     </div>
                 </div>
@@ -204,7 +224,7 @@
                                 @method('DELETE')
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel1">Anular Matrícula del alumno <span class="text-warning">${registration.student.first_name || ''} ${registration.student.surname || ''}</span></h5>
+                                        <h5 class="modal-title" id="exampleModalLabel1">Anular Matrícula del alumno <span class="text-warning">${registration.first_name || ''} ${registration.surname || ''}</span></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -277,5 +297,87 @@
             let pdfUrl = `/${periodId}/ficha-matricula/${registrationId}`;
             window.open(pdfUrl, '_blank');
         }
+    </script>
+
+    {{-- SEARCH --}}
+    <script>
+        $('#search').keyup(function() {
+            let value = $('#search').val();
+            if (value != '') {
+                $.ajax({
+                    url: `/${periodId}/matriculas/search/${value}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="5">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.schoolRegistration, function(index, registration) {
+                                filas += `
+                            <tr id="row-${registration.id}">
+                                <td>${++index}</td>
+                                <td class="text-center">${registration.surname || ''} ${registration.mother_surname || ''} ${registration.first_name || ''} ${registration.other_names || ''}</td>
+                                <td class="text-center">${registration.description}</td>
+                                <td class="text-center">${registration.status}</td>
+                                <td>
+                                    ${generateButtons(registration.id, registration.status, registration)}
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-registration tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="3" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-registration tbody").html(filas);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: `/${periodId}/matriculas/getAll`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let filas = "";
+                        if (data.maxCount == 0) {
+                            filas += `
+                            <tr id="row-0">
+                                <td class="text-center" colspan="5">NO DATA</td>
+                            </tr>
+                        `;
+                        } else {
+                            $.each(data.schoolRegistration, function(index, registration) {
+                                filas += `
+                            <tr id="row-${registration.id}">
+                                <td>${++index}</td>
+                                <td class="text-center">${registration.surname || ''} ${registration.mother_surname || ''} ${registration.first_name || ''} ${registration.other_names || ''}</td>
+                                <td class="text-center">${registration.description}</td>
+                                <td class="text-center">${registration.status}</td>
+                                <td>
+                                    ${generateButtons(registration.id, registration.status, registration)}
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        }
+                        $("#tabla-registration tbody").html(filas);
+                    },
+                    error: function(xhr, status, error) {
+                        let filas = '<tr><td colspan="3" class="text-center">' + xhr.responseJSON
+                            .message +
+                            '</td></tr>';
+                        $("#tabla-registration tbody").html(filas);
+                    }
+                });
+            }
+        });
     </script>
 @endsection

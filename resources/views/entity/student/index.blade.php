@@ -42,6 +42,7 @@
     </div>
 
     <input type="hidden" value="{{ $period->id }}" id="period_id" name="period_id">
+    <input type="hidden" value="{{ $period->name }}" id="period_name" name="period_name">
 
     @include('entity.student.student-create-modal')
     @include('entity.student.student-edit-modal')
@@ -63,6 +64,7 @@
     {{-- LIST --}}
     <script>
         const periodId = $('#period_id').val();
+        const periodName = $('#period_name').val();
         window.onload = function() {
             $.ajax({
                 url: `/${periodId}/estudiantes/getAll`,
@@ -87,6 +89,9 @@
                                 <td>${student.classroom || ''}</td>
                                 <td>
                                     <div class="d-flex">
+                                        <a href="/${periodName}/estudiantes/show/${student.id}" class="btn btn-warning btn-sm me-2">
+                                            <span class="tf-icons bx bx-show"></span>
+                                        </a>
                                         <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
                                             <span class="tf-icons bx bx-edit-alt"></span>
                                         </button>
@@ -138,6 +143,9 @@
                                 <td>${student.classroom || ''}</td>
                                 <td>
                                     <div class="d-flex">
+                                        <a href="/${periodName}/estudiantes/show/${student.id}" class="btn btn-warning btn-sm me-2">
+                                            <span class="tf-icons bx bx-show"></span>
+                                        </a>
                                         <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
                                             <span class="tf-icons bx bx-edit-alt"></span>
                                         </button>
@@ -183,6 +191,9 @@
                                 <td>${student.classroom || ''}</td>
                                 <td>
                                     <div class="d-flex">
+                                        <a href="/${periodName}/estudiantes/show/${student.id}" class="btn btn-warning btn-sm me-2">
+                                            <span class="tf-icons bx bx-show"></span>
+                                        </a>
                                         <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${student.id})">
                                             <span class="tf-icons bx bx-edit-alt"></span>
                                         </button>
@@ -250,6 +261,9 @@
                             <td>salón</td>
                             <td>
                                 <div class="d-flex">
+                                    <a href="/${periodName}/estudiantes/show/${data.student.id}" class="btn btn-warning btn-sm me-2">
+                                        <span class="tf-icons bx bx-show"></span>
+                                    </a>
                                     <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${data.student.id})">
                                         <span class="tf-icons bx bx-edit-alt"></span>
                                     </button>
@@ -321,6 +335,9 @@
                         <td>${data.student.classroom || ''}</td>
                         <td>
                             <div class="d-flex">
+                                <a href="/${periodName}/estudiantes/show/${data.student.id}" class="btn btn-warning btn-sm me-2">
+                                    <span class="tf-icons bx bx-show"></span>
+                                </a>
                                 <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${data.student.id})">
                                     <span class="tf-icons bx bx-edit-alt"></span>
                                 </button>

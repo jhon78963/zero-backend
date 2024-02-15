@@ -66,7 +66,7 @@
                         </button>
                     </div>
 
-                    <select name="student_id" id="student_id" class="form-control text-center" style="width: 500px;">
+                    <select name="student_id" id="student_id" class="form-select text-center" style="width: 500px;">
                         <option value="">Seleccione estudiante</option>
                         @foreach ($students as $student)
                             <option value="{{ $student->id }}">
@@ -130,6 +130,18 @@
             $("#table-payment tbody").empty();
             studentId = $('#student_id').val();
         });
+
+        $('#payment-select').select2({
+            theme: "bootstrap-5",
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
+        });
+
+        $('#student_id').select2({
+            theme: "bootstrap-5",
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
+        });
     </script>
     <script>
         function newPayment() {
@@ -175,7 +187,7 @@
 
         function generateConcepts(periodId, studentId) {
             let select =
-                `<select name="description[]" class="form-control" onchange="generateCost(this)" id="payment-select">`;
+                `<select name="description[]" class="form-select" onchange="generateCost(this)" id="payment-select">`;
 
             $.ajax({
                 url: `/api/${periodId}/payments/${studentId}`,

@@ -102,8 +102,19 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/estudiantes', [StudentController::class, 'index'])->name('students.index');
     Route::get('/estudiantes/getAll', [StudentController::class, 'getAll'])->name('students.getall');
     Route::get('/estudiantes/search/{id}', [StudentController::class, 'search'])->name('students.search');
+    Route::get('/estudiantes/show/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::get('/estudiantes/get/{id}', [StudentController::class, 'get'])->name('students.get');
     Route::get('/estudiantes/delete/{id}', [StudentController::class, 'delete'])->name('students.delete');
+
+    Route::get('/estudiantes/asistencia/getAll/{student_id}', [StudentController::class, 'getMissing'])->name('students.missing.getall');
+    Route::get('/estudiantes/asistencia/search/{student_id}/{value_id}', [StudentController::class, 'getMissingSearch'])->name('students.missing.search');
+    Route::get('/estudiantes/asistencia/{id}', [StudentController::class, 'missing'])->name('students.missing');
+
+    Route::get('/estudiantes/pagos/getAll/{student_id}', [StudentController::class, 'getPayments'])->name('students.payments.getall');
+    Route::get('/estudiantes/pagos/search/{student_id}/{value_id}', [StudentController::class, 'getPaymentsSearch'])->name('students.payments.search');
+    Route::get('/estudiantes/pagos/{id}', [StudentController::class, 'payment'])->name('students.payment');
+
+    Route::get('/estudiantes/reporte/pagos/{id}', [StudentController::class, 'paymentPdf'])->name('students.payment.pdf');
     Route::post('/estudiantes/store', [StudentController::class, 'create'])->name('students.create');
     Route::put('/estudiantes/update/{id}', [StudentController::class, 'update'])->name('students.update');
 
@@ -165,6 +176,7 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('/matriculas', [SchoolRegistrationController::class, 'index'])->name('school-registration.index');
     Route::get('/matriculas/registrar', [SchoolRegistrationController::class, 'create'])->name('school-registration.create');
     Route::get('/matriculas/getAll', [SchoolRegistrationController::class, 'getAll'])->name('school-registration.getall');
+    Route::get('/matriculas/search/{id}', [SchoolRegistrationController::class, 'search'])->name('school-registration');
     Route::get('/matriculas/aulas/{student_id}', [SchoolRegistrationController::class, 'getStudentClassrooms'])->name('school-registration.classrooms');
     Route::post('/matriculas/store', [SchoolRegistrationController::class, 'store'])->name('school-registration.store');
     Route::post('/matriculas/promoted/{matricula_id}', [SchoolRegistrationController::class, 'promoted'])->name('school-registration.promoted');

@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Mail\RecoveryPasswordMail;
 use App\Models\AcademicPeriod;
+use App\Models\Course;
+use App\Models\SchoolRegistration;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Treasury;
 use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
@@ -161,9 +166,14 @@ class AuthController extends Controller
         $diaActual = Carbon::now('America/Lima')->locale('es')->isoFormat('dddd');
         $fechaActual = Carbon::now('America/Lima')->locale('es')->isoFormat("MMMM D, YYYY");
         $period = AcademicPeriod::where('name', $period_name)->first();
+        $schoolRegistrationCount = SchoolRegistration::where('TenantId', $period->id)->where('IsDeleted', false)->where('status', '!=', 'ANULADO')->count();
+        $teacherCount = Teacher::where('TenantId', $period->id)->where('IsDeleted', false)->count();
+        $courseCount = Course::where('TenantId', $period->id)->where('IsDeleted', false)->count();
+        $studentCount = Student::where('TenantId', $period->id)->where('IsDeleted', false)->count();
+        $treasuryMount = Treasury::where('TenantId', $period->id)->where('IsDeleted', false)->sum('total');
         // $currentYear = Carbon::now()->year;
         // $academic_period = AcademicPeriod::where('year', $currentYear)->first();
-        return view('auth.home', compact('diaActual', 'fechaActual', 'period'));
+        return view('auth.home', compact('diaActual', 'fechaActual', 'period', 'schoolRegistrationCount', 'teacherCount', 'courseCount', 'studentCount', 'treasuryMount'));
     }
 
     public function homePrincipal()

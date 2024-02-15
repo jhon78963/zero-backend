@@ -6,7 +6,11 @@ use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\AcademicPeriod;
 use App\Models\Api\User;
+use App\Models\AttendanceDetail;
 use App\Models\Student;
+use App\Models\StudentClassroom;
+use App\Models\StudentPayment;
+use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -179,6 +183,128 @@ class StudentController extends Controller
             'maxCount' => $count,
             'students' => $students
         ]);
+    }
+
+    public function show($period_name, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $student = Student::find($student_id);
+        $classroom = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+            ->where('student_classroom.student_id', $student_id)
+            ->select('cr.id', 'cr.description')
+            ->first();
+
+        return view('entity.student.show', compact('period', 'student', 'classroom'));
+    }
+
+    public function missing($period_name, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $missing = AttendanceDetail::where('TenantId', $period->id)
+            ->where('student_id', $student_id)
+            ->where('status', 'FALTA')
+            ->select(DB::raw("DATE_FORMAT(CreationTime, '%d-%m-%Y') as date"), 'status')
+            ->get();
+        $student = Student::findOrFail($student_id);
+        $classroom = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+            ->where('student_classroom.student_id', $student_id)
+            ->select('cr.id', 'cr.description')
+            ->first();
+
+        return view('entity.student.missing', compact('period', 'missing', 'student', 'classroom'));
+    }
+
+    public function getMissing($period_id, $student_id)
+    {
+        $missing = AttendanceDetail::where('TenantId', $period_id)
+            ->where('student_id', $student_id)
+            ->where('status', 'FALTA')
+            ->select(DB::raw("DATE_FORMAT(CreationTime, '%d-%m-%Y') as date"), 'status')
+            ->get();
+
+        return response()->json($missing);
+    }
+
+    public function getMissingSearch($period_id, $student_id, $value)
+    {
+        $missing = AttendanceDetail::where('TenantId', $period_id)
+            ->where('student_id', $student_id)
+            ->where('status', 'FALTA')
+            ->where(function ($query) use ($value) {
+                $query->where(DB::raw("DATE_FORMAT(CreationTime, '%d-%m-%Y')"), 'LIKE', '%' . $value . '%');
+            })
+            ->select(DB::raw("DATE_FORMAT(CreationTime, '%d-%m-%Y') as date"), 'status')
+            ->get();
+
+        return response()->json($missing);
+    }
+
+    public function payment($period_name, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $student = Student::findOrFail($student_id);
+        $classroom = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+            ->where('student_classroom.student_id', $student_id)
+            ->select('cr.id', 'cr.description')
+            ->first();
+
+        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.student_id', $student_id)
+            ->where('student_payments.isPaid', true)
+            ->select(DB::raw("DATE_FORMAT(student_payments.CreationTime, '%d-%m-%Y') as date"), 'p.description', 'p.cost')
+            ->get();
+
+        return view('entity.student.payment', compact('period', 'payments', 'student', 'classroom'));
+    }
+
+    public function getPayments($period_id, $student_id)
+    {
+        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+            ->where('student_payments.TenantId', $period_id)
+            ->where('student_payments.student_id', $student_id)
+            ->where('student_payments.isPaid', true)
+            ->select(DB::raw("DATE_FORMAT(student_payments.CreationTime, '%d-%m-%Y') as date"), 'p.description', 'p.cost')
+            ->get();
+
+        return response()->json($payments);
+    }
+
+    public function getPaymentsSearch($period_id, $student_id, $value)
+    {
+        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+            ->where('student_payments.TenantId', $period_id)
+            ->where('student_payments.student_id', $student_id)
+            ->where('student_payments.isPaid', true)
+            ->where(function ($query) use ($value) {
+                $query->where(DB::raw("DATE_FORMAT(student_payments.CreationTime, '%d-%m-%Y')"), 'LIKE', '%' . $value . '%')
+                    ->orWhere('p.description', 'LIKE', '%' . $value . '%')
+                    ->orWhere('p.cost', 'LIKE', '%' . $value . '%');
+            })
+            ->select(DB::raw("DATE_FORMAT(student_payments.CreationTime, '%d-%m-%Y') as date"), 'p.description', 'p.cost')
+            ->get();
+
+        return response()->json($payments);
+    }
+
+    public function paymentPdf($period_name, $student_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $student = Student::findOrFail($student_id);
+        $classroom = StudentClassroom::join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+            ->where('student_classroom.student_id', $student_id)
+            ->select('cr.id', 'cr.description')
+            ->first();
+
+        $payments = StudentPayment::join('payments as p', 'p.id', 'student_payments.payment_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.student_id', $student_id)
+            ->where('student_payments.isPaid', true)
+            ->select(DB::raw("DATE_FORMAT(student_payments.CreationTime, '%d/%m/%Y') as date"), 'p.description', 'p.cost')
+            ->get();
+
+        $pdf = DomPDF::loadView('entity.student.payment-pdf', compact('period', 'payments', 'student', 'classroom'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-pagos.pdf');
     }
 
     public function update(UpdateStudentRequest $request, $period_id, $id)

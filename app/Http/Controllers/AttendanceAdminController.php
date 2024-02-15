@@ -95,7 +95,11 @@ class AttendanceAdminController extends Controller
     public function generatePDF($period_name, $classroom_id, $student_id)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $missing = AttendanceDetail::where('TenantId', $period->id)->where('student_id', $student_id)->where('status', 'FALTA')->get();
+        $missing = AttendanceDetail::where('TenantId', $period->id)
+            ->where('student_id', $student_id)
+            ->where('status', 'FALTA')
+            ->select(DB::raw("DATE_FORMAT(CreationTime, '%d/%m/%Y') as date"), 'status')
+            ->get();
         $student = Student::findOrFail($student_id);
         $classroom = ClassRoom::findOrFail($classroom_id);
 

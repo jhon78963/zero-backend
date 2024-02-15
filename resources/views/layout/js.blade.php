@@ -11,6 +11,7 @@
 <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages-account-settings-account.js') }}"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="{{ asset('assets/vendor/js/select2.js') }}"></script>
 <script>
     $(document).ready(function() {
         var currentUrl = window.location.href;
