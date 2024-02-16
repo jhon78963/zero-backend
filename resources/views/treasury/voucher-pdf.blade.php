@@ -185,7 +185,7 @@
 
         <div class="body" style="margin-bottom: 5px;">
             <div style="margin-top: 10px; font-weight: bold;">
-                Pago: CONTADO
+                Pago: {{ $venta->payment_method }}
                 <br>
 
                 Gracias por su puntualidad
