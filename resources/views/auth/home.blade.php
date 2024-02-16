@@ -1,15 +1,45 @@
 @extends('layout.template')
 @section('content')
-    <div class="row">
-        <div class="col-lg-4 col-md-4 order-1">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
+    @php
+        $roleName = auth()->user()->userRoles()->first()->role->name;
+    @endphp
+    @if ($roleName == 'Admin' || $roleName == 'Secretaria')
+        <div class="row">
+            <div class="col-lg-4 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-title d-flex align-items-start justify-content-between">
+                                        <div class="avatar flex-shrink-0">
+                                            <img src="{{ asset('assets/img/icons/unicons/matricula.png') }}"
+                                                alt="Credit Card" class="rounded">
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('school-registration.index', $period->name) }}">Ver
+                                                    Mas</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span>Matrículas</span>
+                                    <h3 class="card-title text-nowrap mb-1">{{ $schoolRegistrationCount }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="{{ asset('assets/img/icons/unicons/matricula.png') }}" alt="Credit Card"
+                                        <img src="{{ asset('assets/img/icons/unicons/tesoreria.png') }}" alt="Credit Card"
                                             class="rounded">
                                     </div>
                                     <div class="dropdown">
@@ -19,143 +49,125 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
                                             <a class="dropdown-item"
-                                                href="{{ route('school-registration.index', $period->name) }}">Ver Mas</a>
+                                                href="{{ route('treasuries.index', $period->name) }}">Ver
+                                                Mas</a>
                                         </div>
                                     </div>
                                 </div>
-                                <span>Matrículas</span>
-                                <h3 class="card-title text-nowrap mb-1">{{ $schoolRegistrationCount }}</h3>
+                                <span>Tesorería</span>
+                                <h3 class="card-title text-nowrap mb-1">S/ {{ $treasuryMount }}</h3>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/tesoreria.png') }}" alt="Credit Card"
-                                        class="rounded">
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="{{ route('treasuries.index', $period->name) }}">Ver Mas</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <span>Tesorería</span>
-                            <h3 class="card-title text-nowrap mb-1">S/ {{ $treasuryMount }}</h3>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4 col-md-4 order-1">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
+            <div class="col-lg-4 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
 
-                                    <img src="{{ asset('assets/img/icons/unicons/docente.png') }}" alt="Credit Card"
-                                        class="rounded">
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="{{ route('teachers.index', $period->name) }}">Ver Mas</a>
+                                        <img src="{{ asset('assets/img/icons/unicons/docente.png') }}" alt="Credit Card"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                            <a class="dropdown-item" href="{{ route('teachers.index', $period->name) }}">Ver
+                                                Mas</a>
+                                        </div>
                                     </div>
                                 </div>
+                                <span>Docentes</span>
+                                <h3 class="card-title text-nowrap mb-1">{{ $teacherCount }}</h3>
                             </div>
-                            <span>Docentes</span>
-                            <h3 class="card-title text-nowrap mb-1">{{ $teacherCount }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="{{ asset('assets/img/icons/unicons/curso.png') }}" alt="Credit Card"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                            <a class="dropdown-item" href="{{ route('courses.index', $period->name) }}">Ver
+                                                Mas</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Cursos</span>
+                                <h3 class="card-title text-nowrap mb-1">{{ $courseCount }}</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/curso.png') }}" alt="Credit Card"
-                                        class="rounded">
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="{{ route('courses.index', $period->name) }}">Ver Mas</a>
+            </div>
+            <div class="col-lg-4 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="{{ asset('assets/img/icons/unicons/alumno.png') }}" alt="Credit Card"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                            <a class="dropdown-item"
+                                                href="{{ route('students.index', $period->name) }}">Ver
+                                                Mas</a>
+                                        </div>
                                     </div>
                                 </div>
+                                <span>Alumnos</span>
+                                <h3 class="card-title text-nowrap mb-1">{{ $studentCount }}</h3>
                             </div>
-                            <span>Cursos</span>
-                            <h3 class="card-title text-nowrap mb-1">{{ $courseCount }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="{{ asset('assets/img/icons/unicons/padres.png') }}" alt="Credit Card"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                            <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Padres</span>
+                                <h3 class="card-title text-nowrap mb-1">0</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-4 order-1">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/alumno.png') }}" alt="Credit Card"
-                                        class="rounded">
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="{{ route('students.index', $period->name) }}">Ver Mas</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <span>Alumnos</span>
-                            <h3 class="card-title text-nowrap mb-1">{{ $studentCount }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <img src="{{ asset('assets/img/icons/unicons/padres.png') }}" alt="Credit Card"
-                                        class="rounded">
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">Ver Mas</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <span>Padres</span>
-                            <h3 class="card-title text-nowrap mb-1">0</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 
     <div class="row">
         <div class="col-lg-4 col-md-6">
