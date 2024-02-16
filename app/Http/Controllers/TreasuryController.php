@@ -30,24 +30,39 @@ class TreasuryController extends Controller
     public function index($period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
-        $treasuries = DB::table('treasury_detail as td')
-            ->join('treasuries as t', 't.id', 'td.treasury_id')
+        $treasuries = TreasuryDetail::join('treasuries as t', 't.id', 'treasury_detail.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
-            ->join('payments as p', 'p.id', 'td.concepto')
+            ->join('payments as p', 'p.id', 'treasury_detail.concepto')
             ->where('t.TenantId', $period->id)
             ->where('t.IsDeleted', false)
             ->select(
                 't.*',
                 'p.*',
                 't.id as treasury_id',
-                'td.concepto',
-                'td.monto_total',
+                'treasury_detail.concepto',
+                'treasury_detail.monto_total',
+                's.id as student_id',
                 's.first_name as student_first_name',
                 's.other_names as student_other_names',
                 's.surname as student_surname',
                 's.mother_surname as student_mother_surname'
             )
             ->get();
+
+        $treasuriesCount = TreasuryDetail::join('treasuries as t', 't.id', 'treasury_detail.treasury_id')
+            ->join('students as s', 's.id', 't.student_id')
+            ->join('payments as p', 'p.id', 'treasury_detail.concepto')
+            ->where('t.TenantId', $period->id)
+            ->where('t.IsDeleted', false)
+            ->select(
+                't.id as treasury_id',
+                'p.description'
+            )
+            ->get()
+            ->groupBy('treasury_id')
+            ->map(function ($group) {
+                return count($group);
+            });
 
         $payments = Payment::where('IsDeleted', false)->paginate(8);
 
@@ -79,7 +94,8 @@ class TreasuryController extends Controller
             });
 
 
-        return view('treasury.index', compact('treasuries', 'payments', 'period', 'morosos', 'conteoPorEstudiante'));
+
+        return view('treasury.index', compact('treasuries', 'treasuriesCount', 'payments', 'period', 'morosos', 'conteoPorEstudiante'));
     }
 
     public function create($period_name)

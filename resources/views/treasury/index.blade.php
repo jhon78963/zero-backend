@@ -118,48 +118,86 @@
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">
-                    <table class="table" id="tabla-grades">
+                    <table class="table table-bordered" id="tabla-grades">
                         <thead>
                             <tr>
                                 <th width="10%" class="text-center">Fecha</th>
-                                <th class="text-center">Estudiante</th>
-                                <th class="text-center">Concepto</th>
-                                <th class="text-center">Total</th>
-                                <th width="10%">Opciones</th>
+                                <th width="20%" class="text-center">Estudiante</th>
+                                <th width="30%" class="text-center">Concepto</th>
+                                <th width="20%" class="text-center">Total</th>
+                                <th width="20%">Opciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @if ($treasuries->count() > 0)
+                                @php $printedTreasuryStudents = []; @endphp
                                 @foreach ($treasuries as $treasury)
-                                    <tr>
-                                        <td class="text-center">{{ $treasury->fecha_emision }}</td>
-                                        <td class="text-center">
-                                            {{ $treasury->student_first_name }}
-                                            {{ $treasury->student_other_names }}
-                                            {{ $treasury->student_surname }}
-                                            {{ $treasury->student_mother_surname }}
-                                        </td>
-                                        <td class="text-center">{{ $treasury->description }}</td>
-                                        <td class="text-center">{{ $treasury->monto_total }}</td>
-                                        <td>
-                                            <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}"
-                                                target="_blank" class="btn btn-sm btn-primary">
-                                                <i class="bx bxs-file-pdf"></i>
-                                            </a>
+                                    @if (!in_array($treasury->treasury_id, $printedTreasuryStudents))
+                                        @php $printedTreasuryStudents[] = $treasury->treasury_id; @endphp
+                                        @if ($treasuriesCount[$treasury->treasury_id] > 1)
+                                            <tr class="text-center">
+                                                <td rowspan="{{ $treasuriesCount[$treasury->treasury_id] }}">
+                                                    {{ $treasury->fecha_emision }}
+                                                </td>
+                                                <td rowspan="{{ $treasuriesCount[$treasury->treasury_id] }}">
+                                                    {{ $treasury->student_surname }}
+                                                    {{ $treasury->student_mother_surname }}
+                                                    {{ $treasury->student_first_name }}
+                                                    {{ $treasury->student_other_names }}
+                                                </td>
+                                                <td>{{ $treasury->description }}</td>
+                                                <td>{{ $treasury->monto_total }}</td>
+                                                <td rowspan="{{ $treasuriesCount[$treasury->treasury_id] }}">
+                                                    <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}"
+                                                        target="_blank" class="btn btn-sm btn-primary">
+                                                        <i class="bx bxs-file-pdf"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="openCancelTreasuryModal({{ $treasury->treasury_id }})">
+                                                        Anular
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            @for ($i = 1; $i < $treasuriesCount[$treasury->treasury_id]; $i++)
+                                                <tr class="text-center">
+                                                    <td>{{ $treasuries[$loop->index + $i]->description }}</td>
+                                                    <td>{{ $treasuries[$loop->index + $i]->monto_total }}</td>
+                                                </tr>
+                                            @endfor
+                                        @else
+                                            <tr class="text-center">
+                                                <td>{{ $treasury->fecha_emision }}</td>
+                                                <td>
+                                                    {{ $treasury->student_surname }}
+                                                    {{ $treasury->student_mother_surname }}
+                                                    {{ $treasury->student_first_name }}
+                                                    {{ $treasury->student_other_names }}
+                                                </td>
+                                                <td>{{ $treasury->description }}</td>
+                                                <td>{{ $treasury->monto_total }}</td>
+                                                <td>
+                                                    <a href="{{ route('treasuries.voucher', [$period->name, $treasury->treasury_id]) }}"
+                                                        target="_blank" class="btn btn-sm btn-primary">
+                                                        <i class="bx bxs-file-pdf"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="openCancelTreasuryModal({{ $treasury->treasury_id }})">
+                                                        Anular
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endif
 
-                                            <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="openCancelTreasuryModal({{ $treasury->treasury_id }})">
-                                                Anular
-                                            </button>
-                                        </td>
-                                    </tr>
                                     @include('treasury.treasury-delete-modal', [
                                         'treasury' => $treasury,
                                         'period' => $period,
                                     ])
                                 @endforeach
                             @else
-                                <td colspan="7" class="text-center">NO DATA</td>
+                                <tr>
+                                    <td colspan="5" class="text-center">NO DATA</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>
