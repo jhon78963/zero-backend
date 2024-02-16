@@ -175,9 +175,19 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+        $courseFailed = FailedCourse::where('classroom_id', $classroom_id)->where('student_id', $student_id)->get();
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
+        foreach ($promediosPorCurso as $cursoId => $promedio) {
+            $failedCourse = $courseFailed->where('course_id', $cursoId)->first();
+
+            if ($failedCourse) {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => $failedCourse->grade_extension]);
+            } else {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => null]);
+            }
+        }
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFailed'));
     }
 
     public function createNext($period_name, $classroom_id, $student_id)
@@ -272,9 +282,19 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+        $courseFailed = FailedCourse::where('classroom_id', $classroom_id)->where('student_id', $student_id)->get();
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
+        foreach ($promediosPorCurso as $cursoId => $promedio) {
+            $failedCourse = $courseFailed->where('course_id', $cursoId)->first();
+
+            if ($failedCourse) {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => $failedCourse->grade_extension]);
+            } else {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => null]);
+            }
+        }
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFailed'));
     }
 
     public function createPrevious($period_name, $classroom_id, $student_id)
@@ -369,9 +389,19 @@ class TeacherCompetenciaController extends Controller
             ];
         }
 
-        $courseFaled = FailedCourse::where('classroom_id', $classroom_id)->where('student_id')->get();
+        $courseFailed = FailedCourse::where('classroom_id', $classroom_id)->where('student_id', $student_id)->get();
 
-        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFaled'));
+        foreach ($promediosPorCurso as $cursoId => $promedio) {
+            $failedCourse = $courseFailed->where('course_id', $cursoId)->first();
+
+            if ($failedCourse) {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => $failedCourse->grade_extension]);
+            } else {
+                $promediosPorCurso[$cursoId] = array_merge($promediosPorCurso[$cursoId], ['grade_extension' => null]);
+            }
+        }
+
+        return view('academic.note.create', compact('period', 'studentsGrade', 'student', 'nextEstudiante', 'previousEstudiante', 'courses', 'competenciasPorCurso', 'class_room', 'promediosPorCurso', 'courseFailed'));
     }
 
     private function calcularPromedio($gradeKey, $competencias)
