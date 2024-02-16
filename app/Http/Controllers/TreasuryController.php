@@ -194,6 +194,7 @@ class TreasuryController extends Controller
         $treasury->porcentaje_igv = 18;
         $treasury->total_igv = 0;
         $treasury->total = 0;
+        $treasury->payment_method = $request->payment_method;
         $treasury->student_id = $request->student_id;
         $treasury->TenantId = $period_id;
         $treasury->CreatorUserId = Auth::id();

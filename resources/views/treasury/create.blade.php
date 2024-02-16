@@ -79,8 +79,8 @@
                     <select name="payment_method" id="" class="form-control" style="width: 201.68px;">
                         <option value="CONTADO">Contado</option>
                         <option value="POS">POS</option>
-                        <option value="yape_plin">Yape/Plin</option>
-                        <option value="transferencia">Transferencia</option>
+                        <option value="YAPE_PLIN">Yape/Plin</option>
+                        <option value="TRANSFERENCIA">Transferencia</option>
                     </select>
                 </div>
 
