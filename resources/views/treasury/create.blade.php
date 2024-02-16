@@ -154,7 +154,7 @@
                     <td width="60%">
                         ${generateConcepts(periodId, studentId)}
                     </td>
-                    <td width="10%"><input type="text" name="price[]" class="form-control text-center"></td>
+                    <td width="10%"><input type="text" name="price[]" class="form-control text-center" readonly></td>
                     <td width="5%"><input type="text" name="total[]" class="form-control text-center" readonly></td>
                     <td>
                         <button type="button" class="btn btn-danger" onclick="deleteRow(this)"><i class='bx bx-trash-alt'></i></button>
@@ -243,6 +243,66 @@
 
         costCreate.addEventListener('keydown', function(evento) {
             validarInput(evento, costCreate);
+        });
+    </script>
+
+    <script>
+        $('#createTreasuryForm').submit(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: `/${periodId}/estudiantes/store`,
+                method: 'POST',
+                dataType: 'json',
+                data: new FormData($("#createStudentForm")[0]),
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    $('#btnCreateStudent').attr("disabled", true);
+                    $('#btnCreateStudent').html(
+                        '<div class="spinner-border spinner-border-sm text-white" role="status"></div> Registrando...'
+                    );
+                },
+                success: function(data) {
+                    $('#createStudentModal').modal('hide');
+                    $('#createStudentForm')[0].reset();
+                    toastr.success('El registro fue creado correctamente.', 'Crear Registro', {
+                        timeOut: 3000
+                    });
+
+                    if (data.count == 1) {
+                        $(`#tabla-students tbody #row-0`).html("");
+                    }
+
+                    const fila = `
+                        <tr id="row-${data.student.id}">
+                            <td>${data.student.code}</td>
+                            <td>${data.student.first_name} ${data.student.other_names != null ? data.student.other_names : ''}</td>
+                            <td>${data.student.surname} ${data.student.mother_surname != null ? data.student.mother_surname : ''}</td>
+                            <td>${data.student.institutional_email}</td>
+                            <td>salón</td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="/${periodName}/estudiantes/show/${data.student.id}" class="btn btn-warning btn-sm me-2">
+                                        <span class="tf-icons bx bx-show"></span>
+                                    </a>
+                                    <button class="btn btn-primary btn-sm me-2" onclick="openEditStudentModal(${data.student.id})">
+                                        <span class="tf-icons bx bx-edit-alt"></span>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="openDeleteStudentModal(${data.student.id})">
+                                        <span class="tf-icons bx bx-trash"></span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    $("#tabla-students tbody").append(fila);
+                },
+                complete: function() {
+                    $('#btnCreateStudent').text('Registrar');
+                    $('#btnCreateStudent').attr("disabled", false);
+                }
+            });
         });
     </script>
 @endsection
