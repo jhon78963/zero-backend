@@ -12,32 +12,6 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-md-6 col-12 p-1">
-            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
-                <canvas id="genderChart" width="200" height="340"></canvas>
-            </div>
-        </div>
-        <div class="col-md-6 col-12">
-            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
-                <canvas id="roleChart" width="200" height="340"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 col-12 p-1">
-            <div class="card mb-3 justify-content-center">
-                <canvas id="studentByGradeChart" width="200" height="100"></canvas>
-            </div>
-        </div>
-        <div class="col-md-6 col-12">
-            <div class="card mb-3">
-                <canvas id="limitClassroomChart" width="200" height="100"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
         <div class="col-md-6 col-12">
             <div class="card mb-4">
                 <div class="d-flex align-items-center justify-content-between">
@@ -92,6 +66,32 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6 col-12 p-1">
+            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
+                <canvas id="genderChart" width="200" height="340"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="card card-center mb-3" style="width: 680px; height: 340px;">
+                <canvas id="roleChart" width="200" height="340"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-12 p-1">
+            <div class="card mb-3 justify-content-center">
+                <canvas id="studentByGradeChart" width="200" height="100"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="card mb-3">
+                <canvas id="limitClassroomChart" width="200" height="100"></canvas>
             </div>
         </div>
     </div>

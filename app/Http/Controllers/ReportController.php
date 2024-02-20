@@ -96,4 +96,25 @@ class ReportController extends Controller
         $pdf = DomPDF::loadView('reports.grade-pdf', compact('period', 'registrationGrades'))->setPaper('a4')->setWarnings(false);
         return $pdf->stream('reporte-grados.pdf');
     }
+
+    public function generateRegistrationByClassroomPDF($period_name, $classroom_id)
+    {
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $classroom = ClassRoom::find($classroom_id);
+        $registrationClassrooms = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+            ->where('student_classroom.TenantId', $period->id)
+            ->where('student_classroom.classroom_id', $classroom_id)
+            ->where('s.TenantId', $period->id)
+            ->where('s.IsDeleted', false)
+            ->where('s.status', '1')
+            ->select('s.*')
+            ->get();
+
+        return response()->json($registrationClassrooms);
+    }
+
+    public function generateRegistrationByGradePDF($period_name)
+    {
+        //
+    }
 }

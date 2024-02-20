@@ -234,6 +234,8 @@ Route::group(['prefix' => '{period_id}/'], function () {
     Route::get('reportes', [ReportController::class, 'index'])->name('reports.index');
     Route::get('generate-pdf/aula', [ReportController::class, 'generateClassroomPdf'])->name('reports.classroom-pdf');
     Route::get('generate-pdf/grado', [ReportController::class, 'generateGradePdf'])->name('reports.grade-pdf');
+    Route::get('generate-pdf/matricula/aula/{classroom_id}', [ReportController::class, 'generateRegistrationByClassroomPDF'])->name('reports.registration.classroom-pdf');
+    Route::get('generate-pdf/matricula/grado/{grade_id}', [ReportController::class, 'generateRegistrationByGradePDF'])->name('reports.registration.grade-pdf');
 });
 
 // Auth
