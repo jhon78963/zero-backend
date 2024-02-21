@@ -34,6 +34,12 @@
                             <tr class="text-center">
                                 <td>{{ $registration->description }}</td>
                                 <td>{{ $registration->registration }}</td>
+                                <td>
+                                    <a href="{{ route('reports.registration.classroom-pdf', [$period->name, $registration->classroom_id]) }}"
+                                        target="_blank" class="btn btn-primary btn-sm">
+                                        <i class='bx bxs-file-pdf'></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -46,7 +52,8 @@
                     <h5 class="card-header mt-3">Alumnos matriculados por grado</h5>
                     <div style="padding-right: 1rem">
                         <a href="{{ route('reports.grade-pdf', $period->name) }}" target="_blank"
-                            class="btn btn-primary me-1 m-0">PDF</a>
+                            class="btn btn-primary me-1 m-0">PDF
+                        </a>
                     </div>
                 </div>
 
@@ -62,6 +69,12 @@
                             <tr class="text-center">
                                 <td>{{ $registration->description }}</td>
                                 <td>{{ $registration->registration }}</td>
+                                <td>
+                                    <a href="{{ route('reports.registration.grade-pdf', [$period->name, $registration->grade_id]) }}"
+                                        target="_blank" class="btn btn-primary btn-sm">
+                                        <i class='bx bxs-file-pdf'></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

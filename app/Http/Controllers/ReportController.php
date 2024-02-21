@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicPeriod;
 use App\Models\ClassRoom;
+use App\Models\Grade;
 use App\Models\Student;
 use App\Models\StudentClassroom;
 use App\Models\UserRole;
@@ -50,15 +51,15 @@ class ReportController extends Controller
 
         $registrationClassrooms = ClassRoom::where('TenantId', $period->id)
             ->where('IsDeleted', false)
-            ->groupBy('description', 'students_number')
-            ->selectRaw('description, students_number as registration')
+            ->groupBy('description', 'students_number', 'id')
+            ->selectRaw('description, students_number as registration, id as classroom_id')
             ->get();
 
         $registrationGrades = ClassRoom::join('grades as g', 'g.id', 'class_rooms.grade_id')
             ->where('class_rooms.TenantId', $period->id)
             ->where('class_rooms.IsDeleted', false)
-            ->groupBy('g.description')
-            ->selectRaw('g.description, SUM(class_rooms.students_number) as registration')
+            ->groupBy('g.description', 'g.id')
+            ->selectRaw('g.description, SUM(class_rooms.students_number) as registration, g.id as grade_id')
             ->get();
 
         // $coursesFinalStatus = CourseGrade::join('courses as c', 'c.id', 'course_grades.course_id')
@@ -110,11 +111,26 @@ class ReportController extends Controller
             ->select('s.*')
             ->get();
 
-        return response()->json($registrationClassrooms);
+        $pdf = DomPDF::loadView('reports.registration-classroom-pdf', compact('period', 'classroom', 'registrationClassrooms'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-matriculados-por-aula.pdf');
     }
 
-    public function generateRegistrationByGradePDF($period_name)
+    public function generateRegistrationByGradePDF($period_name, $grade_id)
     {
-        //
+        $period = AcademicPeriod::where('name', $period_name)->first();
+        $grade = Grade::find($grade_id);
+        $registrationGrades = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')
+            ->join('class_rooms as cr', 'cr.id', 'student_classroom.classroom_id')
+            ->join('grades as g', 'g.id', 'cr.grade_id')
+            ->where('student_classroom.TenantId', $period->id)
+            ->where('g.id', $grade_id)
+            ->where('s.TenantId', $period->id)
+            ->where('s.IsDeleted', false)
+            ->where('s.status', '1')
+            ->select('s.*')
+            ->get();
+
+        $pdf = DomPDF::loadView('reports.registration-grade-pdf', compact('period', 'grade', 'registrationGrades'))->setPaper('a4')->setWarnings(false);
+        return $pdf->stream('reporte-matriculados-por-aula.pdf');
     }
 }
