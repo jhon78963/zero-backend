@@ -111,10 +111,37 @@
             <div class="card mb-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <h5 class="card-header">Tesoreria</h5>
+                    <form action="{{ route('treasuries.index', $period->name) }}" method="GET">
+                        <div class="d-flex">
+                            <select name="payment_year" id="year" class="form-select me-1">
+                                @foreach ($treasuryYear as $year)
+                                    <option value="{{ $year->year }}">{{ $year->year }}</option>
+                                @endforeach
+                            </select>
+                            <select name="month_payment" id="month" class="form-select me-1">
+                                @foreach ($treasuryMonth as $month)
+                                    <option value="{{ $month->month }}">{{ $month->monthName }}</option>
+                                @endforeach
+                            </select>
+                            <select name="payment_grade_id" id="grade_id" class="form-select me-1" style="width: 10rem;">
+                                @foreach ($treasuryGrade as $grade)
+                                    <option value="{{ $grade->grade_id }}">{{ $grade->grade }}</option>
+                                @endforeach
+                            </select>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="bx bx-search-alt"></i>
+                            </button>
+                        </div>
+                    </form>
+
                     <div style="padding-right: 1rem">
-                        <a href="{{ route('treasuries.create', $period->name) }}"
-                            class="btn btn-outline-primary me-1">Registrar
-                            pago</a>
+                        <a href="#" target="_blank" class="btn btn-outline-primary me-1">
+                            PDF
+                        </a>
+
+                        <a href="{{ route('treasuries.create', $period->name) }}" class="btn btn-outline-primary me-1">
+                            <i class='bx bx-plus-medical'></i>
+                        </a>
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">
@@ -206,9 +233,34 @@
             <div class="card mb-4">
                 <div class="d-flex align-items-center justify-content-between ">
                     <h5 class="card-header">Morosos</h5>
+                    <form action="{{ route('treasuries.index', $period->name) }}" method="GET">
+                        <div class="d-flex">
+                            <select name="moroso_year" id="year" class="form-select me-1">
+                                @foreach ($morosoYear as $moroso)
+                                    <option value="{{ $moroso->year }}">{{ $moroso->year }}</option>
+                                @endforeach
+                            </select>
+                            <select name="moroso_month" id="month" class="form-select me-1">
+                                @foreach ($morosoMonth as $moroso)
+                                    <option value="{{ $moroso->month }}">{{ $moroso->monthName }}</option>
+                                @endforeach
+                            </select>
+                            <select name="moroso_grade_id" id="grade_id" class="form-select me-1" style="width: 10rem;">
+                                @foreach ($morosoGrade as $moroso)
+                                    <option value="{{ $moroso->grade_id }}">{{ $moroso->grade }}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bx bx-search-alt"></i>
+                            </button>
+                        </div>
+                    </form>
+
                     <div style="padding-right: 1rem">
                         <a href="{{ route('treasuries.pdf', $period->name) }}" target="_blank"
-                            class="btn btn-outline-primary me-1">PDF</a>
+                            class="btn btn-outline-primary me-1">
+                            PDF
+                        </a>
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">

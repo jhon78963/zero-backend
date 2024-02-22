@@ -93,9 +93,85 @@ class TreasuryController extends Controller
                 return count($group);
             });
 
+        $treasuryYear = Treasury::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->select(DB::raw('YEAR(fecha_emision) as year'))
+            ->distinct()
+            ->get();
 
+        $treasuryMonth = Treasury::where('TenantId', $period->id)
+            ->where('IsDeleted', false)
+            ->whereYear('fecha_emision', 2024)
+            ->select(DB::raw('MONTHNAME(fecha_emision) as monthName, MONTH(fecha_emision) as month'))
+            ->distinct()
+            ->get();
 
-        return view('treasury.index', compact('treasuries', 'treasuriesCount', 'payments', 'period', 'morosos', 'conteoPorEstudiante'));
+        $treasuryGrade = TreasuryDetail::join('treasuries as t', 't.id', 'treasury_detail.treasury_id')
+            ->join('students as s', 's.id', 't.student_id')
+            ->join('student_classroom as sc', 'sc.student_id', 's.id')
+            ->join('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->join('grades as g', 'g.id', 'c.grade_id')
+            ->where('t.TenantId', $period->id)
+            ->where('t.IsDeleted', false)
+            ->select(
+                'g.id as grade_id',
+                'g.description as grade',
+            )
+            ->distinct()
+            ->get();
+
+        $morosoYear = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->select(DB::raw('YEAR(p.due_date) as year'))
+            ->distinct()
+            ->get();
+
+        $morosoMonth = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('p.due_date', '<', $current_month)
+            ->whereYear('p.due_date', 2024)
+            ->select(DB::raw('MONTHNAME(p.due_date) as monthName, MONTH(p.due_date) as month'))
+            ->distinct()
+            ->get();
+
+        $morosoGrade = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
+            ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
+            ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->join('grades as g', 'g.id', 'c.grade_id')
+            ->where('student_payments.TenantId', $period->id)
+            ->where('student_payments.isPaid', false)
+            ->where('g.TenantId', $period->id)
+            ->where('g.IsDeleted', false)
+            ->where('p.due_date', '<', $current_month)
+            ->whereYear('p.due_date', 2024)
+            ->select(
+                'g.id as grade_id',
+                'g.description as grade',
+            )
+            ->distinct()
+            ->get();
+
+        return view('treasury.index', compact(
+            'treasuries',
+            'treasuriesCount',
+            'payments',
+            'period',
+            'morosos',
+            'conteoPorEstudiante',
+            'treasuryYear',
+            'treasuryMonth',
+            'treasuryGrade',
+            'morosoYear',
+            'morosoMonth',
+            'morosoGrade'
+        ));
     }
 
     public function create($period_name)
