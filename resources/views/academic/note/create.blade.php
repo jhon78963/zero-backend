@@ -108,7 +108,7 @@
                                     </td>
                                     <td>
                                         <select name="nota_4[]" class="form-control text-center" style="width: 80px"
-                                            {{ $calendar_notas->activity == 'Subida de notas VI Bimestre' ? '' : 'disabled' }}>
+                                            {{ $calendar_notas->activity == 'Subida de notas IV Bimestre' ? '' : 'disabled' }}>
                                             <option value="">Nota</option>
                                             <option value="AD"
                                                 {{ $competencia['grade_b_4'] == 'AD' ? 'selected' : '' }}>AD</option>
