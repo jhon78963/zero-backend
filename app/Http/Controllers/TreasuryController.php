@@ -16,7 +16,6 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 
 class TreasuryController extends Controller
 {
@@ -27,27 +26,51 @@ class TreasuryController extends Controller
         $this->middleware('check.permissions:Admin,pages.calendar.modify')->only(['store']);
     }
 
-    public function index($period_name)
+    public function index(Request $request, $period_name)
     {
         $period = AcademicPeriod::where('name', $period_name)->first();
         $treasuries = TreasuryDetail::join('treasuries as t', 't.id', 'treasury_detail.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
             ->join('payments as p', 'p.id', 'treasury_detail.concepto')
+            ->join('student_classroom as sc', 'sc.student_id', 's.id')
+            ->join('class_rooms as c', 'c.id', 'sc.classroom_id')
+            ->join('grades as g', 'g.id', 'c.grade_id')
             ->where('t.TenantId', $period->id)
-            ->where('t.IsDeleted', false)
-            ->select(
-                't.*',
-                'p.*',
-                't.id as treasury_id',
-                'treasury_detail.concepto',
-                'treasury_detail.monto_total',
-                's.id as student_id',
-                's.first_name as student_first_name',
-                's.other_names as student_other_names',
-                's.surname as student_surname',
-                's.mother_surname as student_mother_surname'
-            )
-            ->get();
+            ->where('t.IsDeleted', false);
+
+        if ($request->has('payment_year')) {
+            $treasuries->whereYear('t.fecha_emision', $request->input('payment_year'));
+            $paymentYear = $request->input('payment_year');
+        } else {
+            $paymentYear = '';
+        }
+
+        if ($request->has('payment_month')) {
+            $treasuries->whereMonth('t.fecha_emision', $request->input('payment_month'));
+            $paymentMonth = $request->input('payment_month');
+        } else {
+            $paymentMonth = '';
+        }
+
+        if ($request->has('payment_grade_id')) {
+            $treasuries->where('g.id', $request->input('payment_grade_id'));
+            $paymentGradeId = $request->input('payment_grade_id');
+        } else {
+            $paymentGradeId = '';
+        }
+
+        $treasuries = $treasuries->select(
+            't.*',
+            'p.*',
+            't.id as treasury_id',
+            'treasury_detail.concepto',
+            'treasury_detail.monto_total',
+            's.id as student_id',
+            's.first_name as student_first_name',
+            's.other_names as student_other_names',
+            's.surname as student_surname',
+            's.mother_surname as student_mother_surname'
+        )->get();
 
         $treasuriesCount = TreasuryDetail::join('treasuries as t', 't.id', 'treasury_detail.treasury_id')
             ->join('students as s', 's.id', 't.student_id')
@@ -71,10 +94,24 @@ class TreasuryController extends Controller
         $morosos = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
             ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
             ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->join('grades as g', 'g.id', 'c.grade_id')
             ->where('student_payments.TenantId', $period->id)
             ->where('student_payments.isPaid', false)
-            ->where('p.due_date', '<', $current_month)
-            ->select('s.*', 's.id as student_id', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
+            ->where('p.due_date', '<', $current_month);
+
+        if ($request->has('moroso_year')) {
+            $morosos->whereYear('p.due_date', $request->input('moroso_year'));
+        }
+
+        if ($request->has('moroso_month')) {
+            $morosos->whereMonth('p.due_date', $request->input('moroso_month'));
+        }
+
+        if ($request->has('moroso_grade_id')) {
+            $morosos->where('g.id', $request->input('moroso_grade_id'));
+        }
+
+        $morosos = $morosos->select('s.*', 's.id as student_id', 'p.description', 'p.due_date', 'p.cost', 'c.description as classroom')
             ->orderBy('c.description')->orderBy('s.surname')->orderBy('s.mother_surname')->orderBy('s.first_name')->orderBy('s.other_names')->orderBy('p.due_date')
             ->distinct()
             ->get();
@@ -82,10 +119,33 @@ class TreasuryController extends Controller
         $conteoPorEstudiante = StudentPayment::join('students as s', 's.id', '=', 'student_payments.student_id')
             ->join('payments as p', 'p.id', '=', 'student_payments.payment_id')
             ->join('class_rooms as c', 'c.id', 'student_payments.classroom_id')
+            ->join('grades as g', 'g.id', 'c.grade_id')
             ->where('student_payments.TenantId', $period->id)
             ->where('student_payments.isPaid', false)
-            ->where('p.due_date', '<', $current_month)
-            ->select('s.id as student_id', 'p.description')
+            ->where('p.due_date', '<', $current_month);
+
+        if ($request->has('moroso_year')) {
+            $conteoPorEstudiante->whereYear('p.due_date', $request->input('moroso_year'));
+            $morosoYearSelected = $request->input('moroso_year');
+        } else {
+            $morosoYearSelected = '2024';
+        }
+
+        if ($request->has('moroso_month')) {
+            $conteoPorEstudiante->whereMonth('p.due_date', $request->input('moroso_month'));
+            $morosoMonthSelected = $request->input('moroso_month');
+        } else {
+            $morosoMonthSelected = '';
+        }
+
+        if ($request->has('moroso_grade_id')) {
+            $conteoPorEstudiante->where('g.id', $request->input('moroso_grade_id'));
+            $morosoGradeIdSelected = $request->input('moroso_grade_id');
+        } else {
+            $morosoGradeIdSelected = '';
+        }
+
+        $conteoPorEstudiante = $conteoPorEstudiante->select('s.id as student_id', 'p.description')
             ->distinct()
             ->get()
             ->groupBy('student_id')
@@ -170,7 +230,13 @@ class TreasuryController extends Controller
             'treasuryGrade',
             'morosoYear',
             'morosoMonth',
-            'morosoGrade'
+            'morosoGrade',
+            'morosoYearSelected',
+            'morosoMonthSelected',
+            'morosoGradeIdSelected',
+            'paymentYear',
+            'paymentMonth',
+            'paymentGradeId',
         ));
     }
 

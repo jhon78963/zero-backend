@@ -115,17 +115,56 @@
                         <div class="d-flex">
                             <select name="payment_year" id="year" class="form-select me-1">
                                 @foreach ($treasuryYear as $year)
-                                    <option value="{{ $year->year }}">{{ $year->year }}</option>
+                                    <option value="{{ $year->year }}"
+                                        {{ $year->year == $paymentYear ? 'selected' : '' }}>{{ $year->year }}</option>
                                 @endforeach
                             </select>
-                            <select name="month_payment" id="month" class="form-select me-1">
+                            <select name="payment_month" id="month" class="form-select me-1">
                                 @foreach ($treasuryMonth as $month)
-                                    <option value="{{ $month->month }}">{{ $month->monthName }}</option>
+                                    @if ($month->month == 1)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Enero</option>
+                                    @elseif ($month->month == 2)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Febrero</option>
+                                    @elseif ($month->month == 3)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Marzo</option>
+                                    @elseif ($month->month == 4)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Abril</option>
+                                    @elseif ($month->month == 5)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Mayo</option>
+                                    @elseif ($month->month == 6)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Junio</option>
+                                    @elseif ($month->month == 7)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Julio</option>
+                                    @elseif ($month->month == 8)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Agosto</option>
+                                    @elseif ($month->month == 9)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Septiembre</option>
+                                    @elseif ($month->month == 10)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Octubre</option>
+                                    @elseif ($month->month == 11)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Noviembre</option>
+                                    @elseif ($month->month == 12)
+                                        <option value="{{ $month->month }}"
+                                            {{ $month->month == $paymentMonth ? 'selected' : '' }}>Diciembre</option>
+                                    @endif
                                 @endforeach
                             </select>
                             <select name="payment_grade_id" id="grade_id" class="form-select me-1" style="width: 10rem;">
                                 @foreach ($treasuryGrade as $grade)
-                                    <option value="{{ $grade->grade_id }}">{{ $grade->grade }}</option>
+                                    <option value="{{ $grade->grade_id }}"
+                                        {{ $grade->grade_id == $paymentGradeId ? 'selected' : '' }}>{{ $grade->grade }}
+                                    </option>
                                 @endforeach
                             </select>
                             <button class="btn btn-primary btn-sm">
@@ -237,17 +276,68 @@
                         <div class="d-flex">
                             <select name="moroso_year" id="year" class="form-select me-1">
                                 @foreach ($morosoYear as $moroso)
-                                    <option value="{{ $moroso->year }}">{{ $moroso->year }}</option>
+                                    <option value="{{ $moroso->year }}"
+                                        {{ $moroso->year == $morosoYearSelected ? 'selected' : '' }}>{{ $moroso->year }}
+                                    </option>
                                 @endforeach
                             </select>
                             <select name="moroso_month" id="month" class="form-select me-1">
                                 @foreach ($morosoMonth as $moroso)
-                                    <option value="{{ $moroso->month }}">{{ $moroso->monthName }}</option>
+                                    @if ($moroso->month == 1)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>Enero</option>
+                                    @elseif ($moroso->month == 2)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>Febrero</option>
+                                    @elseif ($moroso->month == 3)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Marzo</option>
+                                    @elseif ($moroso->month == 4)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Abril</option>
+                                    @elseif ($moroso->month == 5)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Mayo</option>
+                                    @elseif ($moroso->month == 6)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Junio</option>
+                                    @elseif ($moroso->month == 7)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Julio</option>
+                                    @elseif ($moroso->month == 8)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Agosto</option>
+                                    @elseif ($moroso->month == 9)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Septiembre</option>
+                                    @elseif ($moroso->month == 10)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Octubre</option>
+                                    @elseif ($moroso->month == 11)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Noviembre</option>
+                                    @elseif ($moroso->month == 12)
+                                        <option value="{{ $moroso->month }}"
+                                            {{ $moroso->month == $morosoMonthSelected ? 'selected' : '' }}>
+                                            Diciembre</option>
+                                    @endif
                                 @endforeach
                             </select>
-                            <select name="moroso_grade_id" id="grade_id" class="form-select me-1" style="width: 10rem;">
+                            <select name="moroso_grade_id" id="grade_id" class="form-select me-1"
+                                style="width: 10rem;">
                                 @foreach ($morosoGrade as $moroso)
-                                    <option value="{{ $moroso->grade_id }}">{{ $moroso->grade }}</option>
+                                    <option value="{{ $moroso->grade_id }}"
+                                        {{ $moroso->grade_id == $morosoGradeIdSelected ? 'selected' : '' }}>
+                                        {{ $moroso->grade }}</option>
                                 @endforeach
                             </select>
                             <button type="submit" class="btn btn-primary btn-sm">
