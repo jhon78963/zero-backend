@@ -42,7 +42,6 @@ class AdminCompetenciaController extends Controller
         } else {
             $classroomSelected = ClassRoom::where('TenantId', $period->id)
                 ->where('IsDeleted', false)
-                ->where('id', 1)
                 ->first();
 
             $students = StudentClassroom::join('students as s', 's.id', 'student_classroom.student_id')

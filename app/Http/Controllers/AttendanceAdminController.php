@@ -52,7 +52,6 @@ class AttendanceAdminController extends Controller
         } else {
             $classroomSelected = ClassRoom::where('TenantId', $period->id)
                 ->where('IsDeleted', false)
-                ->where('id', 1)
                 ->first();
 
             return view('academic.attendance.admin.index', compact('attendances', 'period', 'classrooms', 'classroomSelected', 'today'));
