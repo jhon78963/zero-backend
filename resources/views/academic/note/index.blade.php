@@ -51,8 +51,21 @@
                                     {{ $classroom_student->other_names }}
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('grade.teacher.create', [$period->name, $classroom_student->classroom_id, $classroom_student->student->id]) }}"
-                                        class="btn btn-primary btn-rounded">Subir notas</a>
+                                    @if ($calendar_notas)
+                                        @if (
+                                            $calendar_notas->activity == 'Subida de notas I Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas II Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas III Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas IV Bimestre' ||
+                                                $calendar_notas->activity == 'Subida de notas de recuperación')
+                                            <a href="{{ route('grade.teacher.create', [$period->name, $classroom_student->classroom_id, $classroom_student->student->id]) }}"
+                                                class="btn btn-primary btn-rounded">Subir notas</a>
+                                        @else
+                                            <p class="m-0">Está fuera del periodo de registro de notas</p>
+                                        @endif
+                                    @else
+                                        <p class="m-0">Está fuera del periodo de registro de notas</p>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
