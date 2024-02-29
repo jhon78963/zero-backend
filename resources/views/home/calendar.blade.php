@@ -12,8 +12,8 @@
             <form action="{{ route('calendars.home.index') }}">
                 <div class="navbar-nav align-items-center">
                     <div class="nav-item d-flex align-items-center">
-                        <input type="text" name="search" class="form-control border-search shadow-none" placeholder="Buscar..."
-                            style="width: 500px;">
+                        <input type="text" name="search" class="form-control border-search shadow-none"
+                            placeholder="Buscar..." style="width: 500px;">
                         <button class="p-0 btn btn-default">
                             <i class="bx bx-search fs-4 lh-0"></i>
                         </button>
@@ -65,7 +65,7 @@
                             <div class="col mb-3">
                                 <label for="name" class="form-label">Actividad</label>
                                 <input type="text" id="c_activity" name="activity" class="form-control"
-                                    placeholder="Detalla en que consitirá la actividad" readonly />
+                                    placeholder="Detalla en que consitirá la actividad" />
                             </div>
                         </div>
                         <div class="row">
