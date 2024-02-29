@@ -534,7 +534,7 @@ class TeacherCompetenciaController extends Controller
             }
         }
 
-        if ($cursosJaladosCount > 0) {
+        if ($prom_nota_1 > 0 && $prom_nota_2 > 0 && $prom_nota_3 > 0 && $prom_nota_4 > 0 && $cursosJaladosCount == 0) {
             $period = AcademicPeriod::find($period_id);
             $nextPeriod = AcademicPeriod::where('year', ($period->year + 1))->first();
             $student = Student::find($student_id);
